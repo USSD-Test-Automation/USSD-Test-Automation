@@ -86,69 +86,6 @@
 
         {# Chart 2: Test Executions by Application (Pass/Fail) - SVG Pie Chart #}
 
-        <div class="chart-container-wrapper">
-            <h3>Executions by Application (Adhoc)</h3>
-            <div class="svg-chart-container" id="appExecutionsPieChart"
-                style="align-items: center; justify-content: center; overflow: visible !important;">
-                {% if stats.app_chart_labels and stats.app_chart_labels|length > 0 %}
-                    {% set total_app_executions = 0 %}
-                    {% for i in range(stats.app_chart_pass_data|length) %}
-                       {% set total_app_executions = total_app_executions + stats.app_chart_pass_data[i] + stats.app_chart_fail_data[i] %}
-                    {% endfor %}
-
-                    {% if total_app_executions > 0 %}
-                        <svg width="250" height="250" viewBox="-1 -1 2 2" preserveAspectRatio="xMidYMid meet"
-                            style="overflow: visible !important;">
-                            <g transform="rotate(-90 0 0)">
-                                {% set start_angle_deg = 0 %}
-                                {% for i in range(stats.app_chart_labels|length) %}
-                                {% set pass_val = stats.app_chart_pass_data[i] %}
-                                {% set pass_slice_angle_deg = (pass_val / total_app_executions) * 360 if total_app_executions >
-                                0 else 0 %}
-                                {% if pass_val > 0 %}
-                                <path class="svg-pie-slice" fill="#28a745"
-                                    d="{{ make_pie_slice_path(pass_slice_angle_deg, start_angle_deg) }}">
-                                    <title>{{ stats.app_chart_labels[i] }} - Pass: {{ pass_val }}</title>
-                                </path>
-                                {% set start_angle_deg = start_angle_deg + pass_slice_angle_deg %}
-                                {% endif %}
-
-                                {% set fail_val = stats.app_chart_fail_data[i] %}
-                                {% set fail_slice_angle_deg = (fail_val / total_app_executions) * 360 if total_app_executions >
-                                0 else 0 %}
-                                {% if fail_val > 0 %}
-                                <path class="svg-pie-slice" fill="#dc3545"
-                                    d="{{ make_pie_slice_path(fail_slice_angle_deg, start_angle_deg) }}">
-                                    <title>{{ stats.app_chart_labels[i] }} - Fail: {{ fail_val }}</title>
-                                </path>
-                                {% set start_angle_deg = start_angle_deg + fail_slice_angle_deg %}
-                                {% endif %}
-                                {% endfor %}
-                            </g>
-                        </svg>
-                        <div style="margin-left: 20px; font-size:0.9em;">
-                            {% for i in range(stats.app_chart_labels|length) %}
-                            <p style="margin: 3px 0;">
-                                <span
-                                    style="display:inline-block; width:10px; height:10px; background-color:#28a745; margin-right:5px; border-radius:2px;"></span>
-                                {{ stats.app_chart_labels[i] }} Pass: {{ stats.app_chart_pass_data[i] }}
-                            </p>
-                            <p style="margin: 3px 0 8px 0;">
-                                <span
-                                    style="display:inline-block; width:10px; height:10px; background-color:#dc3545; margin-right:5px; border-radius:2px;"></span>
-                                {{ stats.app_chart_labels[i] }} Fail: {{ stats.app_chart_fail_data[i] }}
-                            </p>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p>No application execution data to display for pie chart.</p>
-                    {% endif %}
-                {% else %}
-                  <p>No application execution data available.</p>
-                {% endif %}
-            </div>
-        </div>
-
         {# Chart: EXECUTED Test Assignments by Priority - SVG Pie Chart with Percentages #}
         <div class="card shadow mb-4 flex-grow-1" style="min-width: 320px; flex: 1 1 45%;">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">

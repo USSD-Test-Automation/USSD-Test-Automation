@@ -3218,6 +3218,25 @@ def run_test_subprocess(cmd, output_file_path, env):
 def forgot_password():
     return render_template('auth/forgot-password.html')
 
+
+@app.route('/admin/check-testcase-code/<code>')
+@login_required
+@admin_required
+def check_testcase_code(code):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT TestCaseID FROM testcases WHERE Code = %s", (code,))
+        existing = cursor.fetchone()
+        return jsonify({'exists': bool(existing)})
+    except Exception as e:
+        app.logger.error(f"Error checking test case code: {e}")
+        return jsonify({'error': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn and conn.is_connected():
+            conn.close()
 # --- HELPERS for Manager Dashboard (Your existing) ---
 def get_all_applications_for_dashboard():
     with get_db_conn_from_models() as conn:

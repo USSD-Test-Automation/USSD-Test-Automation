@@ -573,7 +573,13 @@
                     moduleSelect.innerHTML = '<option value="">Select Module</option>';
                     moduleSelect.disabled = true;
                 } else {
-                    throw new Error(result.error || 'Unknown error creating test case.');
+                    if (result.error && result.error.includes('already exists')) {
+                        showAlert('A test case with this code already exists. Please use a different code.', 'warning');
+                        // Focus on the code input field
+                        document.getElementById('code').focus();
+                    } else {
+                        showAlert('Failed to create test case: ' + (result.error || 'Unknown error'), 'danger');
+                    }
                 }
             } catch (err) {
                 console.error('Error creating test case:', err);
@@ -733,6 +739,36 @@
 
         // --- Initial Load ---
         loadApplications();
+
+        const codeInput = document.getElementById('code');
+        let codeCheckTimeout;
+
+        codeInput.addEventListener('input', async function () {
+            const code = this.value.trim();
+            if (!code) return;
+
+            // Clear any existing timeout
+            if (codeCheckTimeout) {
+                clearTimeout(codeCheckTimeout);
+            }
+
+            // Set a new timeout to check after user stops typing
+            codeCheckTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/admin/check-testcase-code/${encodeURIComponent(code)}`);
+                    const data = await response.json();
+
+                    if (data.exists) {
+                        showAlert('This test case code already exists. Please use a different code.', 'warning');
+                        this.setCustomValidity('This test case code already exists');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                } catch (error) {
+                    console.error('Error checking test case code:', error);
+                }
+            }, 500); // Wait 500ms after user stops typing
+        });
     });
 </script>
 {% endblock %}
