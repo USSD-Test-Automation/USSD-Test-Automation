@@ -3219,6 +3219,8 @@ def forgot_password():
     return render_template('auth/forgot-password.html')
 
 
+
+
 @app.route('/admin/check-testcase-code/<code>')
 @login_required
 @admin_required

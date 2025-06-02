@@ -718,4 +718,5 @@ def main_runner():
 if __name__ == "__main__":
     main_runner()
 
+
 # appium --allow-insecure adb_shell
