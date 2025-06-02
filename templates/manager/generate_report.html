@@ -1,0 +1,273 @@
+{% extends "manager_base.html" %}
+
+{% block title %}Generate Test Report{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+     {% include '_messages.html' %}
+    <div class="card shadow-sm border-0">
+       
+        <div class="card-header section-header">
+            <h4 class="mb-0">Generate Test Report</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST" id="reportForm">
+                <!-- Report Type -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="report_type" class="form-label">Report Type</label>
+                        <select class="custom-form-select" id="report_type" name="report_type" required>
+                            <option value="">Select Report Type</option>
+                            {% for type in report_types %}
+                            <option value="{{ type.id }}">{{ type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Date Range -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="start_date" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="end_date" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="end_date" name="end_date">
+                    </div>
+                </div>
+
+                <!-- Application Filter -->
+                <div class="row mb-3" id="applicationFilter">
+                    <div class="col-md-6">
+                        <label for="application_id" class="form-label">Application</label>
+                        <select class="custom-form-select" id="application_id" name="application_id" required>
+                            <option value="">Select Application</option>
+                            {% for app in applications %}
+                            <option value="{{ app.id }}">{{ app.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Test Case Filter -->
+                <div class="row mb-3" id="testCaseFilter">
+                    <div class="col-md-6">
+                        <label for="test_case_id" class="form-label">Test Case</label>
+                        <select class="custom-form-select" id="test_case_id" name="test_case_id">
+                            <option value="">Select Test Case</option>
+                            {% for tc in test_cases %}
+                            <option value="{{ tc.TestCaseID }}">{{ tc.Code }} - {{ tc.Name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Batch Filter -->
+                <div class="row mb-3" id="batchFilter">
+                    <div class="col-md-6">
+                        <label for="batch_id" class="form-label">Batch</label>
+                        <select class="custom-form-select" id="batch_id" name="batch_id">
+                            <option value="">Select Batch</option>
+                            {% for batch in batches %}
+                            <option value="{{ batch.BatchAssignmentID }}">{{ batch.ReferenceName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Email Option Checkbox -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="send_email" name="send_email"
+                                value="true">
+                            <label class="form-check-label" for="send_email">
+                                Send Report via Email
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Input Fields -->
+                <div class="row mb-3" id="emailFields" style="display: none;">
+                    <div class="col-md-6">
+                        <label class="form-label">Email Recipients</label>
+                        <div id="emailInputsContainer">
+                            <div class="input-group mb-2 email-input-group">
+                                <input type="email" class="form-control email-input" name="email_addresses[]"
+                                    placeholder="Enter email address">
+                                <button type="button" class="btn btn-outline-primary" id="addEmailBtn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="row">
+                    <div class="col-md-6 gap-1 d-grid">
+                        <button type="submit" class="btn btn-warning p-2">
+                            <i class="fas fa-file-pdf"></i>Generate Report
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom styling for manager consistency */
+    .email-input-group {
+        transition: all 0.3s ease;
+    }
+
+    .email-input-group:hover .remove-email {
+        display: block !important;
+    }
+
+    .email-input {
+        border-right: none;
+    }
+
+    .remove-email {
+        border-left: none;
+        background-color: #fff;
+    }
+
+    .remove-email:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    #addEmailBtn {
+        transition: all 0.3s ease;
+    }
+
+    #addEmailBtn:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const reportType = document.getElementById('report_type');
+        const applicationFilter = document.getElementById('applicationFilter');
+        const testCaseFilter = document.getElementById('testCaseFilter');
+        const batchFilter = document.getElementById('batchFilter');
+        const sendEmail = document.getElementById('send_email');
+        const emailFields = document.getElementById('emailFields');
+        const emailInputsContainer = document.getElementById('emailInputsContainer');
+        const addEmailBtn = document.getElementById('addEmailBtn');
+
+        function updateFormVisibility() {
+            const selectedType = reportType.value;
+
+            // Hide all filters first
+            applicationFilter.style.display = 'none';
+            testCaseFilter.style.display = 'none';
+            batchFilter.style.display = 'none';
+
+            // Show relevant filters based on report type
+            switch (selectedType) {
+                case 'application':
+                    applicationFilter.style.display = 'block';
+                    break;
+                case 'test_case':
+                    testCaseFilter.style.display = 'block';
+                    break;
+                case 'batch':
+                    batchFilter.style.display = 'block';
+                    break;
+            }
+        }
+
+        // Update form visibility when report type changes
+        reportType.addEventListener('change', updateFormVisibility);
+
+        // Toggle email fields visibility
+        sendEmail.addEventListener('change', function () {
+            emailFields.style.display = this.checked ? 'block' : 'none';
+        });
+
+        // Add new email input
+        function addEmailInput() {
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'input-group mb-2';
+            inputGroup.innerHTML = `
+            <input type="email" class="form-control" name="email_addresses[]" placeholder="Enter email address">
+            <button type="button" class="btn btn-outline-danger remove-email">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+            emailInputsContainer.appendChild(inputGroup);
+
+            // Add remove functionality
+            const removeBtn = inputGroup.querySelector('.remove-email');
+            removeBtn.addEventListener('click', function () {
+                inputGroup.remove();
+            });
+        }
+
+        // Add email input button click handler
+        addEmailBtn.addEventListener('click', addEmailInput);
+
+        // Form validation
+        document.getElementById('reportForm').addEventListener('submit', function (e) {
+            const selectedType = reportType.value;
+            let isValid = true;
+            let errorMessage = '';
+
+            // Check required fields based on report type
+            switch (selectedType) {
+                case 'application':
+                    if (!document.getElementById('application_id').value) {
+                        isValid = false;
+                        errorMessage = 'Please select an application';
+                    }
+                    break;
+                case 'test_case':
+                    if (!document.getElementById('test_case_id').value) {
+                        isValid = false;
+                        errorMessage = 'Please select a test case';
+                    }
+                    break;
+                case 'batch':
+                    if (!document.getElementById('batch_id').value) {
+                        isValid = false;
+                        errorMessage = 'Please select a batch';
+                    }
+                    break;
+            }
+
+            // Check email fields if email sending is enabled
+            if (sendEmail.checked) {
+                const emailInputs = document.querySelectorAll('input[name="email_addresses[]"]');
+                let hasValidEmail = false;
+
+                emailInputs.forEach(input => {
+                    if (input.value.trim() !== '') {
+                        hasValidEmail = true;
+                    }
+                });
+
+                if (!hasValidEmail) {
+                    isValid = false;
+                    errorMessage = 'Please enter at least one email address';
+                }
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                alert(errorMessage);
+            }
+        });
+
+        // Initialize form visibility
+        updateFormVisibility();
+    });
+</script>
+{% endblock %}

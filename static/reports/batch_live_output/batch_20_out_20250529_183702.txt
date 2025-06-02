@@ -1,0 +1,51 @@
+BATCH_RUNNER_INFO: 2025-05-29T18:37:03.110052 - Batch runner process started.
+BATCH_RUNNER_INFO: 2025-05-29T18:37:03.110206 - PARAMS: BatchAssignmentID=20, UserID=5, DeviceID='naty', AndroidVersion='12', PasswordProvided=Yes
+BATCH_RUNNER_DEBUG: 2025-05-29T18:37:03.110235 - DYNAMIC_INPUTS_COLLECTED (first 5 keys): []
+BATCH_RUNNER_INFO: 2025-05-29T18:37:03.156655 - Resuming IN_PROGRESS Batch 20.
+BATCH_RUNNER_INFO: 2025-05-29T18:37:03.157098 - Found 2 TCs. Initial progress: 0/2 completed, 0 passed.
+BATCH_RUNNER_INFO: 2025-05-29T18:37:03.157132 - --- Starting TC 1/2: To02 (AssignmentID: 89) ---
+BATCH_RUNNER_DB_UPDATE: 2025-05-29T18:37:03.158369 - Individual Assignment 89 status set to IN_PROGRESS.
+BATCH_RUNNER_DEBUG: 2025-05-29T18:37:03.158502 - Dynamic params for TC To02: {}
+BATCH_RUNNER_INFO: 2025-05-29T18:37:03.158583 - Executing generic_runner for TC To02 (Assignment 89)
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.971275 - [TC:To02]> RUNNER_INFO: Appium generic_runner.py started.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.971314 - [TC:To02]> RUNNER_PARAMS: DeviceID='naty', AndroidVersion='12', TestCaseID='16', ExecutedByID='5', PasswordGiven='Yes', AssignmentID='89'
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.971331 - [TC:To02]> RUNNER_PARAMS: DynamicParams='{}'
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.987503 - [TC:To02]> RUNNER_INFO: Created TestExecutionID: 81 status NOT EXECUTED
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.987541 - [TC:To02]> RUNNER_INFO: Fetching steps for TestCaseID: 16
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.988005 - [TC:To02]> RUNNER_WARNING: No steps defined for TestCaseID 16.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.988052 - [TC:To02]> RUNNER_CRITICAL_ERROR: Main execution flow error: No steps defined for TestCaseID 16.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.988728 - [TC:To02]> Traceback (most recent call last):
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.988761 - [TC:To02]> File "D:\BOA\Templates\startbootstrap-sb-admin-2-gh-pages\startbootstrap-sb-admin-2-gh-pages\generic_runner.py", line 144, in main_runner
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.988773 - [TC:To02]> raise ValueError(final_log_message)
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.988783 - [TC:To02]> ValueError: No steps defined for TestCaseID 16.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.988792 - [TC:To02]> 
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.990357 - [TC:To02]> RUNNER_DB: Final TestExecutionID 81 status: FAIL. Log: No steps defined for TestCaseID 16.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.992029 - [TC:To02]> RUNNER_DB: AssignmentID 89 status updated to EXECUTED_FAIL.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.992155 - [TC:To02]> RUNNER_INFO: Database connection closed.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:03.992174 - [TC:To02]> RUNNER_INFO: generic_runner.py finished. OverallStatus: FAIL.
+BATCH_RUNNER_INFO: 2025-05-29T18:37:04.045609 - Generic_runner for TC To02 finished with exit code: 0.
+BATCH_RUNNER_DB_UPDATE: 2025-05-29T18:37:04.049829 - Batch progress: 1/2 done. Passed: 0.
+BATCH_RUNNER_INFO: 2025-05-29T18:37:04.049897 - --- Starting TC 2/2: To03 (AssignmentID: 90) ---
+BATCH_RUNNER_DB_UPDATE: 2025-05-29T18:37:04.051124 - Individual Assignment 90 status set to IN_PROGRESS.
+BATCH_RUNNER_DEBUG: 2025-05-29T18:37:04.051187 - Dynamic params for TC To03: {}
+BATCH_RUNNER_INFO: 2025-05-29T18:37:04.051279 - Executing generic_runner for TC To03 (Assignment 90)
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.586837 - [TC:To03]> RUNNER_INFO: Appium generic_runner.py started.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.586902 - [TC:To03]> RUNNER_PARAMS: DeviceID='naty', AndroidVersion='12', TestCaseID='17', ExecutedByID='5', PasswordGiven='Yes', AssignmentID='90'
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.586914 - [TC:To03]> RUNNER_PARAMS: DynamicParams='{}'
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.594819 - [TC:To03]> RUNNER_INFO: Created TestExecutionID: 82 status NOT EXECUTED
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.594864 - [TC:To03]> RUNNER_INFO: Fetching steps for TestCaseID: 17
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.595056 - [TC:To03]> RUNNER_WARNING: No steps defined for TestCaseID 17.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.595079 - [TC:To03]> RUNNER_CRITICAL_ERROR: Main execution flow error: No steps defined for TestCaseID 17.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.597930 - [TC:To03]> Traceback (most recent call last):
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.598101 - [TC:To03]> File "D:\BOA\Templates\startbootstrap-sb-admin-2-gh-pages\startbootstrap-sb-admin-2-gh-pages\generic_runner.py", line 144, in main_runner
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.598133 - [TC:To03]> raise ValueError(final_log_message)
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.598143 - [TC:To03]> ValueError: No steps defined for TestCaseID 17.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.598152 - [TC:To03]> 
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.600323 - [TC:To03]> RUNNER_DB: Final TestExecutionID 82 status: FAIL. Log: No steps defined for TestCaseID 17.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.601767 - [TC:To03]> RUNNER_DB: AssignmentID 90 status updated to EXECUTED_FAIL.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.601862 - [TC:To03]> RUNNER_INFO: Database connection closed.
+BATCH_RUNNER_RUNNER_OUT: 2025-05-29T18:37:04.601880 - [TC:To03]> RUNNER_INFO: generic_runner.py finished. OverallStatus: FAIL.
+BATCH_RUNNER_INFO: 2025-05-29T18:37:04.639007 - Generic_runner for TC To03 finished with exit code: 0.
+BATCH_RUNNER_DB_UPDATE: 2025-05-29T18:37:04.640362 - Batch progress: 2/2 done. Passed: 0.
+BATCH_RUNNER_DB_UPDATE: 2025-05-29T18:37:04.641384 - Final BatchAssignmentID 20 status: COMPLETED_FAIL. Completed: 2, Passed: 0.
+BATCH_RUNNER_INFO: 2025-05-29T18:37:04.641489 - Batch runner process finished. Overall Batch Status: COMPLETED_FAIL.

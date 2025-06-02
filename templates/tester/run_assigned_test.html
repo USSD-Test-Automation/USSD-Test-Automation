@@ -1,0 +1,471 @@
+{% extends "tester_base.html" %}
+
+{% block head_extra %}
+{{ super() }}
+<style>
+    .page-title-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #dee2e6;
+        /* Softer border */
+    }
+
+    .page-title-header h2 {
+        margin: 0;
+        font-size: 26px;
+        /* Slightly larger title */
+        font-weight: 600;
+        /* Bolder title */
+        color: #212529;
+    }
+
+    /* --- Button Styling --- */
+    .button-base {
+        /* General button style */
+        display: inline-flex;
+        /* For icon alignment */
+        align-items: center;
+        justify-content: center;
+        padding: 10px 18px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.5;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        user-select: none;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        /* Slightly more rounded */
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .button-base i {
+        /* For icons inside buttons */
+        margin-right: 6px;
+    }
+
+    .button-footer {
+        /* For footer links */
+        background-color: #6c757d;
+        color: white;
+        margin-right: 10px;
+        /* Space between footer buttons */
+    }
+
+    .button-footer:hover {
+        opacity: 0.85;
+    }
+
+
+    /* --- Form Card Styling --- */
+    .form-container-card {
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #e3e6f0;
+        /* Lighter border */
+        border-radius: 8px;
+        padding: 25px 30px;
+        /* Adjust padding */
+        margin-bottom: 30px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.12);
+        /* Subtle shadow */
+    }
+
+    /* --- Form Elements --- */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        /* Slightly less bold labels */
+        font-size: 14px;
+        color: #495057;
+    }
+
+    .form-control {
+        /* Shared by all input[type="text"], input[type="password"] */
+        display: block;
+        width: 100%;
+        height: calc(1.5em + 0.9rem + 2px);
+        /* Consistent height */
+        padding: 0.45rem 0.9rem;
+        /* Adjust padding */
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        box-sizing: border-box;
+        /* Ensure padding doesn't expand width */
+    }
+
+    .form-control:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #80bdff;
+        /* Bootstrap focus blue */
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .form-control::placeholder {
+        color: #6c757d;
+        opacity: 1;
+    }
+
+    #progressOutput {
+        background-color: #212529;
+        /* Dark background matching image */
+        color: #f8f9fa;
+        /* Light text for contrast */
+        padding: 15px 20px;
+        border-radius: 6px;
+        border: 1px solid #495057;
+        /* Darker border */
+        min-height: 250px;
+        max-height: 450px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 13px;
+        /* Common terminal font size */
+        line-height: 1.6;
+        /* Spacing for readability */
+    }
+
+    .loader {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #6c757d;
+        /* Darker spinner color */
+        border-radius: 50%;
+        width: 16px;
+        /* Slightly smaller loader */
+        height: 16px;
+        animation: spin 0.9s linear infinite;
+        display: inline-block;
+        margin-left: 8px;
+        vertical-align: middle;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    #runStatusIndicator {
+        font-size: 14px;
+        font-weight: 500;
+        color: #343a40;
+        margin-left: 10px;
+        vertical-align: middle;
+    }
+
+    #reportLinkContainer,
+    #batchActionMessage {
+        margin-top: 15px;
+        padding: 12px 15px;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    #reportLinkContainer {
+        background-color: #e9ecef;
+        /* Light gray info box */
+        border: 1px solid #ced4da;
+        color: #495057;
+        display: none;
+        /* Initially hidden by JS */
+    }
+
+    #reportLinkContainer p {
+        margin: 0;
+    }
+
+    #reportLinkContainer a {
+        color: #007bff;
+        font-weight: 500;
+    }
+
+    #batchActionMessage {
+        font-weight: bold;
+    }
+
+    .dynamic-params-heading {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .dynamic-params-heading i {
+        margin-right: 6px;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container"> {# Optional: Wrap everything for centering/max-width #}
+
+    <div class="content-card-header">
+        <h2 class="batch-title">
+            Run Test:
+            <span class="batch-subtitle">{{ assignment.Code }} - {{ assignment.Name }}</span>
+        </h2>
+
+    </div>
+
+    {% if assignment.Description or assignment.BatchAssignmentID %}
+    <div class="form-container-card"
+        style="padding: 15px 20px; margin-bottom: 20px; background-color: #f8f9fa; border-color: #e9ecef; box-shadow: none;">
+        {% if assignment.Description %}
+        <p style="margin-bottom: 5px;"><strong>Description:</strong> {{ assignment.Description }}</p>
+        {% endif %}
+        {% if assignment.BatchAssignmentID %}
+        <p style="margin-bottom: 0;"><em>This test is part of Batch Assignment ID: {{ assignment.BatchAssignmentID }}.
+                <a href="{{ url_for('run_batch_assignment_page', batch_assignment_id=assignment.BatchAssignmentID) }}">View
+                    Batch Details</a>
+            </em></p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+
+    <div class="form-container-card">
+        <form id="runTestForm">
+            <input type="hidden" id="test_case_id" name="test_case" value="{{ test_case_id }}">
+            <input type="hidden" id="assignment_id" name="assignment_id" value="{{ assignment.AssignmentID }}">
+            <input type="hidden" id="batch_assignment_id_context_holder"
+                value="{{ assignment.BatchAssignmentID if assignment.BatchAssignmentID else '' }}">
+
+            <div class="form-group">
+                <label for="device_id">Device ID:</label>
+                <input type="text" id="device_id" name="device_id" value="{{ device_id if device_id else '' }}"
+                    placeholder="R9ZR601C1BH (example)" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="android_version">Android Version:</label>
+                <input type="text" id="android_version" name="android_version"
+                    value="{{ android_version if android_version else '' }}" placeholder="12 (example)"
+                    class="form-control">
+            </div>
+
+            {% if params_for_tc %}
+            <h3 class="dynamic-params-heading"><i class="fas fa-cogs text-warning"></i>Dynamic Parameters</h3> {#
+            Assuming FontAwesome for icon #}
+            {% for param in params_for_tc %}
+            <div class="form-group">
+                <label for="{{ param.ParamName }}">{{ param.ParamName }}:</label>
+                <input type="{{ param.InpType }}" id="{{ param.ParamName }}" name="{{ param.ParamName }}" required
+                    class="form-control">
+            </div>
+            {% endfor %}
+            {% else %}
+            {# To match the image, if no params, this section is visually absent #}
+            {# <p>No dynamic parameters required for this test case.</p> #}
+            {% endif %}
+
+            <div class="form-group" style="margin-top: 25px;">
+                <button type="submit" id="runButton" class="btn-warning p-2 rounded"><i class="fas fa-play"></i> Run
+                    Test</button>
+                <span id="runStatusIndicator" style="display: none;">
+                    <div class="loader"></div> Running...
+                </span>
+            </div>
+        </form>
+    </div>
+
+
+    <h3 class="section-header"><i class="fas fa-terminal"></i> Live Output:</h3>
+    <pre id="progressOutput"></pre>
+
+    <div id="reportLinkContainer"></div>
+    <div id="batchActionMessage"></div>
+
+    <div class="footer-actions">
+        <p>
+            <a href="{{ url_for('tester_dashboard') }}" class="btn btn-secondary rounded p-2"><i
+                    class="fas fa-arrow-left"></i> Back to My Dashboard</a>
+            {% if assignment.BatchAssignmentID %}
+            <a href="{{ url_for('run_batch_assignment_page', batch_assignment_id=assignment.BatchAssignmentID) }}"
+                class="button-base button-footer info"><i class="fas fa-arrow-left"></i> Back to Batch Details</a>
+            {% endif %}
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{# Your JavaScript from the previous response (which is the same as in this request) goes here #}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const runTestForm = document.getElementById('runTestForm');
+        const progressOutput = document.getElementById('progressOutput');
+        const reportLinkContainer = document.getElementById('reportLinkContainer');
+        const batchActionMessage = document.getElementById('batchActionMessage');
+        const runButton = document.getElementById('runButton');
+        const runStatusIndicator = document.getElementById('runStatusIndicator');
+        // const stopButton = document.getElementById('stopButton');
+
+        const batchAssignmentIdContextHolder = document.getElementById('batch_assignment_id_context_holder');
+        const currentIndividualAssignmentId = "{{ assignment.AssignmentID }}";
+
+
+        let pollInterval;
+
+        function pollProgress() {
+            fetch("{{ url_for('get_progress') }}")
+                .then(response => response.json())
+                .then(data => {
+                    progressOutput.textContent = data.output;
+                    progressOutput.scrollTop = progressOutput.scrollHeight; // Autoscroll
+
+                    if (data.error) {
+                        progressOutput.textContent += "\n\nCLIENT-SIDE POLLING ERROR: " + data.error;
+                    }
+
+                    if (!data.running) {
+                        clearInterval(pollInterval);
+                        runButton.disabled = false;
+                        runButton.style.display = 'inline-flex'; // For icon alignment
+                        runStatusIndicator.style.display = 'none';
+                        runButton.innerHTML = '<i class="fas fa-redo"></i> Run Test Again'; // JS now aligns with button-base + icon
+                        // stopButton.style.display = 'none';
+
+                        reportLinkContainer.style.display = 'block'; // Show report container
+                        if (data.report_path) {
+                            if (data.report_path.toLowerCase().startsWith('http://') || data.report_path.toLowerCase().startsWith('https://') || data.report_path.toLowerCase().startsWith('file:///')) {
+                                reportLinkContainer.innerHTML = `<p><strong>Test Finished.</strong> Report available at: <a href="${data.report_path}" target="_blank">${data.report_path}</a></p>`;
+                            } else if (data.report_path.includes("failed") || data.report_path.includes("error") || data.report_path.includes("No report path")) {
+                                reportLinkContainer.innerHTML = `<p><strong>Test Finished with issues.</strong> Status: ${data.report_path}</p>`;
+                            } else {
+                                reportLinkContainer.innerHTML = `<p><strong>Test Finished.</strong> Report path (may be local to server): ${data.report_path}</p>`;
+                            }
+                        } else {
+                            reportLinkContainer.innerHTML = "<p><strong>Test Finished.</strong> No report path provided by the runner.</p>";
+                        }
+
+                        // --- BATCH PROGRESSION LOGIC ---
+                        const finishedAssignmentId = data.current_assignment_id;
+                        const batchIdForFinishedTest = data.current_batch_assignment_id;
+
+                        console.log("Poll Progress - Test Finished. Finished Assignment ID:", finishedAssignmentId, "Batch ID for this test:", batchIdForFinishedTest);
+
+                        if (batchIdForFinishedTest && finishedAssignmentId && parseInt(finishedAssignmentId) === parseInt(currentIndividualAssignmentId)) {
+                            batchActionMessage.innerHTML = `Test completed. Checking for next step in Batch ${batchIdForFinishedTest}... <div class="loader"></div>`;
+
+                            fetch("{{ url_for('start_batch_run') }}", {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ batch_assignment_id: batchIdForFinishedTest })
+                            })
+                                .then(resp => resp.json())
+                                .then(batchData => {
+                                    if (batchData.status === 'next_test') {
+                                        batchActionMessage.innerHTML = `Redirecting to next test (Assignment ID: ${batchData.next_assignment_id}) in batch...`;
+                                        window.location.href = batchData.next_test_page_url;
+                                    } else if (batchData.status === 'batch_complete') {
+                                        batchActionMessage.innerHTML = `<strong>Batch ${batchIdForFinishedTest} Complete!</strong> Final Status: ${batchData.final_status}. 
+                                                                 <a href="{{ url_for('run_batch_assignment_page', batch_assignment_id=0) }}".replace('0', batchIdForFinishedTest)>View Batch Summary</a> | 
+                                                                 <a href="{{ url_for('tester_dashboard') }}">Return to Dashboard</a>`;
+                                        runButton.innerHTML = '<i class="fas fa-check-circle"></i> Batch Completed'; // JS now aligns with button-base + icon
+                                        runButton.disabled = true;
+                                    } else {
+                                        batchActionMessage.textContent = `Could not proceed with batch: ${batchData.message || 'Unknown error'}. Check dashboard.`;
+                                        console.error("Batch progression error:", batchData);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error('Error triggering next batch step:', err);
+                                    batchActionMessage.textContent = `Error advancing batch: ${err.message}. Please check your dashboard.`;
+                                });
+                        } else {
+                            console.log("Test finished. Not part of an auto-advancing batch sequence from this page, or finished test ID mismatch.");
+                            if (batchIdForFinishedTest && finishedAssignmentId && parseInt(finishedAssignmentId) !== parseInt(currentIndividualAssignmentId)) {
+                                console.warn("Mismatch: Page assignment ID is", currentIndividualAssignmentId, "but finished assignment ID from poll is", finishedAssignmentId);
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Polling error:', error);
+                    progressOutput.textContent += "\n\nCLIENT-SIDE POLLING ERROR: " + error;
+                });
+        }
+
+        runTestForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            progressOutput.textContent = 'Attempting to start test...\n';
+            reportLinkContainer.innerHTML = '';
+            reportLinkContainer.style.display = 'none'; // Hide on new run
+            batchActionMessage.textContent = '';
+            runButton.disabled = true;
+            runButton.style.display = 'none';
+            runStatusIndicator.style.display = 'inline-flex'; // For alignment
+
+            const formData = new FormData(this);
+            const dataToSubmit = {};
+            formData.forEach((value, key) => { dataToSubmit[key] = value; });
+
+            console.log("Submitting data for run_test:", dataToSubmit);
+
+            fetch("{{ url_for('run_test') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToSubmit)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.message || `Server error: ${response.status} ${response.statusText}`);
+                        }).catch(() => {
+                            throw new Error(`Server error: ${response.status} ${response.statusText}. Could not parse error details.`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.status === 'started') {
+                        progressOutput.textContent += `Test process initiated. Output file on server: ${result.output_file}\nMonitoring progress...\n\n`;
+                        pollInterval = setInterval(pollProgress, 2500);
+                    } else {
+                        progressOutput.textContent += 'Error starting test: ' + (result.message || 'Unknown error from server.');
+                        runButton.disabled = false;
+                        runButton.style.display = 'inline-flex';
+                        runStatusIndicator.style.display = 'none';
+                        runButton.innerHTML = '<i class="fas fa-play"></i> Run Test'; // JS now aligns with button-base + icon
+                    }
+                })
+                .catch(error => {
+                    console.error('Error submitting test run:', error);
+                    progressOutput.textContent += 'Failed to start test run: ' + error.message;
+                    runButton.disabled = false;
+                    runButton.style.display = 'inline-flex';
+                    runStatusIndicator.style.display = 'none';
+                    runButton.innerHTML = '<i class="fas fa-play"></i> Run Test'; // JS now aligns with button-base + icon
+                });
+        });
+    });
+</script>
+{% endblock %}

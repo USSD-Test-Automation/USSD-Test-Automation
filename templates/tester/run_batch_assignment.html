@@ -1,0 +1,617 @@
+{% extends "tester_base.html" %}
+
+{% block content_header %}
+
+{% endblock %}
+
+{% block head_extra %}
+{{ super() }}
+<style>
+    /* --- General Section & Card Styling --- */
+
+    .page-container {
+        max-width: 960px;
+        margin: 100px;
+    }
+
+    .section-header {
+        font-size: 1.3em;
+        color: #333;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e9ecef;
+        margin-top: 25px;
+    }
+
+    .section-header:first-of-type {
+        margin-top: 0;
+    }
+
+    .section-header i {
+        margin-right: 8px;
+        color: #f7b731;
+    }
+
+    /* --- Summary Details Styling --- */
+    .summary-details-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 20px 0;
+    }
+
+    .summary-details-list li {
+        padding: 6px 0;
+        border-bottom: 1px solid #f1f3f5;
+        display: flex;
+        font-size: 0.95em;
+        align-items: center;
+    }
+
+    .summary-details-list li:last-child {
+        border-bottom: none;
+    }
+
+    .summary-details-list strong {
+        min-width: 100px;
+        display: inline-block;
+        color: #343a40;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+
+    .summary-details-list span.value-text {
+        color: #495057;
+    }
+
+    .notes-item-value {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+
+    /* --- Progress Bar Styling --- */
+    .batch-progress-bar-container {
+        width: 100%;
+        background-color: #e9ecef;
+        border-radius: .375rem;
+        margin: 15px 0 5px 0;
+        overflow: hidden;
+        border: 1px solid #ced4da;
+    }
+
+    #batchProgressBar {
+        height: 24px;
+        line-height: 24px;
+        text-align: center;
+        font-weight: 600;
+        color: #fff;
+        background-color: #f7b731;
+        /* Theme accent */
+        width: 0%;
+        /* Initial width */
+        transition: width .4s ease;
+        font-size: 0.9em;
+    }
+
+    #batchProgressText {
+        font-size: 0.9em;
+        color: #495057;
+        margin-bottom: 20px;
+    }
+
+    /* --- Form & Input Section Styling --- */
+    .input-section-card {
+        /* Replaces .input-section, uses card styling */
+        margin-bottom: 25px;
+        /* Inherits .content-card styles if nested or apply similar directly */
+    }
+
+    .input-section-card h4,
+    .input-section-card h5 {
+        /* Sub-headers within form card */
+        font-size: 1.1em;
+        color: #343a40;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .input-section-card h4:first-of-type,
+    .input-section-card h5:first-of-type {
+        margin-top: 0;
+    }
+
+    /* form-group, form-label, form-control from base.html */
+
+    /* --- Live Output Styling --- */
+    #liveBatchOutput {
+        background-color: #2d2d2d;
+        color: #d4d4d4;
+        padding: 15px;
+        border-radius: 6px;
+        border: 1px solid #444;
+        min-height: 150px;
+        max-height: 350px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family: monospace;
+        font-size: 0.88em;
+        line-height: 1.5;
+        margin-top: 5px;
+    }
+
+    /* --- Loader and Status/Report Messages --- */
+    .loader {
+        border: 3px solid #f0f0f0;
+        border-top: 3px solid #f7b731;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        animation: spin 0.8s linear infinite;
+        display: inline-block;
+        margin-left: 8px;
+        vertical-align: middle;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    #batchSubmitStatus {
+        font-weight: 500;
+        color: #333;
+        margin-left: 10px;
+    }
+
+    #batchReportLinkContainer p {
+        font-size: 0.95em;
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 6px;
+        background-color: #e6f7ff;
+        border: 1px solid #b3e0ff;
+        color: #004085;
+    }
+
+    #batchReportLinkContainer p a {
+        color: #0056b3;
+        font-weight: 600;
+    }
+
+    /* --- Individual Test Case List Styling --- */
+    #individualTestsContainer {
+        margin-top: 10px;
+    }
+
+    .test-case-item {
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        border: 1px solid #e0e0e0;
+        background-color: #fff;
+        font-size: 0.9em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .test-case-item strong {
+        color: #343a40;
+    }
+
+    /* Status coloring for individual TC items */
+    .test-case-item.status-pending {
+        border-left: 4px solid #007bff;
+    }
+
+    .test-case-item.status-in_progress {
+        border-left: 4px solid #17a2b8;
+    }
+
+    .test-case-item.status-completed_pass {
+        border-left: 4px solid #28a745;
+    }
+
+    .test-case-item.status-completed_fail {
+        border-left: 4px solid #dc3545;
+    }
+
+    .test-case-item.status-cancelled {
+        border-left: 4px solid #6c757d;
+    }
+
+    .test-case-item.status-unknown {
+        border-left: 4px solid #ced4da;
+    }
+
+    .test-case-item .tc-status {
+        font-weight: 600;
+    }
+
+    /* Span for individual TC status */
+
+    /* Priority Badge */
+    .priority-badge {
+        /* Defined in tester_dashboard.html, ensure consistency or move to base */
+        display: inline-block;
+        padding: 0.35em 0.65em;
+        font-size: .75em;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .375rem;
+        text-transform: uppercase;
+    }
+
+    .priority-high {
+        background-color: #dc3545;
+    }
+
+    .priority-medium {
+        background-color: #ffc107;
+        color: white
+    }
+
+    .priority-low {
+        background-color: #28a745;
+    }
+
+    .priority-unknown {
+        background-color: #6c757d;
+    }
+
+    /* No Data Message */
+    .no-data-message {
+        /* Defined earlier, ensure consistency or move to base */
+        text-align: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border: 1px dashed #ced4da;
+        border-radius: 6px;
+        margin-top: 10px;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-card">
+
+    {% include '_messages.html' %}
+
+    <!-- 3. Top Header Section -->
+    <div class="content-card-header">
+        {% if batch_assignment %}
+        <h2 class="batch-title">
+            Batch:
+            <span class="batch-subtitle">{{ batch_assignment.ReferenceName }}</span>
+        </h2>
+        {% else %}
+        <h2 class="batch-title">Run Batch Assignment</h2>
+        {% endif %}
+        <a href="{{ url_for('tester_dashboard') }}" class="btn btn-secondary back-button">
+            <i class="fas fa-arrow-left"></i> My Dashboard
+        </a>
+    </div>
+
+
+    <!-- Batch Assignment Summary -->
+    {% if batch_assignment %}
+    <ul class="summary-details-list">
+        <li><strong>Type:</strong> <span class="value-text">{{ batch_assignment.AssignmentType | capitalize }}</span>
+        </li>
+        <li><strong>Priority:</strong>
+            <span
+                class="priority-badge priority-{{ batch_assignment.Priority.lower() if batch_assignment.Priority else 'unknown' }}">
+                {{ batch_assignment.Priority | capitalize if batch_assignment.Priority else 'N/A' }}
+            </span>
+        </li>
+        <li><strong>Overall Status:</strong>
+            <span id="batchOverallStatus" class="value-text" style="font-weight:bold;">
+                {{ batch_assignment.Status | replace('_', ' ') | title }}
+            </span>
+        </li>
+        {% if batch_assignment.Notes %}
+        <li class="notes-item">
+            <strong>Notes:</strong>
+            <span class="value-text notes-item-value">{{ batch_assignment.Notes }}</span>
+        </li>
+        {% endif %}
+    </ul>
+
+    <!-- Progress -->
+    <div class="batch-progress-bar-container">
+        <div id="batchProgressBar" class="batch-progress-bar">0%</div>
+    </div>
+    <p id="batchProgressText">
+        Progress: {{ batch_assignment.CompletedTestCases }} / {{ batch_assignment.TotalTestCases }} test cases
+        completed.
+    </p>
+
+    <!-- Input Form -->
+    {% if batch_assignment.Status in ['PENDING', 'IN_PROGRESS'] %}
+    <form id="runBatchForm" class="input-section-card">
+        <input type="hidden" name="batch_assignment_id" value="{{ batch_assignment.BatchAssignmentID }}">
+
+        <h4><i class="fas fa-cogs text-warning"></i> General Inputs for Batch</h4>
+
+        <div class="form-group">
+            <label for="device_id" class="form-label">Device ID:</label>
+            <input type="text" id="device_id" name="device_id" value="{{ device_id if device_id else '' }}"
+                placeholder="Auto-detected or enter manually" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="android_version" class="form-label">Android Version:</label>
+            <input type="text" id="android_version" name="android_version"
+                value="{{ android_version if android_version else '' }}" placeholder="Auto-detected or enter manually"
+                class="form-control" required>
+        </div>
+
+        <!-- <div class="form-group">
+                <label for="password" class="form-label">Device Password (if any test requires it):</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Enter device password">
+            </div> -->
+
+        {% if dynamic_params_info.COMMON %}
+        <h5><i class="fas fa-sliders-h text-warning"></i> Common Dynamic Inputs:</h5>
+            {% for param_name, label_text in dynamic_params_info.COMMON.items() %}
+            <div class="form-group">
+                <label for="common_param_{{ param_name }}" class="form-label">{{param_name}}:</label>
+                <input type="{{ label_text.InpType }}" id="common_param_{{ param_name }}"
+                    name="dynamic_input__{{ param_name }}" class="form-control" required>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if dynamic_params_info.TEST_CASE_SPECIFIC %}
+        <h4><i class="fas fa-tasks text-warning "></i> Test Case Specific Dynamic Inputs:</h4>
+        {% for tc_key, tc_data in dynamic_params_info.TEST_CASE_SPECIFIC.items() %}
+            {% if tc_data.params %}
+                <div class="input-section-card">
+                    <h5>For: {{ tc_data.code }} - {{ tc_data.name }}</h5>
+                    {% for param_name, label_text in tc_data.params.items() %}
+                        <div class="form-group">
+                            <label for="tc_param_{{ tc_data.id }}_{{ param_name }}" class="form-label">{{param_name}}:</label>
+                            <input type="{{ label_text.InpType }}" id="tc_param_{{ tc_data.id }}_{{ param_name }}"
+                                name="dynamic_input__TC_{{ tc_data.id }}__{{ param_name }}" class="form-control" required>
+                        </div>
+                   {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% elif not dynamic_params_info.COMMON %}
+        <p style="font-size:0.9em; color:#6c757d; margin-top:15px;">
+            <em>No dynamic parameters seem to be required for this batch.</em>
+        </p>
+        {% endif %}
+
+        <div class="form-group" style="margin-top: 30px; padding-top:20px; border-top:1px solid #eee;">
+            <button type="submit" id="executeBatchButton" class="button">
+                <i class="fas fa-play-circle"></i>
+                {% if batch_assignment.Status == 'PENDING' %}Execute Batch{% else %}Resume/Re-run Batch{% endif %}
+            </button>
+            <span id="batchSubmitStatus"></span>
+        </div>
+    </form>
+    {% else %}
+    <div class="no-data-message" style="margin-top:25px;">
+        <i class="fas fa-info-circle"></i>
+        <p>This batch is <strong>{{ batch_assignment.Status | replace('_', ' ') | title }}</strong>. Input form is not
+            available.</p>
+    </div>
+    {% endif %}
+
+    <!-- Live Output -->
+    <h3 class="section-header"><i class="fas fa-terminal"></i> Live Batch Output:</h3>
+    <pre id="liveBatchOutput"></pre>
+    <div id="batchReportLinkContainer"></div>
+
+    <!-- Individual Tests -->
+    <h3 class="section-header"><i class="fas fa-clipboard-list"></i> Test Cases in Batch:</h3>
+    {% if individual_tests %}
+    <div id="individualTestsContainer">
+        {% for tc_assign in individual_tests %}
+        <div class="test-case-item status-{{ tc_assign.Status.lower().replace(' ', '_').replace('/', '_') if tc_assign.Status else 'unknown' }}"
+            id="tc-assign-{{ tc_assign.AssignmentID }}">
+            <span><strong>{{ tc_assign.Code }}</strong> - {{ tc_assign.Name }}</span>
+            <span class="tc-status tc-status-{{ tc_assign.AssignmentID }}">Status: {{ tc_assign.Status | replace('_', '') | title if tc_assign.Status else 'Unknown' }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-data-message">
+        <i class="fas fa-info-circle"></i>
+        <p>No individual test cases listed for this batch assignment.</p>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="no-data-message">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Batch assignment details not found.</p>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{# Your existing JavaScript block remains unchanged - only adding icons to button text potentially #}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const runBatchForm = document.getElementById('runBatchForm');
+        const executeBatchButton = document.getElementById('executeBatchButton');
+        const batchSubmitStatus = document.getElementById('batchSubmitStatus');
+        const liveBatchOutput = document.getElementById('liveBatchOutput');
+        const batchReportLinkContainer = document.getElementById('batchReportLinkContainer');
+
+        const batchProgressBar = document.getElementById('batchProgressBar');
+        const batchProgressText = document.getElementById('batchProgressText');
+        const batchOverallStatusEl = document.getElementById('batchOverallStatus');
+
+        const currentBatchAssignmentId = {{ batch_assignment.BatchAssignmentID if batch_assignment else 'null' }};
+        let totalTestCasesInBatch = {{ batch_assignment.TotalTestCases or 0 if batch_assignment else 0 }};
+        let completedTestCasesInBatch = {{ batch_assignment.CompletedTestCases or 0 if batch_assignment else 0 }};
+    // let passedTestCasesInBatch = {{ batch_assignment.PassedTestCases or 0 if batch_assignment else 0 }}; // Not directly used by updateBatchProgressUI's text
+
+    let batchPollInterval;
+
+    function updateBatchProgressUI(data) {
+        if (!batchProgressBar || !batchProgressText || !batchOverallStatusEl) return; // Elements not found
+
+        if (data.total_test_cases !== undefined) totalTestCasesInBatch = data.total_test_cases;
+        if (data.completed_test_cases !== undefined) completedTestCasesInBatch = data.completed_test_cases;
+        // if (data.passed_test_cases !== undefined) passedTestCasesInBatch = data.passed_test_cases; // Store if needed elsewhere
+        if (data.overall_status) batchOverallStatusEl.textContent = data.overall_status.replace(/_/g, ' ').toUpperCase();
+
+
+        let progressPercent = 0;
+        if (totalTestCasesInBatch > 0) {
+            progressPercent = (completedTestCasesInBatch / totalTestCasesInBatch) * 100;
+        }
+        batchProgressBar.style.width = progressPercent.toFixed(2) + '%';
+        batchProgressBar.textContent = progressPercent.toFixed(0) + '%';
+        batchProgressText.textContent = `Progress: ${completedTestCasesInBatch} / ${totalTestCasesInBatch} TC(s) completed.`;
+
+        if (data.individual_tc_statuses) {
+            for (const assignId in data.individual_tc_statuses) {
+                const statusEl = document.querySelector(`.tc-status-${assignId}`);
+                if (statusEl) {
+                    statusEl.textContent = "Status: " + data.individual_tc_statuses[assignId].replace(/_/g, ' ').toUpperCase();
+                    const itemEl = document.getElementById(`tc-assign-${assignId}`);
+                    if(itemEl) {
+                        itemEl.className = 'test-case-item status-' + data.individual_tc_statuses[assignId].toLowerCase().replace(/ /g, '_').replace(/\//g, '_');
+                    }
+                }
+            }
+        }
+    }
+
+    if (currentBatchAssignmentId) { // Only proceed if batch_assignment exists
+        updateBatchProgressUI({
+            completed_test_cases: completedTestCasesInBatch,
+            total_test_cases: totalTestCasesInBatch,
+            overall_status: "{{ batch_assignment.Status if batch_assignment else '' }}"
+        });
+    }
+
+
+    function pollBatchProgress() {
+        if (!currentBatchAssignmentId) return;
+        fetch(`{{ url_for('get_batch_progress', batch_assignment_id=0) }}`.replace('0', currentBatchAssignmentId))
+            .then(response => response.json())
+            .then(data => {
+                if(liveBatchOutput) liveBatchOutput.textContent = data.live_output || "Waiting for output...";
+                if(liveBatchOutput) liveBatchOutput.scrollTop = liveBatchOutput.scrollHeight;
+                updateBatchProgressUI(data);
+
+                if (data.error) {
+                    if(liveBatchOutput) liveBatchOutput.textContent += "\n\nPOLLING ERROR: " + data.error;
+                }
+
+                if (!data.is_running) {
+                    clearInterval(batchPollInterval);
+                    if (executeBatchButton) {
+                        executeBatchButton.disabled = false;
+                        executeBatchButton.innerHTML = '<i class="fas fa-redo"></i> Re-run Batch';
+                    }
+                    if(batchSubmitStatus) batchSubmitStatus.innerHTML = `<strong>Batch processing finished.</strong> Status: ${data.overall_status || 'Unknown'}`;
+                    if (data.report_path_summary && batchReportLinkContainer) {
+                        batchReportLinkContainer.innerHTML = `<p>Batch Summary Report: <a href="${data.report_path_summary}" target="_blank">${data.report_path_summary}</a></p>`;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Batch polling error:', error);
+                if(liveBatchOutput) liveBatchOutput.textContent += "\n\nError polling for batch progress: " + error;
+            });
+    }
+
+
+    if (runBatchForm && executeBatchButton) {
+        runBatchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            executeBatchButton.disabled = true;
+            executeBatchButton.innerHTML = 'Executing Batch <div class="loader"></div>';
+            if(batchSubmitStatus) batchSubmitStatus.textContent = 'Submitting batch for execution...';
+            if(liveBatchOutput) liveBatchOutput.textContent = 'Batch submitted. Waiting for runner to start...\n';
+            if(batchReportLinkContainer) batchReportLinkContainer.innerHTML = '';
+
+            const formData = new FormData(this);
+            const dataToSubmit = {
+                batch_assignment_id: currentBatchAssignmentId,
+                device_id: formData.get('device_id'),
+                android_version: formData.get('android_version'),
+                // password: formData.get('password'),
+                dynamic_inputs: {}
+            };
+
+            for (let [key, value] of formData.entries()) {
+                if (key.startsWith('dynamic_input__')) {
+                    dataToSubmit.dynamic_inputs[key.substring('dynamic_input__'.length)] = value;
+                }
+            }
+            
+            console.log("Submitting data for execute_batch:", JSON.stringify(dataToSubmit, null, 2));
+
+            fetch("{{ url_for('execute_batch') }}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataToSubmit)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.message || `Server error ${response.status}`) });
+                }
+                return response.json();
+            })
+            .then(result => {
+                if (result.status === 'batch_execution_started') {
+                    if(batchSubmitStatus) batchSubmitStatus.textContent = 'Batch execution started. Monitoring progress...';
+                    if(liveBatchOutput) liveBatchOutput.textContent += `Batch runner process initiated for Batch ID ${currentBatchAssignmentId}.\n`;
+                    if (batchPollInterval) clearInterval(batchPollInterval);
+                    batchPollInterval = setInterval(pollBatchProgress, 3000);
+                } else {
+                    if(batchSubmitStatus) batchSubmitStatus.textContent = 'Error starting batch: ' + (result.message || 'Unknown error');
+                    executeBatchButton.disabled = false;
+                    executeBatchButton.innerHTML = `<i class="fas fa-play-circle"></i> {% if batch_assignment.Status == 'PENDING' %}Execute Batch{% else %}Resume/Re-run Batch{% endif %}`;
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting batch execution:', error);
+                if(batchSubmitStatus) batchSubmitStatus.textContent = 'Failed to start batch execution: ' + error.message;
+                executeBatchButton.disabled = false;
+                executeBatchButton.innerHTML = `<i class="fas fa-play-circle"></i> {% if batch_assignment.Status == 'PENDING' %}Execute Batch{% else %}Resume/Re-run Batch{% endif %}`;
+            });
+        });
+    }
+
+    if (currentBatchAssignmentId && "{{batch_assignment.Status if batch_assignment else ''}}" === "IN_PROGRESS") {
+        if (executeBatchButton) {
+            executeBatchButton.innerHTML = 'Batch Running... <div class="loader"></div>';
+            executeBatchButton.disabled = true;
+        }
+        if(batchSubmitStatus) batchSubmitStatus.textContent = 'Batch is currently in progress. Monitoring...';
+        if (batchPollInterval) clearInterval(batchPollInterval);
+        batchPollInterval = setInterval(pollBatchProgress, 3000);
+        pollBatchProgress();
+    } else if (!currentBatchAssignmentId && document.querySelector('.no-data-message')) {
+         console.log("Run batch form not found, likely batch assignment details were not loaded.");
+    }
+
+});
+</script>
+{% endblock %}

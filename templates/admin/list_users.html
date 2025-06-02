@@ -1,0 +1,71 @@
+{% extends "admin_base.html" %}
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="dashboard-card shadow-sm p-4 mb-5 bg-white rounded">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-header"><i class="fas fa-users"></i> Manage Users</h2>
+        <a href="{{ url_for('create_user') }}" class="btn btn-warning shadow-sm">
+            <i class="fas fa-user-plus mr-1"></i> Create New User
+        </a>
+    </div>
+
+    {% include '_messages.html' %}
+
+    {% if users %}
+    <div class="table-responsive">
+        <table class="table dashboard-table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>UserID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user_item in users %}
+                <tr>
+                    <td>{{ user_item.id }}</td>
+                    <td>{{ user_item.username }}</td>
+                    <td>{{ user_item.role | capitalize }}</td>
+                    <td>
+                        {% if user_item.is_active %}
+                        <span class="badge badge-success p-2">Active</span>
+                        {% else %}
+                        <span class="badge badge-secondary p-2">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="{{ url_for('edit_user', user_id=user_item.id) }}" class="btn btn-sm btn-info" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            {% if user_item.id != current_user.id %}
+                                {% if user_item.is_active %}
+                                <form action="{{ url_for('deactivate_user', user_id=user_item.id) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-warning" title="Deactivate">
+                                        <i class="fas fa-user-slash"></i>
+                                    </button>
+                                </form>
+                                {% else %}
+                                <form action="{{ url_for('activate_user', user_id=user_item.id) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-success" title="Activate">
+                                        <i class="fas fa-user-check"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">No users found.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,197 @@
+{% if user_role == 'admin' %}
+{% extends "admin_base.html" %}
+{% elif user_role == 'manager' %}
+{% extends "manager_base.html" %}
+{% else %}
+{% extends "tester_base.html" %}
+{% endif %}
+
+{% block head_extra %}
+{{ super() }}
+<style>
+    .card-section {
+        margin-bottom: 30px;
+    }
+
+    .card-section h3 {
+        font-size: 1.25rem;
+        /* color: #4e73df; */
+        border-bottom: 2px solid #e3e6f0;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .summary-details p {
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+    }
+
+    .summary-details strong {
+        min-width: 180px;
+        display: inline-block;
+        color: #5a5c69;
+    }
+
+    .status-PASS,
+    .status-EXECUTED_PASS {
+        color: #1cc88a;
+        font-weight: 600;
+    }
+
+    .status-FAIL,
+    .status-EXECUTED_FAIL {
+        color: #e74a3b;
+        font-weight: 600;
+    }
+
+    .status-PENDING,
+    .status-IN_PROGRESS {
+        color: #36b9cc;
+        font-weight: 600;
+    }
+
+    .status-NOT_EXECUTED,
+    .status-CANCELLED {
+        color: #858796;
+        font-weight: 600;
+    }
+
+    .btn-view-tc-details {
+        background-color: #4e73df;
+        color: #fff;
+        padding: 4px 10px;
+        font-size: 0.8rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.2s;
+    }
+
+    .btn-view-tc-details:hover {
+        background-color: #2e59d9;
+        color: white;
+    }
+
+    .back-link {
+        background-color: #6c757d;
+        color: #fff;
+        padding: 6px 14px;
+        font-size: 0.9rem;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        background-color: #5a6268;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- <p>
+        <a href="{{ url_for('test_results_overview') }}" class="back-link">« Back to All Results</a>
+    </p> -->
+
+
+
+
+    {% if batch %}
+    <div class="card shadow card-section">
+        <div class="card-body">
+            <div class="row align-items-center mb-4 ">
+                <div class="col-12 col-md-6">
+                    <h2 class="section-header  mb-2 mb-md-0">Batch Execution Details</h2>
+                </div>
+                <div class="col-12 col-md-6 text-md-right">
+                    <a href="{{ url_for('test_results_overview') }}" class="btn btn-warning shadow-sm">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to All Results
+                    </a>
+                </div>
+            </div>
+            <h3 class="text-gray-800">Batch Summary</h3>
+            <div class="summary-details">
+                <p><strong>Batch ID:</strong> {{ batch.BatchAssignmentID }}</p>
+                <p><strong>Batch Type:</strong> {{ batch.AssignmentType | capitalize }}</p>
+                <p><strong>Assigned To:</strong> {{ batch.AssignedToUsername }}</p>
+                <p><strong>Assigned By:</strong> {{ batch.AssignedByUsername }}</p>
+                <p><strong>Assignment Date:</strong> {{ batch.AssignmentDate.strftime('%Y-%m-%d %H:%M') if
+                    batch.AssignmentDate else 'N/A' }}</p>
+                <p><strong>Priority:</strong> {{ batch.Priority | capitalize }}</p>
+                <p><strong>Overall Batch Status:</strong> <span class="status-{{ batch.Status }}">{{ batch.Status |
+                        replace('_', ' ') | title }}</span></p>
+                <p><strong>Total Test Cases:</strong> {{ batch.TotalTestCases }}</p>
+                <p><strong>Completed Test Cases:</strong> {{ batch.CompletedTestCases }}</p>
+                <p><strong>Passed Test Cases:</strong> {{ batch.PassedTestCases }}</p>
+                {% if batch.TotalTestCases > 0 and batch.CompletedTestCases > 0 %}
+                <p><strong>Pass Rate (of completed):</strong>
+                    {{ (batch.PassedTestCases / batch.CompletedTestCases * 100) | round(1) }}%
+                </p>
+                {% endif %}
+                {% if batch.Notes %}
+                <p><strong>Notes:</strong> {{ batch.Notes }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow card-section mt-4">
+        <div class="card-body">
+            <h3 class="section-header">Individual Test Case Executions</h3>
+            {% if executions %}
+
+            <div class="table-responsive">
+                <table class="table dashboard-table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>TC Code</th>
+                            <th>TC Name</th>
+                            <th>Individual Status</th>
+                            <th>Execution Time</th>
+                            <th>Execution Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for exec in executions %}
+                        <tr>
+                            <td>{{ exec.TestCaseCode }}</td>
+                            <td>{{ exec.TestCaseName }}</td>
+                            <td><span class="status-{{ exec.IndividualAssignmentStatus }}">{{
+                                    exec.IndividualAssignmentStatus | replace('_', ' ') | title }}</span>
+                            </td>
+                            <td>{{ exec.ExecutionTime.strftime('%Y-%m-%d %H:%M:%S') if exec.ExecutionTime
+                                else 'N/A' }}
+                            </td>
+                            <td>
+                                {% if exec.ExecutionID %}
+                                <span class="status-{{ exec.OverallStatus }}">{{ exec.OverallStatus
+                                    }}</span>
+                                {% else %}
+                                Not Executed Yet
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if exec.ExecutionID %}
+                                <a href="{{ url_for('execution_detail', execution_id=exec.ExecutionID) }}"
+                                    class="btn btn-warning">View TC Run</a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No individual test case executions found recorded for this batch run yet.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <p class="text-danger">Batch details not found.</p>
+    {% endif %}
+</div>
+{% endblock %}

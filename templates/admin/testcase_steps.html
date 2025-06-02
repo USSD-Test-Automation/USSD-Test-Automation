@@ -1,0 +1,74 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Steps for {{ testcase.Name }}{% endblock %}
+
+{% block head_extra %}
+{{ super() }}
+<style>
+    .step-card {
+        border-left: 5px solid #4e73df;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+    .step-card:hover {
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header strong {
+        color: #4e73df;
+    }
+
+    .edit-btn {
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="row align-items-center mb-4">
+        <div class="col-12 col-md-6">
+            <h1 class="h3 text-gray-800 mb-2 mb-md-0">Steps for: {{ testcase.Name }}</h1>
+            {% include '_messages.html' %} 
+        </div>
+
+        <div class="col-12 col-md-6 text-md-right">
+            <a href="{{ url_for('test_cases') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Test Cases
+            </a>
+        </div>
+    </div>
+
+    {% if steps %}
+        <div class="row">
+            {% for step in steps %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <div class="card step-card shadow-sm h-100">
+                        <div class="card-header">
+                            <strong>Step {{ step.StepOrder }}</strong>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Input:</strong> {{ step.Input }}</p>
+                            <p><strong>Expected Response:</strong> {{ step.ExpectedResponse }}</p>
+                            <p><strong>Param Name:</strong> {{ step.ParamName or 'None' }}</p>
+                            <p><strong>Input Field Type:</strong> {{ step.InputType }}</p>
+                            <p><strong>Input Type:</strong> {{ step.InpType }}</p>
+                            <a href="{{ url_for('edit_testcase_step', step_id=step.StepID) }}" class="btn btn-md btn-warning edit-btn">
+                                <i class="fas fa-edit"></i> Edit Step
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+      {% else %}
+            <div class="alert alert-warning text-center">
+                 This test case doesn't have any steps yet.<br>
+                <a href="{{ url_for('create_testcase', testcase_id=testcase.TestCaseID) }}" class="btn btn-sm btn-warning mt-2">
+                    <i class="fas fa-plus-circle"></i> Add Steps Now
+                </a>
+            </div>
+      {% endif %}
+</div>
+{% endblock %}

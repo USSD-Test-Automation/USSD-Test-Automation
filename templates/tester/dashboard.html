@@ -1,0 +1,221 @@
+{% extends "tester_base.html" %}
+
+{% block head_extra %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h1 class="mb-4 dashboard-title">Tester Dashboard</h1>
+
+    <!-- Batch Assignments Section -->
+    <div class="dashboard-card shadow-sm p-4 mb-5 bg-white rounded">
+        
+        <h2 class="section-header"><i class="fas fa-layer-group"></i> My Assigned Batch Tests</h2>
+
+        <div class="row mb-3">
+            <div class="col-12 col-md-6">
+                <form method="GET" action="{{ url_for('tester_dashboard') }}" class="form-inline">
+                    <div class="input-group w-100">
+                        <input type="text" name="search" class="form-control" placeholder="Search assign tests..."
+                            value="{{ request.args.get('search', '') }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-warning" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if batch_assigned_tests %}
+        <div class="table-responsive">
+            <table class="table dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Batch Name</th>
+                        <th>Assigned By</th>
+                        <th>Assigned Date</th>
+                        <th>Priority</th>
+                        <th>Overall Status</th>
+                        <th>Progress</th>
+                        <th>Notes</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for batch in batch_assigned_tests %}
+                    <tr>
+                        <td class="small">
+                            <strong>{{ batch.ReferenceName or 'Unnamed Batch' }}</strong>
+                            <br><small class="text-muted">({{ batch.AssignmentType | capitalize }})</small>
+                        </td>
+                        <td class="small">{{ batch.AssignedByUsername or batch.AssignedByUserID }}</td>
+                        <td class="small">{{ batch.AssignmentDate.strftime('%Y-%m-%d %H:%M') if batch.AssignmentDate
+                            else 'N/A' }}</td>
+                        <td class="small">
+                            {% if batch.Priority == 'HIGH' %}
+                            <span class="bg-danger text-white rounded p-1 text-uppercase">High</span>
+                            {% elif batch.Priority == 'MEDIUM' %}
+                            <span class="bg-warning text-white text-uppercase rounded p-1">Medium</span>
+                            {% elif batch.Priority == 'LOW' %}
+                            <span class="bg-success text-white text-uppercase rounded p-1">Low</span>
+                            {% else %}
+                            <span class="bg-secondary text-white text-uppercase rounded p-1">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td class="small">
+                            {% if batch.Status == 'COMPLETED' %}
+                            <span class="bg-success text-white text-uppercase rounded p-1">Completed</span>
+                            {% elif batch.Status == 'PENDING' %}
+                            <span class="bg-warning text-white text-uppercase rounded p-1">Pending</span>
+                            {% else %}
+                            <span class="bg-secondary text-white text-uppercase rounded p-1">{{ batch.Status |
+                                replace('_', '') | title }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="small progress-info">
+                            {{ batch.CompletedTestCases }}/{{ batch.TotalTestCases }} completed<br>
+                            <small class="text-muted">
+                                {% if batch.CompletedTestCases > 0 %}
+                                ({{ (batch.PassedTestCases / batch.CompletedTestCases * 100) | round(0) | int }}%
+                                passed)
+                                {% else %}(0% passed){% endif %}
+                            </small>
+                        </td>
+                        <td class="small notes-cell">{{ batch.Notes or '-' }}</td>
+                        <td>
+                            {% if batch.Status in ['PENDING', 'IN_PROGRESS'] %}
+                            <a href="{{ url_for('run_batch_assignment_page', batch_assignment_id=batch.BatchAssignmentID) }}"
+                                class="btn btn-sm btn-outline-warning">
+                                <i class="fas fa-play"></i> {% if batch.Status == 'IN_PROGRESS' %}Continue{% else
+                                %}Start{% endif %}
+                            </a>
+                            {% else %}
+                            <span class="text-muted small">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+        <p class="text-muted">No batch tests currently assigned or all are completed/cancelled.</p>
+        {% endif %}
+    </div>
+
+    <!-- Individual Test Cases Section -->
+    <div class="dashboard-card shadow-sm p-4 mb-5 bg-white rounded">
+
+         <h2 class="section-header"><i class="fas fa-microscope"></i> My Assigned Individual Test Cases</h2>
+
+        {% if individual_assigned_tests %}
+        <div class="table-responsive">
+            <table class="table dashboard-table">
+                <thead>
+                    <tr>
+                        <th>TC Code</th>
+                        <th>Name</th>
+                        <th>Module</th>
+                        <th>Assigned By</th>
+                        <th>Assigned Date</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for test in individual_assigned_tests %}
+                    <tr>
+                        <td class="small">{{ test.Code }}</td>
+                        <td class="small">{{ test.Name }}</td>
+                        <td class="small">{{ test.Module }}</td>
+                        <td class="small">{{ test.AssignedBy }}</td>
+                        <td class="small">{{ test.AssignmentDate.strftime('%Y-%m-%d %H:%M') if test.AssignmentDate else
+                            'N/A' }}</td>
+                        <td class="small">
+                            {% if test.Status == 'COMPLETED' %}
+                            <span class="badge bg-success">Completed</span>
+                            {% elif test.Status == 'PENDING' %}
+                            <span class="bg-warning text-white rounded p-1">Pending</span>
+                            {% elif test.Status == 'IN_PROGRESS'%}
+                            <span class="bg-secondary text-white rounded p-1">{{ test.Status | replace('_', '') | title
+                                }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="small">
+                            {% if test.Priority == 'HIGH' %}
+                            <span class="bg-danger text-white rounded p-1 text-uppercase">High</span>
+                            {% elif test.Priority == 'MEDIUM' %}
+                            <span class="bg-warning text-white rounded p-1 text-uppercase">Medium</span>
+                            {% elif test.Priority == 'LOW' %}
+                            <span class="bg-success text-white rounded p-1 text-uppercase">Low</span>
+                            {% else %}
+                            <span class="badge bg-secondary text-uppercase">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if test.Status in ['PENDING', 'IN_PROGRESS'] %}
+                            <a href="{{ url_for('run_assigned_test_page', assignment_id=test.AssignmentID) }}"
+                                class="btn btn-sm btn-outline-warning">
+                                <i class="fas fa-play"></i> {% if test.Status == 'IN_PROGRESS' %}Continue{% else
+                                %}Start{% endif %}
+                            </a>
+                            {% else %}
+                            <span class="text-muted small">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+        <p class="text-muted">No individual test cases currently assigned to you.</p>
+        {% endif %}
+
+        <div class="text-end mt-3">
+            <a href="{{ url_for('test_results_overview') }}" class="btn btn-secondary p-2 rounded">
+                <i class="fas fa-history"></i> View My Past Test Results
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="highPriorityModal" tabindex="-1" role="dialog" aria-labelledby="highPriorityModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-warning">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="highPriorityModalLabel">⚠️ High Priority Tests</h5>
+                <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>You have <strong>{{ high_priority_individual_count }}</strong> high-priority individual test(s)</p>
+                <p>and <strong>{{ high_priority_batch_count }}</strong> high-priority batch test(s).</p>
+                <p>Please attend to them as soon as possible.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if high_priority_individual_count > 0 or high_priority_batch_count > 0 %}
+<script>
+    $(document).ready(function () {
+        $('#highPriorityModal').modal('show');
+    });
+</script>
+{% endif %}
+
+{% endblock %}

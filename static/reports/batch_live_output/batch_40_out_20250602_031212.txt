@@ -1,0 +1,247 @@
+BATCH_RUNNER_INFO: 2025-06-02T03:12:13.238022 - Batch runner process started.
+BATCH_RUNNER_INFO: 2025-06-02T03:12:13.238138 - PARAMS: BatchAssignmentID=40, UserID=5, DeviceID='R9ZR601C18H', AndroidVersion='12', PasswordProvided=No
+BATCH_RUNNER_DEBUG: 2025-06-02T03:12:13.238164 - DYNAMIC_INPUTS_COLLECTED (first 5 keys): ['PIN']
+BATCH_RUNNER_INFO: 2025-06-02T03:12:13.345637 - Resuming IN_PROGRESS Batch 40.
+BATCH_RUNNER_INFO: 2025-06-02T03:12:13.346601 - Found 3 TCs. Initial progress: 0/3 completed, 0 passed.
+BATCH_RUNNER_INFO: 2025-06-02T03:12:13.346649 - --- Starting TC 1/3: L008 (AssignmentID: 187) ---
+BATCH_RUNNER_DB_UPDATE: 2025-06-02T03:12:13.349024 - Individual Assignment 187 status set to IN_PROGRESS.
+BATCH_RUNNER_DEBUG: 2025-06-02T03:12:13.349326 - Dynamic params for TC L008: {"PIN": "5544"}
+BATCH_RUNNER_INFO: 2025-06-02T03:12:13.349411 - Executing generic_runner for TC L008 (Assignment 187)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:14.079468 - [TC:L008]> RUNNER_INFO: Appium generic_runner.py started.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:14.079527 - [TC:L008]> RUNNER_PARAMS: DeviceID='R9ZR601C18H', AndroidVersion='12', TestCaseID='81', ExecutedByID='5', PasswordGiven='No', AssignmentID='187'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:14.079538 - [TC:L008]> RUNNER_PARAMS: DynamicParams='{'PIN': '5544'}'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:14.092855 - [TC:L008]> RUNNER_INFO: Created TestExecutionID: 87 status NOT EXECUTED
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:14.092906 - [TC:L008]> RUNNER_INFO: Fetching steps for TestCaseID: 81
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:14.093949 - [TC:L008]> RUNNER_INFO: Setting up Appium driver...
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:31.767994 - [TC:L008]> RUNNER_INFO: Appium driver setup complete.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:31.768669 - [TC:L008]> RUNNER_STEP Start: Order=1, Input='*815#', Expected KWs='['welcome']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:31.768706 - [TC:L008]> RUNNER_STEP Start: Order=1, Input='*815#', Expected KWs='['welcome']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:31.768716 - [TC:L008]> RUNNER_APPIUM: Dialing USSD via 'am start': tel:*815%23
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:31.768726 - [TC:L008]> Dialing USSD code (Attempt 1)...
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:36.576877 - [TC:L008]> Expected Home USSD page matched.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:41.577375 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:41.694419 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:41.884271 - [TC:L008]> RUNNER_APPIUM: Response captured: 'Welcome to Bank of Abyssinia Mobile Banking Service. Press * to navigate back any time, select one of the following options below:
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:41.884340 - [TC:L008]> 1: Login
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:41.884360 - [TC:L008]> 2: Exit'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:44.669563 - [TC:L008]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_87\step_1.png (DB path: screenshots_exec_87/step_1.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:44.669657 - [TC:L008]> RUNNER_STEP Result: Order=1, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:44.674022 - [TC:L008]> RUNNER_DB: Logged result for StepID 129 (Order: 1)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:44.674078 - [TC:L008]> RUNNER_STEP Start: Order=2, Input='1', Expected KWs='['enter', 'pin']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:44.674093 - [TC:L008]> RUNNER_STEP Start: Order=2, Input='1', Expected KWs='['enter', 'pin']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:44.674106 - [TC:L008]> RUNNER_APPIUM: Sending keys '1'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:56.957553 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:57.079329 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:57.286613 - [TC:L008]> RUNNER_APPIUM: Response captured: 'Please enter your PIN to login:'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:59.303802 - [TC:L008]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_87\step_2.png (DB path: screenshots_exec_87/step_2.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:59.303890 - [TC:L008]> RUNNER_STEP Result: Order=2, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:59.306079 - [TC:L008]> RUNNER_DB: Logged result for StepID 130 (Order: 2)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:59.306122 - [TC:L008]> RUNNER_STEP Start: Order=3, Input='5544', Expected KWs='['my accounts', 'transfer', 'airtime', 'more']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:59.306130 - [TC:L008]> RUNNER_STEP Start: Order=3, Input='5544', Expected KWs='['my accounts', 'transfer', 'airtime', 'more']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:12:59.306135 - [TC:L008]> RUNNER_APPIUM: Sending keys '5544'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:06.634091 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:06.761932 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:06.956071 - [TC:L008]> RUNNER_APPIUM: Response captured: 'Welcome to BOA Mobile Banking
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:06.956140 - [TC:L008]> 1: My Accounts
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:06.956162 - [TC:L008]> 2: Transfer
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:06.956181 - [TC:L008]> 3: Transfer to Other Bank
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:06.956197 - [TC:L008]> 4: Transfer to Own
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:06.956212 - [TC:L008]> 5: Airtime
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:06.956228 - [TC:L008]> 6: Utilities
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:06.956244 - [TC:L008]> 7: Exchange Rates
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:06.956259 - [TC:L008]> 8: More options'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:08.398552 - [TC:L008]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_87\step_3.png (DB path: screenshots_exec_87/step_3.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:08.398646 - [TC:L008]> RUNNER_STEP Result: Order=3, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:08.402420 - [TC:L008]> RUNNER_DB: Logged result for StepID 131 (Order: 3)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:08.402496 - [TC:L008]> RUNNER_STEP Start: Order=4, Input='8', Expected KWs='['welcome', 'boa', 'exit']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:08.402517 - [TC:L008]> RUNNER_STEP Start: Order=4, Input='8', Expected KWs='['welcome', 'boa', 'exit']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:08.402546 - [TC:L008]> RUNNER_APPIUM: Sending keys '8'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:15.705393 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:15.837803 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:16.060954 - [TC:L008]> RUNNER_APPIUM: Response captured: 'Welcome to BOA Mobile Banking
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:16.061050 - [TC:L008]> 1: My Service
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:16.061085 - [TC:L008]> 2: Exit
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:16.061116 - [TC:L008]> 3: Previous options'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:17.582367 - [TC:L008]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_87\step_4.png (DB path: screenshots_exec_87/step_4.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:17.582449 - [TC:L008]> RUNNER_STEP Result: Order=4, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:17.585729 - [TC:L008]> RUNNER_DB: Logged result for StepID 132 (Order: 4)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:17.585800 - [TC:L008]> RUNNER_STEP Start: Order=5, Input='2', Expected KWs='['logged out', 'session ended']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:17.585869 - [TC:L008]> RUNNER_STEP Start: Order=5, Input='2', Expected KWs='['logged out', 'session ended']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:17.585891 - [TC:L008]> RUNNER_APPIUM: Sending keys '2'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:24.906173 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:25.248139 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:25.525003 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: xpath - //*[contains(@resource-id, 'message') and @class='android.widget.TextView']
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:26.445837 - [TC:L008]> RUNNER_APPIUM: Trying to find response with: xpath - //android.widget.TextView[@displayed='true' and string-length(@text) > 0 and not(contains(@text,'SEND') or contains(@text,'Send') or contains(@text,'CANCEL') or contains(@text,'Cancel'))]
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:29.253269 - [TC:L008]> RUNNER_APPIUM: Response captured: '6/1, 9:07 PM'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:33.098704 - [TC:L008]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_87\step_5.png (DB path: screenshots_exec_87/step_5.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:33.098778 - [TC:L008]> RUNNER_STEP Result: Order=5, Status=FAIL
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:33.101636 - [TC:L008]> RUNNER_DB: Logged result for StepID 133 (Order: 5)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:33.101677 - [TC:L008]> RUNNER_INFO: Step 5 failed. Aborting further steps.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:33.101683 - [TC:L008]> RUNNER_INFO: Attempting to close any open USSD dialog before quitting driver...
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:35.981245 - [TC:L008]> RUNNER_INFO: Cancel/Dismiss not found or clicked. Looking for OK buttons...
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:36.987666 - [TC:L008]> RUNNER_WARN: No standard dialog dismissal/OK buttons found or clicked. Trying KEYCODE_BACK.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:37.608302 - [TC:L008]> RUNNER_INFO: Sent KEYCODE_BACK.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:43.344388 - [TC:L008]> RUNNER_INFO: Appium driver quit.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:43.346839 - [TC:L008]> RUNNER_DB: Final TestExecutionID 87 status: FAIL. Log: Execution completed. Total Defined Steps: 5. Attempted: 5, Passed: 4, Failed: 1.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:43.349400 - [TC:L008]> RUNNER_DB: AssignmentID 187 status updated to EXECUTED_FAIL.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:43.349596 - [TC:L008]> RUNNER_INFO: Database connection closed.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:43.349625 - [TC:L008]> RUNNER_INFO: generic_runner.py finished. OverallStatus: FAIL.
+BATCH_RUNNER_INFO: 2025-06-02T03:13:43.405408 - Generic_runner for TC L008 finished with exit code: 0.
+BATCH_RUNNER_DB_UPDATE: 2025-06-02T03:13:43.407861 - Batch progress: 1/3 done. Passed: 0.
+BATCH_RUNNER_INFO: 2025-06-02T03:13:43.407929 - --- Starting TC 2/3: L011 (AssignmentID: 188) ---
+BATCH_RUNNER_DB_UPDATE: 2025-06-02T03:13:43.409756 - Individual Assignment 188 status set to IN_PROGRESS.
+BATCH_RUNNER_DEBUG: 2025-06-02T03:13:43.409823 - Dynamic params for TC L011: {"PIN": "5544"}
+BATCH_RUNNER_INFO: 2025-06-02T03:13:43.409916 - Executing generic_runner for TC L011 (Assignment 188)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:43.873155 - [TC:L011]> RUNNER_INFO: Appium generic_runner.py started.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:43.873197 - [TC:L011]> RUNNER_PARAMS: DeviceID='R9ZR601C18H', AndroidVersion='12', TestCaseID='72', ExecutedByID='5', PasswordGiven='No', AssignmentID='188'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:43.873205 - [TC:L011]> RUNNER_PARAMS: DynamicParams='{'PIN': '5544'}'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:43.882375 - [TC:L011]> RUNNER_INFO: Created TestExecutionID: 88 status NOT EXECUTED
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:43.882424 - [TC:L011]> RUNNER_INFO: Fetching steps for TestCaseID: 72
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:43.888891 - [TC:L011]> RUNNER_INFO: Setting up Appium driver...
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:58.980443 - [TC:L011]> RUNNER_INFO: Appium driver setup complete.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:58.981507 - [TC:L011]> RUNNER_STEP Start: Order=1, Input='*815#', Expected KWs='['welcome']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:58.981553 - [TC:L011]> RUNNER_STEP Start: Order=1, Input='*815#', Expected KWs='['welcome']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:58.981565 - [TC:L011]> RUNNER_APPIUM: Dialing USSD via 'am start': tel:*815%23
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:13:58.981574 - [TC:L011]> Dialing USSD code (Attempt 1)...
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:02.935198 - [TC:L011]> Expected Home USSD page matched.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:07.936106 - [TC:L011]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:08.037758 - [TC:L011]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:08.233478 - [TC:L011]> RUNNER_APPIUM: Response captured: 'Welcome to Bank of Abyssinia Mobile Banking Service. Press * to navigate back any time, select one of the following options below:
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:08.233559 - [TC:L011]> 1: Login
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:08.233580 - [TC:L011]> 2: Exit'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:10.934791 - [TC:L011]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_88\step_1.png (DB path: screenshots_exec_88/step_1.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:10.934878 - [TC:L011]> RUNNER_STEP Result: Order=1, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:10.937778 - [TC:L011]> RUNNER_DB: Logged result for StepID 111 (Order: 1)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:10.937848 - [TC:L011]> RUNNER_STEP Start: Order=2, Input='1', Expected KWs='['enter', 'pin']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:10.937869 - [TC:L011]> RUNNER_STEP Start: Order=2, Input='1', Expected KWs='['enter', 'pin']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:10.937886 - [TC:L011]> RUNNER_APPIUM: Sending keys '1'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:23.044874 - [TC:L011]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:23.161429 - [TC:L011]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:23.373611 - [TC:L011]> RUNNER_APPIUM: Response captured: 'Please enter your PIN to login:'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:25.242988 - [TC:L011]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_88\step_2.png (DB path: screenshots_exec_88/step_2.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:25.243111 - [TC:L011]> RUNNER_STEP Result: Order=2, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:25.247315 - [TC:L011]> RUNNER_DB: Logged result for StepID 112 (Order: 2)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:25.247389 - [TC:L011]> RUNNER_STEP Start: Order=3, Input='5544', Expected KWs='['my accounts', 'transfer']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:25.247412 - [TC:L011]> RUNNER_STEP Start: Order=3, Input='5544', Expected KWs='['my accounts', 'transfer']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:25.247430 - [TC:L011]> RUNNER_APPIUM: Sending keys '5544'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:32.517857 - [TC:L011]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:32.634690 - [TC:L011]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:32.824365 - [TC:L011]> RUNNER_APPIUM: Response captured: 'Welcome to BOA Mobile Banking
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:32.824437 - [TC:L011]> 1: My Accounts
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:32.824459 - [TC:L011]> 2: Transfer
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:32.824560 - [TC:L011]> 3: Transfer to Other Bank
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:32.824586 - [TC:L011]> 4: Transfer to Own
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:32.824604 - [TC:L011]> 5: Airtime
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:32.824622 - [TC:L011]> 6: Utilities
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:32.824639 - [TC:L011]> 7: Exchange Rates
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:32.824656 - [TC:L011]> 8: More options'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:34.249371 - [TC:L011]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_88\step_3.png (DB path: screenshots_exec_88/step_3.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:34.249480 - [TC:L011]> RUNNER_STEP Result: Order=3, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:34.254345 - [TC:L011]> RUNNER_DB: Logged result for StepID 113 (Order: 3)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:34.254404 - [TC:L011]> RUNNER_INFO: Attempting to close any open USSD dialog before quitting driver...
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:35.827366 - [TC:L011]> RUNNER_INFO: Found dialog button (Cancel/Dismiss type) with text 'Cancel'. Clicking.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:37.427732 - [TC:L011]> RUNNER_INFO: USSD Dialog likely dismissed by button click.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:43.155506 - [TC:L011]> RUNNER_INFO: Appium driver quit.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:43.158499 - [TC:L011]> RUNNER_DB: Final TestExecutionID 88 status: PASS. Log: Execution completed. Total Defined Steps: 3. Attempted: 3, Passed: 3, Failed: 0.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:43.162297 - [TC:L011]> RUNNER_DB: AssignmentID 188 status updated to EXECUTED_PASS.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:43.162910 - [TC:L011]> RUNNER_INFO: Database connection closed.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:43.162961 - [TC:L011]> RUNNER_INFO: generic_runner.py finished. OverallStatus: PASS.
+BATCH_RUNNER_INFO: 2025-06-02T03:14:43.215002 - Generic_runner for TC L011 finished with exit code: 0.
+BATCH_RUNNER_DB_UPDATE: 2025-06-02T03:14:43.216804 - Batch progress: 2/3 done. Passed: 1.
+BATCH_RUNNER_INFO: 2025-06-02T03:14:43.216844 - --- Starting TC 3/3: M015 (AssignmentID: 189) ---
+BATCH_RUNNER_DB_UPDATE: 2025-06-02T03:14:43.218035 - Individual Assignment 189 status set to IN_PROGRESS.
+BATCH_RUNNER_DEBUG: 2025-06-02T03:14:43.218077 - Dynamic params for TC M015: {"PIN": "5544"}
+BATCH_RUNNER_INFO: 2025-06-02T03:14:43.218143 - Executing generic_runner for TC M015 (Assignment 189)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:43.677157 - [TC:M015]> RUNNER_INFO: Appium generic_runner.py started.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:43.677230 - [TC:M015]> RUNNER_PARAMS: DeviceID='R9ZR601C18H', AndroidVersion='12', TestCaseID='75', ExecutedByID='5', PasswordGiven='No', AssignmentID='189'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:43.677243 - [TC:M015]> RUNNER_PARAMS: DynamicParams='{'PIN': '5544'}'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:43.687148 - [TC:M015]> RUNNER_INFO: Created TestExecutionID: 89 status NOT EXECUTED
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:43.687193 - [TC:M015]> RUNNER_INFO: Fetching steps for TestCaseID: 75
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:43.687507 - [TC:M015]> RUNNER_INFO: Setting up Appium driver...
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:57.323760 - [TC:M015]> RUNNER_INFO: Appium driver setup complete.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:57.324613 - [TC:M015]> RUNNER_STEP Start: Order=1, Input='*815#', Expected KWs='['welcome']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:57.324657 - [TC:M015]> RUNNER_STEP Start: Order=1, Input='*815#', Expected KWs='['welcome']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:57.324667 - [TC:M015]> RUNNER_APPIUM: Dialing USSD via 'am start': tel:*815%23
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:14:57.324676 - [TC:M015]> Dialing USSD code (Attempt 1)...
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:01.748669 - [TC:M015]> Expected Home USSD page matched.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:06.749225 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:06.896632 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:07.131162 - [TC:M015]> RUNNER_APPIUM: Response captured: 'Welcome to Bank of Abyssinia Mobile Banking Service. Press * to navigate back any time, select one of the following options below:
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:07.131227 - [TC:M015]> 1: Login
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:07.131241 - [TC:M015]> 2: Exit'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:09.858457 - [TC:M015]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_89\step_1.png (DB path: screenshots_exec_89/step_1.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:09.858597 - [TC:M015]> RUNNER_STEP Result: Order=1, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:09.863257 - [TC:M015]> RUNNER_DB: Logged result for StepID 117 (Order: 1)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:09.863326 - [TC:M015]> RUNNER_STEP Start: Order=2, Input='1', Expected KWs='['enter', 'pin']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:09.863348 - [TC:M015]> RUNNER_STEP Start: Order=2, Input='1', Expected KWs='['enter', 'pin']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:09.863365 - [TC:M015]> RUNNER_APPIUM: Sending keys '1'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:22.175012 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:22.307544 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:22.490172 - [TC:M015]> RUNNER_APPIUM: Response captured: 'Please enter your PIN to login:'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:24.385125 - [TC:M015]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_89\step_2.png (DB path: screenshots_exec_89/step_2.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:24.385172 - [TC:M015]> RUNNER_STEP Result: Order=2, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:24.388327 - [TC:M015]> RUNNER_DB: Logged result for StepID 118 (Order: 2)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:24.388380 - [TC:M015]> RUNNER_STEP Start: Order=3, Input='5544', Expected KWs='['my accounts', 'transfer', 'airtime']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:24.388391 - [TC:M015]> RUNNER_STEP Start: Order=3, Input='5544', Expected KWs='['my accounts', 'transfer', 'airtime']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:24.388400 - [TC:M015]> RUNNER_APPIUM: Sending keys '5544'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:31.696680 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:31.802226 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:32.001664 - [TC:M015]> RUNNER_APPIUM: Response captured: 'Welcome to BOA Mobile Banking
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:32.001783 - [TC:M015]> 1: My Accounts
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:32.001816 - [TC:M015]> 2: Transfer
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:32.001844 - [TC:M015]> 3: Transfer to Other Bank
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:32.001872 - [TC:M015]> 4: Transfer to Own
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:32.001900 - [TC:M015]> 5: Airtime
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:32.001928 - [TC:M015]> 6: Utilities
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:32.001954 - [TC:M015]> 7: Exchange Rates
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:32.001981 - [TC:M015]> 8: More options'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:33.406134 - [TC:M015]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_89\step_3.png (DB path: screenshots_exec_89/step_3.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:33.406200 - [TC:M015]> RUNNER_STEP Result: Order=3, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:33.408861 - [TC:M015]> RUNNER_DB: Logged result for StepID 119 (Order: 3)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:33.408951 - [TC:M015]> RUNNER_STEP Start: Order=4, Input='1', Expected KWs='['my accounts', 'etb']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:33.408979 - [TC:M015]> RUNNER_STEP Start: Order=4, Input='1', Expected KWs='['my accounts', 'etb']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:33.408999 - [TC:M015]> RUNNER_APPIUM: Sending keys '1'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:41.371842 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:41.490414 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:41.697800 - [TC:M015]> RUNNER_APPIUM: Response captured: 'My Accounts
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:41.697911 - [TC:M015]> 1: 174615624 - ETB - Apol.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:41.697946 - [TC:M015]> 2: 182975435 - ETB - STAF.'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:43.331662 - [TC:M015]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_89\step_4.png (DB path: screenshots_exec_89/step_4.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:43.331721 - [TC:M015]> RUNNER_STEP Result: Order=4, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:43.339961 - [TC:M015]> RUNNER_DB: Logged result for StepID 120 (Order: 4)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:43.340007 - [TC:M015]> RUNNER_STEP Start: Order=5, Input='2', Expected KWs='['balance', 'etb', 'transactions']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:43.340018 - [TC:M015]> RUNNER_STEP Start: Order=5, Input='2', Expected KWs='['balance', 'etb', 'transactions']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:43.340026 - [TC:M015]> RUNNER_APPIUM: Sending keys '2'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:50.993118 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:51.098910 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:51.301364 - [TC:M015]> RUNNER_APPIUM: Response captured: '182975435 - ETB - STAF.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:51.301415 - [TC:M015]> Cleared Balance is ETB 30,319.98 and Ledger Balance is ETB 30,319.98
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:51.301430 - [TC:M015]> Transactions
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:51.301442 - [TC:M015]> 1: - 02/06 211.45
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:51.301453 - [TC:M015]> 2: - 01/06 5.13
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:51.301463 - [TC:M015]> 3: More options'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:52.635789 - [TC:M015]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_89\step_5.png (DB path: screenshots_exec_89/step_5.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:52.635838 - [TC:M015]> RUNNER_STEP Result: Order=5, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:52.637729 - [TC:M015]> RUNNER_DB: Logged result for StepID 121 (Order: 5)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:52.637767 - [TC:M015]> RUNNER_STEP Start: Order=6, Input='1', Expected KWs='['etb', 'press', 'key']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:52.637777 - [TC:M015]> RUNNER_STEP Start: Order=6, Input='1', Expected KWs='['etb', 'press', 'key']'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:52.637786 - [TC:M015]> RUNNER_APPIUM: Sending keys '1'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:15:59.898512 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - android:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:00.643087 - [TC:M015]> RUNNER_APPIUM: Trying to find response with: id - com.android.phone:id/message
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:00.842225 - [TC:M015]> RUNNER_APPIUM: Response captured: '182975435 - ETB - STAFF ORDI - NATNAEL BIRHANU
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:00.842291 - [TC:M015]> ETB 211.45 (ETSW P2P Debit) debited from 182975435 - ETB - STAF. on 02/06/2025 for ... Press any key for more'
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:02.245788 - [TC:M015]> RUNNER_APPIUM: Screenshot saved to static/reports\screenshots_exec_89\step_6.png (DB path: screenshots_exec_89/step_6.png)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:02.245860 - [TC:M015]> RUNNER_STEP Result: Order=6, Status=PASS
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:02.250255 - [TC:M015]> RUNNER_DB: Logged result for StepID 122 (Order: 6)
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:02.250310 - [TC:M015]> RUNNER_INFO: Attempting to close any open USSD dialog before quitting driver...
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:03.784886 - [TC:M015]> RUNNER_INFO: Found dialog button (Cancel/Dismiss type) with text 'Cancel'. Clicking.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:05.386157 - [TC:M015]> RUNNER_INFO: USSD Dialog likely dismissed by button click.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:11.046411 - [TC:M015]> RUNNER_INFO: Appium driver quit.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:11.070380 - [TC:M015]> RUNNER_DB: Final TestExecutionID 89 status: PASS. Log: Execution completed. Total Defined Steps: 6. Attempted: 6, Passed: 6, Failed: 0.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:11.072108 - [TC:M015]> RUNNER_DB: AssignmentID 189 status updated to EXECUTED_PASS.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:11.072258 - [TC:M015]> RUNNER_INFO: Database connection closed.
+BATCH_RUNNER_RUNNER_OUT: 2025-06-02T03:16:11.072285 - [TC:M015]> RUNNER_INFO: generic_runner.py finished. OverallStatus: PASS.
+BATCH_RUNNER_INFO: 2025-06-02T03:16:11.132775 - Generic_runner for TC M015 finished with exit code: 0.
+BATCH_RUNNER_DB_UPDATE: 2025-06-02T03:16:11.136857 - Batch progress: 3/3 done. Passed: 2.
+BATCH_RUNNER_DB_UPDATE: 2025-06-02T03:16:11.138574 - Final BatchAssignmentID 40 status: COMPLETED_FAIL. Completed: 3, Passed: 2.
+BATCH_RUNNER_INFO: 2025-06-02T03:16:11.138745 - Batch runner process finished. Overall Batch Status: COMPLETED_FAIL.

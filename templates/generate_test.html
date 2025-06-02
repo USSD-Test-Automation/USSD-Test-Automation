@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate USSD Test Case</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+        }
+        .step-container {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .btn {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-danger {
+            background-color: #f44336;
+        }
+        #steps-container {
+            margin-top: 20px;
+        }
+        .dynamic-input {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        .hidden {
+            display: none;
+        }
+        .output-section {
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .code-block {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generate USSD Test Case</h1>
+    
+    <form id="testCaseForm">
+        <div class="form-group">
+            <label for="testCaseName">Test Case Name:</label>
+            <input type="text" id="testCaseName" name="testCaseName" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="testCaseId">Test Case ID (e.g., L003):</label>
+            <input type="text" id="testCaseId" name="testCaseId" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="testCaseDescription">Description:</label>
+            <textarea id="testCaseDescription" name="testCaseDescription"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="testCaseCategory">Category:</label>
+            <select id="testCaseCategory" name="testCaseCategory">
+                <option value="Login">Login</option>
+                <option value="Accounts">Accounts</option>
+                <option value="Transfer">Transfer</option>
+                <option value="Airtime">Airtime</option>
+                <option value="TransferOther">Transfer to Other Bank</option>
+                <option value="Loan">Loan</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>
+                <input type="checkbox" id="requiresLogin" name="requiresLogin">
+                Requires Login (will use existing password input)
+            </label>
+        </div>
+        
+        <h3>Test Steps</h3>
+        <div id="steps-container">
+            <!-- Steps will be added here -->
+        </div>
+        
+        <button type="button" id="addStepBtn" class="btn">Add Step</button>
+        
+        <h3>Additional Dynamic Inputs</h3>
+        <div id="dynamic-inputs-container">
+            <!-- Dynamic inputs will be added here -->
+        </div>
+        <button type="button" id="addDynamicInputBtn" class="btn">Add Dynamic Input</button>
+        
+        <div class="form-group" style="margin-top: 20px;">
+            <button type="submit" class="btn">Generate Test Case</button>
+        </div>
+    </form>
+    
+    <div id="outputContainer" class="output-section hidden">
+        <div class="tab-container">
+            <div class="tab active" data-tab="script">Test Script</div>
+            <div class="tab" data-tab="html">HTML Modifications</div>
+            <div class="tab" data-tab="python">Python Runner Mod</div>
+        </div>
+        
+        <div id="scriptTab" class="tab-content active">
+            <h3>Generated Test Script</h3>
+            <textarea id="generatedScript" readonly style="height: 300px; width: 100%;"></textarea>
+            <button id="downloadScriptBtn" class="btn">Download Script</button>
+        </div>
+        
+        <div id="htmlTab" class="tab-content">
+            <h3>HTML Modifications for index.html</h3>
+            <p>Add this option to the appropriate dropdown group in your index.html:</p>
+            <div id="htmlModification" class="code-block"></div>
+            
+            <h4>Additional Fields to Add (if any):</h4>
+            <div id="htmlFields" class="code-block"></div>
+            
+            <h4>JavaScript Logic to Add:</h4>
+            <div id="jsLogic" class="code-block"></div>
+        </div>
+        
+        <div id="pythonTab" class="tab-content">
+            <h3>Python Runner Modifications</h3>
+            <p>Add this mapping to your script_map in run_test.py:</p>
+            <div id="pythonModification" class="code-block"></div>
+            
+            <h4>Additional Command Logic (if any):</h4>
+            <div id="pythonCommandLogic" class="code-block"></div>
+        </div>
+    </div>
+
+    <script>
+        let stepCounter = 0;
+        let dynamicInputCounter = 0;
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab + 'Tab').classList.add('active');
+            });
+        });
+        
+        // Add Step Button
+        document.getElementById('addStepBtn').addEventListener('click', function() {
+            addStep();
+        });
+        
+        // Add Dynamic Input Button
+        document.getElementById('addDynamicInputBtn').addEventListener('click', function() {
+            addDynamicInput();
+        });
+        
+        // Form Submit
+        document.getElementById('testCaseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generateTestArtifacts();
+        });
+        
+        // Download Script Button
+        document.getElementById('downloadScriptBtn').addEventListener('click', function() {
+            downloadScript();
+        });
+        
+        function addStep() {
+            stepCounter++;
+            const stepId = `step-${stepCounter}`;
+            
+            const stepHTML = `
+                <div class="step-container" id="${stepId}">
+                    <div class="step-header">
+                        <h4>Step ${stepCounter}</h4>
+                        <button type="button" class="btn btn-danger" onclick="removeStep('${stepId}')">Remove</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="${stepId}-input">Input:</label>
+                        <input type="text" id="${stepId}-input" name="${stepId}-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="${stepId}-keywords">Expected Keywords (comma separated):</label>
+                        <input type="text" id="${stepId}-keywords" name="${stepId}-keywords" required 
+                               placeholder="e.g., welcome, login, menu">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="${stepId}-use-dynamic" name="${stepId}-use-dynamic">
+                            Use dynamic input for this step
+                        </label>
+                    </div>
+                    
+                    <div class="form-group" id="${stepId}-dynamic-select-container" style="display: none;">
+                        <label for="${stepId}-dynamic-select">Select Dynamic Input:</label>
+                        <select id="${stepId}-dynamic-select" name="${stepId}-dynamic-select">
+                            <!-- Options will be added by JavaScript -->
+                        </select>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('steps-container').insertAdjacentHTML('beforeend', stepHTML);
+            
+            // Add event listener for the dynamic input checkbox
+            document.getElementById(`${stepId}-use-dynamic`).addEventListener('change', function() {
+                const selectContainer = document.getElementById(`${stepId}-dynamic-select-container`);
+                selectContainer.style.display = this.checked ? 'block' : 'none';
+                updateDynamicInputSelects();
+            });
+        }
+        
+        function addDynamicInput() {
+            dynamicInputCounter++;
+            const inputId = `dynamic-input-${dynamicInputCounter}`;
+            
+            const inputHTML = `
+                <div class="dynamic-input" id="${inputId}">
+                    <div class="form-group">
+                        <label for="${inputId}-name">Input Name (variable name):</label>
+                        <input type="text" id="${inputId}-name" name="${inputId}-name" required 
+                               placeholder="e.g., account_number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="${inputId}-description">Description (what this input is for):</label>
+                        <input type="text" id="${inputId}-description" name="${inputId}-description" required 
+                               placeholder="e.g., Account number for transfer">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="${inputId}-type">Input Type:</label>
+                        <select id="${inputId}-type" name="${inputId}-type">
+                            <option value="text">Text</option>
+                            <option value="number">Number</option>
+                            <option value="tel">Phone Number</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn btn-danger" onclick="removeDynamicInput('${inputId}')">Remove</button>
+                </div>
+            `;
+            
+            document.getElementById('dynamic-inputs-container').insertAdjacentHTML('beforeend', inputHTML);
+            updateDynamicInputSelects();
+        }
+        
+        function removeStep(stepId) {
+            document.getElementById(stepId).remove();
+            // Renumber remaining steps for better UX
+            const steps = document.querySelectorAll('.step-container');
+            steps.forEach((step, index) => {
+                step.querySelector('h4').textContent = `Step ${index + 1}`;
+            });
+            stepCounter = steps.length;
+        }
+        
+        function removeDynamicInput(inputId) {
+            document.getElementById(inputId).remove();
+            dynamicInputCounter--;
+            updateDynamicInputSelects();
+        }
+        
+        function updateDynamicInputSelects() {
+            const dynamicInputs = document.querySelectorAll('.dynamic-input');
+            const selects = document.querySelectorAll('[id$="-dynamic-select"]');
+            
+            selects.forEach(select => {
+                // Save current value
+                const currentValue = select.value;
+                
+                // Clear options
+                select.innerHTML = '';
+                
+                // Add default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = '-- Select Dynamic Input --';
+                select.appendChild(defaultOption);
+                
+                // Add options for each dynamic input
+                dynamicInputs.forEach(input => {
+                    const inputId = input.id;
+                    const name = document.querySelector(`#${inputId}-name`).value || `input_${inputId.split('-')[2]}`;
+                    const description = document.querySelector(`#${inputId}-description`).value || '';
+                    
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = `${name} (${description})`;
+                    select.appendChild(option);
+                });
+                
+                // Restore current value if it still exists
+                if (currentValue && Array.from(select.options).some(opt => opt.value === currentValue)) {
+                    select.value = currentValue;
+                }
+            });
+        }
+        
+        function generateTestArtifacts() {
+            // Collect form data
+            const testCaseName = document.getElementById('testCaseName').value;
+            const testCaseId = document.getElementById('testCaseId').value;
+            const testCaseDescription = document.getElementById('testCaseDescription').value;
+            const testCaseCategory = document.getElementById('testCaseCategory').value;
+            const requiresLogin = document.getElementById('requiresLogin').checked;
+            
+            // Collect steps
+            const steps = [];
+            const stepElements = document.querySelectorAll('.step-container');
+            
+            stepElements.forEach((stepElement, index) => {
+                const stepId = stepElement.id;
+                const useDynamic = document.getElementById(`${stepId}-use-dynamic`).checked;
+                let input;
+                
+                if (useDynamic) {
+                    const dynamicSelect = document.getElementById(`${stepId}-dynamic-select`);
+                    input = `{${dynamicSelect.value}}`; // Wrap in {} to indicate it's a dynamic input
+                } else {
+                    input = document.getElementById(`${stepId}-input`).value;
+                }
+                
+                const keywords = document.getElementById(`${stepId}-keywords`).value
+                    .split(',')
+                    .map(kw => kw.trim())
+                    .filter(kw => kw.length > 0);
+                
+                steps.push({
+                    input: input,
+                    expected_keywords: keywords
+                });
+            });
+            
+            // Collect dynamic inputs
+            const dynamicInputs = [];
+            const dynamicInputElements = document.querySelectorAll('.dynamic-input');
+            
+            dynamicInputElements.forEach(inputElement => {
+                const inputId = inputElement.id;
+                const name = document.getElementById(`${inputId}-name`).value;
+                const description = document.getElementById(`${inputId}-description`).value;
+                const type = document.getElementById(`${inputId}-type`).value;
+                
+                dynamicInputs.push({
+                    name: name,
+                    description: description,
+                    type: type
+                });
+            });
+            
+            // Generate the Python script
+            const script = generatePythonScript(
+                testCaseName,
+                testCaseId,
+                testCaseDescription,
+                testCaseCategory,
+                steps,
+                dynamicInputs,
+                requiresLogin
+            );
+            
+            // Generate HTML modifications
+            const htmlMods = generateHtmlModifications(
+                testCaseId,
+                testCaseName,
+                testCaseCategory,
+                dynamicInputs,
+                requiresLogin
+            );
+            
+            // Generate Python runner modifications
+            const pythonMods = generatePythonModifications(
+                testCaseId,
+                testCaseCategory,
+                dynamicInputs,
+                requiresLogin
+            );
+            
+            // Display all generated artifacts
+            document.getElementById('generatedScript').value = script;
+            document.getElementById('htmlModification').textContent = htmlMods.dropdownOption;
+            document.getElementById('htmlFields').textContent = htmlMods.additionalFields || '// No additional fields needed';
+            document.getElementById('jsLogic').textContent = htmlMods.jsLogic || '// No additional JavaScript logic needed';
+            
+            document.getElementById('pythonModification').textContent = pythonMods.scriptMapping;
+            document.getElementById('pythonCommandLogic').textContent = pythonMods.commandLogic || '// No additional command logic needed';
+            
+            document.getElementById('outputContainer').classList.remove('hidden');
+        }
+        
+        function generatePythonScript(name, id, description, category, steps, dynamicInputs, requiresLogin) {
+            // Create the header and imports
+            let script = `\"\"\"
+${name} - ${id}
+${description}
+Category: ${category}
+Generated: ${new Date().toISOString()}
+\"\"\"
+
+import sys
+from appium import webdriver
+from appium.options.android import UiAutomator2Options
+from appium.webdriver.common.appiumby import AppiumBy
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+from openpyxl import Workbook
+from openpyxl.styles import PatternFill
+from openpyxl.chart import BarChart, Reference
+from openpyxl.chart.series import DataPoint
+from openpyxl.chart.label import DataLabelList
+from datetime import datetime
+import os
+
+# === Setup Excel Workbook ===
+wb = Workbook()
+ws_results = wb.active
+ws_results.title = "USSD Test Results"
+ws_results.append(["Step", "Input", "Expected Keywords", "Actual Output", "Status", "Screenshot"])
+
+# Create Summary Sheet
+ws_summary = wb.create_sheet(title="Summary")
+summary_data = {
+    "Total Steps": 0,
+    "Passed": 0,
+    "Failed": 0,
+}
+
+# Create Logs Sheet
+ws_logs = wb.create_sheet(title="Logs")
+ws_logs.append(["Step", "Missing Keywords", "Actual Response", "Input", "Timestamp", "Error Type"])
+
+# Create Timing Logs Sheet
+ws_timing = wb.create_sheet(title="Timing Logs")
+ws_timing.append(["Step", "Input", "Start Time", "End Time", "Duration (sec)"])
+
+# === Dynamic Inputs ===
+`;
+            
+            // Add dynamic inputs as command line arguments
+            let argIndex = 4; // sys.argv[0] is script name, [1] device_id, [2] android_version, [3] password
+            
+            if (requiresLogin) {
+                script += `password = sys.argv[3]  # Standard password input\n`;
+            }
+            
+            dynamicInputs.forEach((input) => {
+                script += `# ${input.description}\n`;
+                script += `${input.name} = sys.argv[${argIndex++}]\n\n`;
+            });
+            
+            // Add the steps definition
+            script += `# === Step-by-step Expected Keywords ===\n`;
+            script += `steps = [\n`;
+            
+            steps.forEach(step => {
+                script += `    {"input": "${step.input}", "expected_keywords": ${JSON.stringify(step.expected_keywords)}},\n`;
+            });
+            
+            script += `]\n\n`;
+            
+            // Add the rest of the standard script
+            script += `# === Appium Options ===
+options = UiAutomator2Options()
+options.platform_name = 'Android'
+options.platform_version = android_version
+options.device_name = device_id
+options.automation_name = 'UiAutomator2'
+options.app_package = 'com.android.phone'
+options.app_activity = 'com.android.phone.DialtactsActivity'
+options.no_reset = True
+
+print("[INFO] Initializing Appium driver...", flush=True)
+# === Initialize Driver ===   
+driver = webdriver.Remote(command_executor='http://localhost:4723', options=options)
+
+# === Setup for saving screenshots ===
+timestamp = time.strftime("%Y%m%d_%H%M%S")
+report_dir = os.path.join("reports", f"${id}_ussd_report_{timestamp}")
+os.makedirs(report_dir, exist_ok=True)
+print(f"[INFO] Report directory created at: {report_dir}", flush=True)
+
+# Fill colors for Status cell only
+fail_fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
+pass_fill = PatternFill(start_color="00FF00", end_color="00FF00", fill_type="solid")
+
+def detect_current_step(actual_response, steps):
+    """
+    Return the index of the step whose expected_keywords all appear
+    in actual_response.  If none match, return None.
+    """
+    for i, s in enumerate(steps):
+        if response_matches(s["expected_keywords"], actual_response):
+            return i
+    return None
+
+def log_step(step_num, input_value, expected, actual, status, screenshot_path):
+    row = [step_num, input_value, ", ".join(expected), actual, status, screenshot_path]
+    ws_results.append(row)
+    
+    status_cell = ws_results.cell(row=ws_results.max_row, column=5)
+    if status == "FAIL":
+        status_cell.fill = fail_fill
+    elif status == "PASS":
+        status_cell.fill = pass_fill
+
+    summary_data["Total Steps"] += 1
+    if status == "PASS":
+        summary_data["Passed"] += 1
+    else:
+        summary_data["Failed"] += 1
+
+    print(f"[RESULT] Step {step_num}: input='{input_value}' -> status={status}", flush=True)
+
+def response_matches(expected_keywords, actual_response):
+    actual_lower = actual_response.lower()
+    return all(keyword.lower() in actual_lower for keyword in expected_keywords)
+
+max_retries = 3
+step_attempts = [0] * len(steps)
+
+try:
+    print("[INFO] Beginning USSD test sequence", flush=True)
+    current_step = 0
+    while current_step < len(steps):
+        print(f"[STEP {current_step+1}] Processing step {current_step+1}", flush=True)
+        step = steps[current_step]
+        start_time = datetime.now()
+        
+        # Handle dynamic inputs (replace {variable} with actual variable value)
+        input_value = step["input"]
+        if input_value.startsWith('{') && input_value.endsWith('}'):
+            var_name = input_value.slice(1, -1)
+            input_value = globals().get(var_name, input_value)
+        
+        expected_keywords = step["expected_keywords"]
+        step_attempts[current_step] += 1
+
+        print(f"[ACTION] Sending input: '{input_value}' (Attempt {step_attempts[current_step]})", flush=True)
+        # 1) Send the USSD code or next input
+        if current_step == 0:
+            ussd_code = input_value.replace("#", "%23")
+            driver.execute_script('mobile: shell', {
+                'command': 'am',
+                'args': ['start', '-a', 'android.intent.action.CALL', 'tel:' + ussd_code]
+            })
+            print(f"[ACTION] Dialed USSD code: {input_value}", flush=True)
+        else:
+            try:
+                input_field = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((AppiumBy.XPATH, '//android.widget.EditText'))
+                )
+                input_field.send_keys(input_value)
+                print(f"[ACTION] Entered '{input_value}' in menu field", flush=True)
+                send_btn = WebDriverWait(driver, 20).until(
+                    EC.element_to_be_clickable((AppiumBy.ANDROID_UIAUTOMATOR,
+                                                'new UiSelector().text("Send")'))
+                )
+                send_btn.click()
+                print("[ACTION] Clicked 'Send' button", flush=True)
+            except Exception as e:
+                print(f"[ERROR] Interaction error: {e}", flush=True)
+
+        time.sleep(3)
+
+        # 2) Read the response by checking multiple possible element IDs
+        possible_response_ids = [
+            'com.android.phone:id/text_message',
+            'com.android.phone:id/message',
+        ]
+
+        ussd_response = "No response found"
+        used_response_id = None
+
+        for resp_id in possible_response_ids:
+            try:
+                elem = WebDriverWait(driver, 5).until(
+                    EC.presence_of_element_located((AppiumBy.ID, resp_id))
+                )
+                ussd_response = elem.text
+                used_response_id = resp_id
+                break
+            except:
+                continue
+
+        if used_response_id:
+            print(f"[INFO] Response retrieved using ID: {used_response_id}", flush=True)
+        else:
+            print("[WARNING] No known response element found", flush=True)
+
+        print(f"[RESPONSE] {ussd_response}", flush=True)
+
+        # 3) Take screenshot & log basic info
+        screenshot_path = f"{report_dir}/step_{current_step + 1}.png"
+        driver.save_screenshot(screenshot_path)
+        print(f"[SCREENSHOT] {screenshot_path}", flush=True)
+
+        missing = [kw for kw in expected_keywords if kw.lower() not in ussd_response.lower()]
+        status = "PASS" if not missing and "no response found" not in ussd_response.lower() else "FAIL"
+        log_step(current_step + 1, input_value, expected_keywords, ussd_response, status, screenshot_path)
+
+        # 4) Error logging
+        if status == "FAIL":
+            error_type = "No Response" if "no response found" in ussd_response.lower() else "Missing Keyword(s)"
+            ws_logs.append([
+                current_step + 1,
+                ", ".join(missing),
+                ussd_response,
+                input_value,
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                error_type
+            ])
+            print(f"[LOG] Error: {error_type}, Missing: {missing}", flush=True)
+
+        # 5) Determine next step
+        detected = detect_current_step(ussd_response, steps)
+        if detected is None and step_attempts[current_step] <= max_retries:
+            next_step = current_step
+            print(f"[INFO] Retry step {current_step+1}", flush=True)
+        elif detected < current_step and step_attempts[current_step] <= max_retries:
+            next_step = detected + 1
+            print(f"[INFO] Bounced to step {detected+1}, advancing to {next_step+1}", flush=True)
+        else:
+            next_step = current_step + 1
+            print(f"[INFO] Advancing to step {next_step+1}", flush=True)
+
+        # 6) Timing log
+        end_time = datetime.now()
+        ws_timing.append([
+            current_step + 1,
+            input_value,
+            start_time.strftime("%H:%M:%S"),
+            end_time.strftime("%H:%M:%S"),
+            (end_time - start_time).total_seconds()
+        ])
+
+        current_step = next_step
+
+finally:
+    driver.quit()
+    print("[INFO] Driver session ended", flush=True)
+
+    # Write summary
+    ws_summary.append(["Metric", "Value"])
+    for key, value in summary_data.items():
+        ws_summary.append([key, value])
+
+    # Add Bar Chart to Summary Sheet
+    chart = BarChart()
+    chart.title = "USSD Test Summary"
+    chart.y_axis.title = "Count"
+    chart.x_axis.title = "Status"
+    chart.style = 10
+
+    data = Reference(ws_summary, min_col=2, min_row=3, max_row=4)
+    categories = Reference(ws_summary, min_col=1, min_row=3, max_row=4)
+    chart.add_data(data, titles_from_data=False)
+    chart.set_categories(categories)
+
+    chart.dataLabels = DataLabelList()
+    chart.dataLabels.showVal = True
+
+    series = chart.series[0]
+    for i, dp in enumerate(series.data_points):
+        point = DataPoint(idx=i)
+        point.graphicalProperties.solidFill = "00FF00" if i == 0 else "FF0000"
+        series.data_points[i] = point
+
+    ws_summary.add_chart(chart, "D2")
+
+    # Auto-size columns
+    for sheet in [ws_results, ws_summary, ws_logs, ws_timing]:
+        for col in sheet.columns:
+            max_length = 0
+            col_letter = col[0].column_letter
+            for cell in col:
+                if cell.value:
+                    max_length = max(max_length, len(str(cell.value)))
+            sheet.column_dimensions[col_letter].width = max_length + 2
+
+    # Save Excel File
+    excel_file = f"{report_dir}/${id}_ussd_test_report_{timestamp}.xlsx"
+    wb.save(excel_file)
+    print(f"[INFO] USSD Test complete. Report saved at: {excel_file}", flush=True)
+`;
+            
+            return script;
+        }
+        
+        function generateHtmlModifications(testCaseId, testCaseName, category, dynamicInputs, requiresLogin) {
+            const result = {
+                dropdownOption: '',
+                additionalFields: '',
+                jsLogic: ''
+            };
+            
+            // Generate dropdown option
+            result.dropdownOption = `<div class="dropdown-option" data-value="${testCaseId}">${testCaseId} - ${testCaseName}</div>`;
+            
+            // Generate additional fields if needed
+            const fields = dynamicInputs.map(input => {
+                let fieldType = 'text';
+                let inputType = 'text';
+                
+                switch(input.type) {
+                    case 'number':
+                        fieldType = 'number';
+                        inputType = 'number';
+                        break;
+                    case 'tel':
+                        fieldType = 'tel';
+                        inputType = 'text';
+                        break;
+                    default:
+                        fieldType = 'text';
+                        inputType = 'text';
+                }
+                
+                return `<div id="${input.name}Field" class="extra-field">
+    <label for="${input.name}">${input.description}</label>
+    <input type="${inputType}" id="${input.name}" name="${input.name}">
+</div>`;
+            });
+            
+            if (fields.length > 0) {
+                result.additionalFields = fields.join('\n');
+            }
+            
+            // Generate JavaScript logic for showing/hiding fields
+            if (dynamicInputs.length > 0 || requiresLogin) {
+                let jsLogic = `// Add to testSelect.addEventListener('change') in index.html\n`;
+                jsLogic += `if (selected === '${testCaseId}') {\n`;
+                
+                if (requiresLogin) {
+                    jsLogic += `    // This test requires password\n`;
+                }
+                
+                dynamicInputs.forEach(input => {
+                    jsLogic += `    ${input.name}Field.style.display = 'block';\n`;
+                });
+                
+                jsLogic += `}`;
+                
+                result.jsLogic = jsLogic;
+            }
+            
+            return result;
+        }
+        
+        function generatePythonModifications(testCaseId, category, dynamicInputs, requiresLogin) {
+            const result = {
+                scriptMapping: '',
+                commandLogic: ''
+            };
+            
+            // Generate script mapping
+            const scriptPath = `'scripts/${category}/apollo_${category.toLowerCase()}_${testCaseId}.py'`;
+            result.scriptMapping = `'${testCaseId}': ${scriptPath},`;
+            
+            // Generate command logic if needed
+            if (dynamicInputs.length > 0 || requiresLogin) {
+                let commandLogic = `# Add to the command building logic in run_test.py\n`;
+                commandLogic += `if test_case == '${testCaseId}':\n`;
+                
+                if (requiresLogin) {
+                    commandLogic += `    if password:\n`;
+                    commandLogic += `        cmd.append(password)\n`;
+                }
+                
+                dynamicInputs.forEach(input => {
+                    commandLogic += `    cmd.append(data.get('${input.name}', ''))\n`;
+                });
+                
+                result.commandLogic = commandLogic;
+            }
+            
+            return result;
+        }
+        
+        function downloadScript() {
+            const script = document.getElementById('generatedScript').value;
+            const testCaseId = document.getElementById('testCaseId').value;
+            const testCaseCategory = document.getElementById('testCaseCategory').value;
+            
+            const blob = new Blob([script], { type: 'text/x-python' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `apollo_${testCaseCategory.toLowerCase()}_${testCaseId.toLowerCase()}.py`;
+            document.body.appendChild(a);
+            a.click();
+            
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+    </script>
+</body>
+</html>

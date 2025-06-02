@@ -1,0 +1,289 @@
+{% extends "admin_base.html" %}
+{% block title %}Edit Test Case{% endblock %}
+
+{% block content %}
+
+<style>
+    .hidden {
+        display: none !important;
+    }
+
+    /* --- Custom Select Styling --- */
+    /* Basic styling to make selects look decent */
+    select.custom-form-select, /* For main form selects */
+    select.custom-form-select-sm /* For step selects */ {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 1.75rem 0.375rem 0.75rem; /* Adjust padding as needed */
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); /* Basic dropdown arrow */
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        appearance: none; /* Important to remove default OS styling */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+
+    select.custom-form-select-sm {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-size: 0.875rem; /* Smaller font for sm version */
+    }
+
+    select.custom-form-select:focus,
+    select.custom-form-select-sm:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* Bootstrap-like focus */
+    }
+
+    /* --- Steps Section Styling --- */
+    .step-row {
+        margin-bottom: 1.5rem;
+        padding: 1rem; /* Base padding */
+        padding-top: 2.5rem;  /* Extra top padding to make space for the close button */
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+        background-color: #f8f9fa;
+        position: relative; /* Needed for absolute positioning of the close button */
+    }
+
+    /* --- Custom Close Button Styling --- */
+    .custom-remove-step-btn {
+        position: absolute;
+        top: 0.5rem;  /* Position from the top of .step-row */
+        right: 0.5rem; /* Position from the right of .step-row */
+        width: 28px;
+        height: 28px;
+        background-color: transparent;
+        border: none;
+        color: #dc3545; /* Red color for the 'X' */
+        font-size: 1.8rem; /* Size of the 'X' character */
+        font-weight: bold;
+        line-height: 1;
+        cursor: pointer;
+        opacity: 0.7;
+        z-index: 10; /* Ensure it's above other content in the step row */
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .custom-remove-step-btn::before {
+        content: "×"; /* The 'times' character for 'X' */
+    }
+
+    .custom-remove-step-btn:hover {
+        color: #a71d2a; /* Darker red on hover */
+        opacity: 1;
+    }
+
+    /* --- Basic Grid Fallback (if Bootstrap grid isn't working) --- */
+    /* This is very basic. Proper grid requires more. */
+    .custom-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px; /* Simulate Bootstrap gutters */
+        margin-left: -15px;
+    }
+    .custom-col-md-2, .custom-col-md-3, .custom-col-md-6, .custom-col-md-7, .custom-col-md-12 {
+        position: relative;
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-bottom: 1rem; /* Spacing between items in a column */
+    }
+
+    /* Apply column widths for medium screens and up */
+    @media (min-width: 768px) { /* md breakpoint */
+        .custom-col-md-2 { flex: 0 0 16.666667%; max-width: 16.666667%; }
+        .custom-col-md-3 { flex: 0 0 25%; max-width: 25%; }
+        .custom-col-md-6 { flex: 0 0 50%; max-width: 50%; }
+        .custom-col-md-7 { flex: 0 0 58.333333%; max-width: 58.333333%; }
+        .custom-col-md-12 { flex: 0 0 100%; max-width: 100%; }
+    }
+
+    /* Spacing between form groups / rows of inputs */
+    .form-group-spacing {
+        margin-bottom: 1rem;
+    }
+
+    /* Labels */
+    .form-label { /* For main form labels */
+        margin-bottom: 0.5rem;
+        display: block; /* Ensure it takes its own line */
+    }
+    .form-label-sm { /* For step labels */
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+        display: block; /* Ensure it takes its own line */
+    }
+    
+    /* Inputs and Textareas */
+    .form-control, .form-control-sm {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        appearance: none;
+        border-radius: 0.25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+    .form-control-sm {
+        min-height: calc(1.5em + 0.5rem + 2px);
+        padding: 0.25rem 0.5rem;
+        font-size: .875rem;
+        border-radius: 0.2rem;
+    }
+    .form-control:focus, .form-control-sm:focus {
+        color: #212529;
+        background-color: #fff;
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+    }
+
+</style>
+<div class="container mt-4">
+    <div class="row align-items-center mb-4">
+        <div class="col-12 col-md-6">
+            <h1 class="h3 text-gray-800 mb-2 mb-md-0">Edit Test Case: {{ testcase.Name }}</h1>
+
+            {% include '_messages.html' %} 
+        </div>
+        <div class="col-12 col-md-6 text-md-right">
+            <a href="{{ url_for('test_cases') }}" class="btn btn-secondary shadow-sm">
+                <i class="fas fa-arrow-left mr-1"></i> Back to Teste Cases
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('edit_test_case', testcase_id=testcase.TestCaseID) }}">
+
+            <div class="row g-3 mb-4">
+                <div class="form-group col-md-6">
+                    <label class="font-weight-bold">Code</label>
+                    <input type="text" name="code" value="{{ testcase.Code }}" class="form-control" required>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label class="font-weight-bold">Name</label>
+                    <input type="text" name="name" value="{{ testcase.Name }}" class="form-control" required>
+                </div>
+
+                <div class="form-group col-md-6"> 
+                    <label for="apptype" class="form-label">Application <span class="text-danger">*</span></label>
+                    <select id="apptype" name="apptype" required class="custom-form-select"> 
+                        <option value="">Loading Applications..</option>
+                    </select>
+                </div>
+                
+                <div class="form-group col-md-6"> 
+                    <label for="module" class="form-label">Module(Test Suite)<span class="text-danger">*</span></label>
+                    <select id="module" name="module" required class="custom-form-select"> 
+                        <option value="">Select Module</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label class="font-weight-bold">Description</label>
+                    <textarea name="description" class="form-control" rows="4">{{ testcase.Description }}</textarea>
+                </div>
+              </div>
+
+                <div class="mt-4 text-right">
+                    <button type="submit" class="btn btn-warning">Save Changes</button>
+                    <a href="{{ url_for('test_cases') }}" class="btn btn-secondary ml-2">Cancel</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const moduleSelect = document.getElementById('module');
+    const appTypeSelect = document.getElementById('apptype');
+
+    const currentAppType = "{{ app_type_id }}";
+    const currentModuleId = "{{ testcase.Module_id }}";
+
+    async function loadApplications() {
+        try {
+            const res = await fetch('/apptype');
+            if (!res.ok) throw new Error(`Failed to fetch applications: ${res.statusText}`);
+            const data = await res.json();
+
+            appTypeSelect.innerHTML = '<option value="">Select Application</option>';
+            data.forEach(app => {
+                const opt = document.createElement('option');
+                opt.value = app.id;
+                opt.textContent = app.name;
+                if (app.id == currentAppType) opt.selected = true;
+                appTypeSelect.appendChild(opt);
+            });
+
+            if (currentAppType) {
+                await loadModules(currentAppType);
+            }
+        } catch (err) {
+            console.error("Failed to load applications:", err);
+            appTypeSelect.innerHTML = '<option value="">Error loading applications</option>';
+        }
+    }
+
+    async function loadModules(appType) {
+        moduleSelect.innerHTML = '<option value="">Loading Modules...</option>';
+        moduleSelect.disabled = true;
+
+        try {
+            const res = await fetch(`/get-modules?appType=${appType}`);
+            if (!res.ok) throw new Error(`Failed to fetch modules: ${res.statusText}`);
+            const data = await res.json();
+
+            moduleSelect.innerHTML = '<option value="">Select Module</option>';
+            data.forEach(mod => {
+                const opt = document.createElement('option');
+                opt.value = mod.SuiteID;
+                opt.textContent = mod.Name;
+                if (mod.SuiteID == currentModuleId) opt.selected = true;
+                moduleSelect.appendChild(opt);
+            });
+            moduleSelect.disabled = false;
+        } catch (err) {
+            console.error("Failed to load modules:", err);
+            moduleSelect.innerHTML = '<option value="">Error loading modules</option>';
+        }
+    }
+
+    appTypeSelect.addEventListener('change', () => {
+        const selectedAppType = appTypeSelect.value;
+        if (selectedAppType) {
+            loadModules(selectedAppType);
+        } else {
+            moduleSelect.disabled = true;
+            moduleSelect.innerHTML = '<option value="">Select Module</option>';
+        }
+    });
+
+    loadApplications();
+  });
+</script>
+{% endblock %}

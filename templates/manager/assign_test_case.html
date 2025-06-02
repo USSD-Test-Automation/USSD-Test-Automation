@@ -1,0 +1,79 @@
+{% extends "manager_base.html" %}
+
+{% block content_header %}
+{% include '_messages.html' %}
+<div class="content-card-header" style="border-bottom:none; padding-bottom:0; margin-bottom: 15px;">
+    <h2>Assign Test Case:
+        <span style="font-weight:normal; color: #555;">
+            {{ test_case.Code }} - {{ test_case.Name }}
+        </span>
+    </h2>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="content-card p-4">
+
+    {% include '_messages.html' %}
+
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="fieldset-box">
+            <legend><i class="fas fa-user-tag"></i> Assignment Details</legend>
+
+            <div class="form-group {% if form.tester_id.errors %}has-error{% endif %}">
+                {{ form.tester_id.label(class="form-label") }}
+                {% if form.tester_id.choices %}
+                {{ form.tester_id(class="form-control") }}
+                {% else %}
+                <div class="no-testers-message">
+                    <i class="fas fa-exclamation-triangle"></i> No testers available to assign to.
+                </div>
+                {% endif %}
+                {% if form.tester_id.errors %}
+                <div class="error-messages">
+                    {% for error in form.tester_id.errors %}
+                    <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group {% if form.priority.errors %}has-error{% endif %}">
+                {{ form.priority.label(class="form-label") }}
+                {{ form.priority(class="form-control") }}
+                {% if form.priority.errors %}
+                <div class="error-messages">
+                    {% for error in form.priority.errors %}
+                    <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group {% if form.notes.errors %}has-error{% endif %}">
+                {{ form.notes.label(class="form-label") }}
+                {{ form.notes(class="form-control", rows=3, placeholder="Add any specific instructions or notes...") }}
+                {% if form.notes.errors %}
+                <div class="error-messages">
+                    {% for error in form.notes.errors %}
+                    <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </fieldset>
+
+        <div class="form-group" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef;">
+            {% if form.tester_id.choices %}
+            {{ form.submit(class="button") }}
+            {% else %}
+            <button type="submit" class="button" disabled title="No testers available">
+                {{ form.submit.label.text }}
+            </button>
+            {% endif %}
+            <a href="{{ url_for('manager_dashboard') }}" class="btn btn-secondary p-2 rounded">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

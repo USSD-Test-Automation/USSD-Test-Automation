@@ -1,0 +1,531 @@
+{% extends "admin_base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+        <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-report shadow-sm"><i
+                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
+    </div>
+
+    <div class="row">
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Users</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_users }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <!-- <i class="fas fa-calendar fa-2x text-gray-300"></i> -->
+                            <i class="fas fa-solid fa-users fa-2x text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Active Testers</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.active_testers }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <!-- <i class="fas fa-calendar fa-2x text-gray-300"></i> -->
+                            <i class="fas fa-solid fa-user fa-2x text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Assigned Tests</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_tests }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-flask fa-2x text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Compleated Tests
+                            </div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ completed_percent }}%
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="progress progress-sm mr-2">
+                                        <div class="progress-bar bg-warning" role="progressbar"
+                                            data-completed="{{ completed_percent }}" style="width: 0%"
+                                            aria-valuenow="{{ completed_percent }}" aria-valuemin="0"
+                                            aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <!-- <i class="fas fa-clipboard-list fa-2x text-gray-300"></i> -->
+                            <i class="fas fa-check-circle fa-2x text-gray-400"></i>
+                            <!-- <i class="fas fa-solid fa-vial-circle-check fa-2x text-gray-400"></i> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Passed Tests</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pass_tests |
+                                default('N/A') }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <!-- <i class="fas fa-calendar fa-2x text-gray-300"></i> -->
+                             <i class="fas fa-thumbs-up  fa-2x text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Failed Tests</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ fail_tests | default('N/A') }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <!-- <i class="fas fa-calendar fa-2x text-gray-300"></i> -->
+                            <!-- <i class="fas fa-solid fa-users fa-2x text-gray-400"></i> -->
+                            <i class="fas fa-exclamation-circle fa-2x text-gray-400" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Inprogress Tests</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ inprogress_tests }}</div>
+                        </div>
+                        <div class="col-auto">
+                            
+                            <i class="fas fa-forward fa-2x text-gray-400"></i>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pending Tests</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pending_tests }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-solid fa-spinner fa-2x text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+    <!-- Content Row -->
+
+    <div class="row mt-20">
+        <div class="container-fluid">
+
+            <div class="section-header" style="border-bottom:none; padding-bottom:0; margin-bottom: 20px;">
+                <!-- <h2><i class="fas fa-chart-line" style="color: #f7b731; margin-right:10px;"></i> System Analytics</h2> -->
+                <h1 class="h3 mb-0 text-gray-800">System Analytics</h1>
+            </div>
+
+            {% if current_user.role == 'manager' or current_user.role == 'admin' %}
+            <div class="d-flex flex-wrap  justify-content-between" style="column-gap: 1.25rem;">
+                <div class="card shadow mb-4 flex-grow-1" style="min-width: 320px; flex: 1 1 45%;">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-gray-700">Executions by Batch (Last 5 Completed)</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-pie pt-4" id="batchExecutionsChart">
+                            {% if stats.batch_chart_labels and stats.batch_chart_labels|length > 0 %}
+                            {% set max_val_batch = ([0] + stats.batch_chart_pass_data + stats.batch_chart_fail_data) |
+                            max %}
+                            {% set chart_height = 200 %}
+                            {% set bar_area_height = chart_height - 30 %}
+                            {% set num_batches = stats.batch_chart_labels | length %}
+                            {% set bar_width = 30 %}
+                            {% set group_spacing = 20 %}
+                            {% set total_width = num_batches * (bar_width * 2 + group_spacing) + group_spacing %}
+                            <svg width="100%" height="{{ chart_height + 60 }}"
+                                viewBox="0 0 {{ total_width + 20 }} {{ chart_height + 60 }}"
+                                preserveAspectRatio="xMidYMid meet">
+                                {% for i in range(5) %}
+                                <line x1="0" y1="{{ chart_height - (i * bar_area_height / 4) }}" x2="{{ total_width }}"
+                                    y2="{{ chart_height - (i * bar_area_height / 4) }}" class="svg-axis-line" />
+                                <text x="-5" y="{{ chart_height - (i * bar_area_height / 4) + 3 }}"
+                                    class="svg-axis-label">
+                                    {{ (max_val_batch * i / 4) | round | int }}</text>
+                                {% endfor %}
+                                <line x1="0" y1="{{ chart_height }}" x2="{{ total_width }}" y2="{{ chart_height }}"
+                                    stroke="#333" stroke-width="1" />
+
+                                {% for i in range(num_batches) %}
+                                {% set pass_height = (stats.batch_chart_pass_data[i] / max_val_batch * bar_area_height)
+                                if
+                                max_val_batch > 0 else 0 %}
+                                {% set fail_height = (stats.batch_chart_fail_data[i] / max_val_batch * bar_area_height)
+                                if
+                                max_val_batch > 0 else 0 %}
+                                {% set x_pass = group_spacing + i * (bar_width * 2 + group_spacing) %}
+                                {% set x_fail = x_pass + bar_width %}
+
+                                <rect class="svg-bar" x="{{ x_pass }}" y="{{ chart_height - pass_height }}"
+                                    width="{{ bar_width }}" height="{{ pass_height }}" fill="#28a745">
+                                    <title>Pass: {{ stats.batch_chart_pass_data[i] }}</title>
+                                </rect>
+                                <rect class="svg-bar" x="{{ x_fail }}" y="{{ chart_height - fail_height }}"
+                                    width="{{ bar_width }}" height="{{ fail_height }}" fill="#dc3545">
+                                    <title>Fail: {{ stats.batch_chart_fail_data[i] }}</title>
+                                </rect>
+                                <text font-size="12px" style="padding-bottom: 30px;" fill="#777" x="{{ x_pass + 2 }}"
+                                    y="{{ chart_height + 15 }}">
+                                    {{ stats.batch_chart_labels[i][:13] }}{{ ' ' if stats.batch_chart_labels[i]|length >
+                                    15 else
+                                    '' }}
+                                </text>
+                                {% endfor %}
+                                <text style="padding-top: 15px;" x="50%" y="{{ chart_height + 35 }}"
+                                    text-anchor="middle" font-size="12px" fill="#777">
+                                    (Green: Pass, Red: Fail)
+                                </text>
+                            </svg>
+                            {% else %}
+                            <p>No batch execution data to display.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {# Chart 2: Test Executions by Application (Pass/Fail) - SVG Pie Chart #}
+
+                {# Chart: EXECUTED Test Assignments by Priority - SVG Pie Chart with Percentages #}
+                <div class="card shadow mb-4 flex-grow-1" style="min-width: 320px; flex: 1 1 45%;">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-gray-700">Executed Test Assignments by Priority</h6>
+                    </div>
+                    <div class="card-body" id="priorityPieChart">
+
+                        {% if stats.priority_pie_data and (stats.priority_pie_data | sum) > 0 %}
+                        {% set total_priority_executions = stats.priority_pie_data | sum %}
+
+                        {# Define SVG size and pie parameters #}
+                        {% set svg_size = 220 %} {# Overall SVG canvas size #}
+                        {% set pie_radius = 0.88 %} {# SLIGHTLY REDUCED: Pie radius relative to viewBox units (-1 to 1)
+                        #}
+                        {% set text_radius_factor = 0.6 %} {# How far from center to place text (0.0 to 1.0 of
+                        pie_radius)
+                        #}
+                        {% set min_percentage_for_text = 5 %} {# Don't show text for slices smaller than this % #}
+                        {% set font_size_svg_units = 0.13 %} {# Font size in viewBox units, adjust as needed #}
+
+                        <svg width="{{ svg_size }}" height="{{ svg_size }}" viewBox="-1 -1 2 2"
+                            preserveAspectRatio="xMidYMid meet" class="chart-pie pt-4"
+                            style="margin-bottom: 15px; overflow: visible !important;">
+                            <g transform="rotate(-90 0 0)">
+                                {% set current_angle_deg = 0 %}
+
+                                {# --- START HARDCODED TEST FOR FIRST SLICE --- #}
+                                {% if stats.priority_pie_labels|length > 0 and stats.priority_pie_data[0] > 0 %}
+                                {% set slice_value_0 = stats.priority_pie_data[0] %}
+                                {% set slice_label_0 = stats.priority_pie_labels[0] %}
+                                {% set slice_color_0 = stats.priority_pie_colors[0] %}
+                                {% set slice_angle_deg_0 = (slice_value_0 / total_priority_executions) * 360 %}
+                                {% set slice_percentage_0 = (slice_value_0 / total_priority_executions * 100) %}
+
+                                <path class="svg-pie-slice" fill="{{ slice_color_0 }}"
+                                    d="{{ make_pie_slice_path(slice_angle_deg_0, current_angle_deg, pie_radius) }}">
+                                    <title>{{ slice_label_0 }}: {{ slice_value_0 }} ({{ slice_percentage_0 | round(1)
+                                        }}%)
+                                    </title>
+                                </path>
+                                <!-- Manually add text for the first slice for this test -->
+                                {% if slice_percentage_0 >= min_percentage_for_text %}
+                                {% set text_mid_angle_rad_0 = (current_angle_deg + slice_angle_deg_0 / 2) * pi / 180 %}
+                                {% set text_x_0 = (pie_radius * text_radius_factor * cos(text_mid_angle_rad_0)) %}
+                                {% set text_y_0 = (pie_radius * text_radius_factor * sin(text_mid_angle_rad_0)) %}
+                                <text class="pie-text" x="{{ text_x_0 | round(5) }}" y="{{ text_y_0 | round(5) }}"
+                                    fill="#ffffff" font-size="{{ font_size_svg_units }}px" text-anchor="middle"
+                                    dominant-baseline="central"
+                                    transform="rotate(90, {{ text_x_0 | round(5) }}, {{ text_y_0 | round(5) }})">
+                                    {{ slice_percentage_0 | round(0) }}%
+                                </text>
+                                {% endif %}
+                                {% set current_angle_deg = current_angle_deg + slice_angle_deg_0 %}
+                                {% endif %}
+                                {# --- END HARDCODED TEST FOR FIRST SLICE --- #}
+
+
+                                {# Loop for subsequent slices (index 1 onwards) #}
+                                {% for i in range(1, stats.priority_pie_labels|length) %} {# START LOOP FROM 1 #}
+                                {% set slice_value = stats.priority_pie_data[i] %}
+                                {% if slice_value > 0 %}
+                                {% set slice_angle_deg = (slice_value / total_priority_executions) * 360 %}
+                                {% set slice_percentage = (slice_value / total_priority_executions * 100) %}
+
+                                <path class="svg-pie-slice" fill="{{ stats.priority_pie_colors[i] }}"
+                                    d="{{ make_pie_slice_path(slice_angle_deg, current_angle_deg, pie_radius) }}">
+                                    <title>{{ stats.priority_pie_labels[i] }}: {{ slice_value }} ({{ slice_percentage |
+                                        round(1) }}%)</title>
+                                </path>
+
+                                {% if slice_percentage >= min_percentage_for_text %}
+                                {% set text_mid_angle_rad = (current_angle_deg + slice_angle_deg / 2) * pi / 180 %}
+                                {% set text_x = (pie_radius * text_radius_factor * cos(text_mid_angle_rad)) %}
+                                {% set text_y = (pie_radius * text_radius_factor * sin(text_mid_angle_rad)) %}
+                                <text class="pie-text" x="{{ text_x | round(5) }}" y="{{ text_y | round(5) }}"
+                                    fill="#ffffff" font-size="{{ font_size_svg_units }}px" text-anchor="middle"
+                                    dominant-baseline="central"
+                                    transform="rotate(90, {{ text_x | round(5) }}, {{ text_y | round(5) }})">
+                                    {{ slice_percentage | round(0) }}%
+                                </text>
+                                {% endif %}
+                                {% set current_angle_deg = current_angle_deg + slice_angle_deg %}
+                                {% endif %}
+                                {% endfor %}
+                            </g>
+                        </svg>
+
+                        {# Legend #}
+                        <div
+                            style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; font-size:0.85em; margin-top: 10px;">
+                            {% for i in range(stats.priority_pie_labels|length) %}
+                            {% if stats.priority_pie_data[i] > 0 or total_priority_executions == 0 %}
+                            <div class="svg-legend-item" style="margin-right: 10px; margin-bottom: 5px;">
+                                <span class="svg-legend-color-box"
+                                    style="background-color: {{ stats.priority_pie_colors[i] }};"></span>
+                                {{ stats.priority_pie_labels[i] }} ({{ stats.priority_pie_data[i] }})
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p>No executed assignment data by priority to display.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {# Chart 3: Test Execution Trend (Pass/Fail over time) - SVG Line Chart #}
+                <div class="card shadow mb-4 flex-grow-1" style="min-width: 320px; flex: 1 1 45%;">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-gray-700">Execution Trend Over Time (Last 7 Days)</h6>
+                    </div>
+                    <div class="card-body" id="executionTrendLineChart">
+                        {% if stats.execution_trend_dates and stats.execution_trend_dates|length > 0 %}
+                        {% set max_val_trend = ([0] + stats.execution_trend_pass_data + stats.execution_trend_fail_data)
+                        | max
+                        %}
+                        {% set chart_height = 200 %}
+                        {% set chart_width = 400 %}
+                        {% set num_points = stats.execution_trend_dates | length %}
+                        {% set point_gap = chart_width / (num_points - 1) if num_points > 1 else chart_width %}
+
+                        <svg class="chart-pie pt-4 p-3" width="100%" height="{{ chart_height + 50 }}"
+                            viewBox="0 0 {{ chart_width + 50 }} {{ chart_height + 50 }}"
+                            preserveAspectRatio="xMidYMid meet">
+                            {% for i in range(5) %}
+                            <line x1="30" y1="{{ chart_height - (i * chart_height / 4) }}" x2="{{ chart_width + 30 }}"
+                                y2="{{ chart_height - (i * chart_height / 4) }}" class="svg-axis-line" />
+                            <text x="25" y="{{ chart_height - (i * chart_height / 4) + 5 }}" class="svg-axis-label">{{
+                                (max_val_trend * i / 4) | round | int }}</text>
+                            {% endfor %}
+                            <line x1="30" y1="{{ chart_height }}" x2="{{ chart_width + 30 }}" y2="{{ chart_height }}"
+                                stroke="#333" stroke-width="1" />
+
+                            {% set pass_points_list = [] %}
+                            {% for i in range(num_points) %}
+                            {% set x = 30 + i * point_gap %}
+                            {% set y = chart_height - (stats.execution_trend_pass_data[i] / max_val_trend *
+                            chart_height) if
+                            max_val_trend > 0 else chart_height %}
+                            {% if pass_points_list.append(x ~ "," ~ y) %}{% endif %}
+                            <circle cx="{{ x }}" cy="{{ y }}" r="3" fill="#28a745">
+                                <title>Pass ({{ stats.execution_trend_dates[i] }}): {{
+                                    stats.execution_trend_pass_data[i] }}
+                                </title>
+                            </circle>
+                            {% endfor %}
+                            <polyline points="{{ pass_points_list | join(' ') }}" fill="none" stroke="#28a745"
+                                stroke-width="2" />
+
+                            {% set fail_points_list = [] %}
+                            {% for i in range(num_points) %}
+                            {% set x = 30 + i * point_gap %}
+                            {% set y = chart_height - (stats.execution_trend_fail_data[i] / max_val_trend *
+                            chart_height) if
+                            max_val_trend > 0 else chart_height %}
+                            {% if fail_points_list.append(x ~ "," ~ y) %}{% endif %}
+                            <circle cx="{{ x }}" cy="{{ y }}" r="3" fill="#dc3545">
+                                <title>Fail ({{ stats.execution_trend_dates[i] }}): {{
+                                    stats.execution_trend_fail_data[i] }}
+                                </title>
+                            </circle>
+                            {% endfor %}
+                            <polyline points="{{ fail_points_list | join(' ') }}" fill="none" stroke="#dc3545"
+                                stroke-width="2" />
+
+                            {% for i in range(num_points) %}
+                            <text font-size="13px" fill="#777" x="{{ 30 + i * point_gap }}" y="{{ chart_height + 15 }}">
+                                {{ stats.execution_trend_dates[i] }}
+                            </text>
+                            {% endfor %}
+                            <text class="pt-4" x="{{ chart_width / 2 + 15}}" y="{{ chart_height + 35 }}"
+                                text-anchor="middle" font-size="12px" fill="#777">(Green: Pass, Red: Fail)</text>
+                        </svg>
+                        {% else %}
+                        <p>No trend data to display.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+
+                <div class="mb-4 flex-grow-1" style="min-width: 320px; flex: 1 1 45%;">
+
+                </div>
+                {% else %}
+                <div class="alert alert-danger text-center">
+                    You are unautorized to see analytics.<br>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Content Row -->
+
+
+</div>
+
+<footer class="sticky-footer bg-white">
+    <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+            <span>Copyright &copy; BOA Test Automation 2025</span>
+        </div>
+    </div>
+</footer>
+
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const bar = document.querySelector('[data-completed]');
+        if (bar) {
+            const percent = bar.getAttribute('data-completed');
+            bar.style.width = percent + '%';
+        }
+    });
+</script>
+
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+
+{% endblock %}
+
+{# Jinja macro to help generate SVG pie slice paths #}
+{% macro make_pie_slice_path(slice_angle_deg, start_angle_deg, radius=1) -%}
+{# Ensure slice_angle is not too small to be invisible or problematic #}
+{% if slice_angle_deg < 0.001 %} {# Return an empty path or a tiny dot if the angle is effectively zero #} M 0 0 {% else
+    %} {# Convert angles to radians for math functions #} {% set start_rad=start_angle_deg * pi / 180 %} {% set
+    end_rad=(start_angle_deg + slice_angle_deg) * pi / 180 %} {# Calculate coordinates for the arc #} {% set x1=(radius
+    * cos(start_rad)) %} {% set y1=(radius * sin(start_rad)) %} {% set x2=(radius * cos(end_rad)) %} {% set y2=(radius *
+    sin(end_rad)) %} {# If start and end points are numerically identical due to a full circle or tiny slice, SVG arc
+    won't draw. We can make x2 infinitesimally different. #} {% if (x1|round(7)==x2|round(7)) and
+    (y1|round(7)==y2|round(7)) and slice_angle_deg> 0 and slice_angle_deg < 359.999 %} {# Avoid for exact 360 #} {% set
+        end_rad_adjusted=(start_angle_deg + slice_angle_deg - 0.0001) * pi / 180 %} {% set x2=(radius *
+        cos(end_rad_adjusted)) %} {% set y2=(radius * sin(end_rad_adjusted)) %} {% endif %} {# Determine if the arc
+        should be> 180 degrees (large-arc-flag) #}
+        {% set large_arc_flag = 1 if slice_angle_deg > 180 else 0 %}
+
+        {# Construct the SVG path data string for a pie slice #}
+        M 0 0 L {{ x1 | round(7) }} {{ y1 | round(7) }} A {{ radius | round(7) }} {{ radius | round(7) }} 0 {{
+        large_arc_flag }} 1 {{ x2 | round(7) }} {{ y2 | round(7) }} Z
+        {% endif %}
+        {%- endmacro %}

@@ -1,0 +1,738 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Create New Test Case{% endblock %}
+
+{% block content %}
+<link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+<style>
+    .hidden {
+        display: none !important;
+    }
+
+    /* --- Custom Select Styling --- */
+    select.custom-form-select,
+    select.custom-form-select-sm {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+
+    select.custom-form-select-sm {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-size: 0.875rem;
+    }
+
+    select.custom-form-select:focus,
+    select.custom-form-select-sm:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    /* --- Steps Section Styling --- */
+    .step-row {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        padding-top: 2.5rem;
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+        background-color: #f8f9fa;
+        position: relative;
+    }
+
+    /* --- Custom Close Button Styling --- */
+    .custom-remove-step-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 28px;
+        height: 28px;
+        background-color: transparent;
+        border: none;
+        color: #dc3545;
+        font-size: 1.8rem;
+        font-weight: bold;
+        line-height: 1;
+        cursor: pointer;
+        opacity: 0.7;
+        z-index: 10;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .custom-remove-step-btn::before {
+        content: "×";
+    }
+
+    .custom-remove-step-btn:hover {
+        color: #a71d2a;
+        opacity: 1;
+    }
+
+    /* --- Basic Grid Fallback --- */
+    .custom-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    .custom-col-md-2,
+    .custom-col-md-3,
+    .custom-col-md-6,
+    .custom-col-md-7,
+    .custom-col-md-12 {
+        position: relative;
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-bottom: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .custom-col-md-2 {
+            flex: 0 0 16.666667%;
+            max-width: 16.666667%;
+        }
+
+        .custom-col-md-3 {
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+
+        .custom-col-md-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        .custom-col-md-7 {
+            flex: 0 0 58.333333%;
+            max-width: 58.333333%;
+        }
+
+        .custom-col-md-12 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+
+    .form-group-spacing {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-label-sm {
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+
+    .form-control,
+    .form-control-sm {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        appearance: none;
+        border-radius: 0.25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    .form-control-sm {
+        min-height: calc(1.5em + 0.5rem + 2px);
+        padding: 0.25rem 0.5rem;
+        font-size: .875rem;
+        border-radius: 0.2rem;
+    }
+
+    .form-control:focus,
+    .form-control-sm:focus {
+        color: #212529;
+        background-color: #fff;
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
+    }
+</style>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-gray-800 font-size-800">Create Test Case</h6>
+        <button type="button" id="addModuleBtn" class="btn btn-warning btn-sm">
+            <i class="fas fa-plus"></i> Add Module
+        </button>
+    </div>
+    <div class="card-body">
+        <form id="createForm">
+
+            <!-- Test Case Metadata -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label for="code" class="form-label">Code <span class="text-danger">*</span></label>
+                    <input type="text" id="code" name="code" required class="form-control"
+                        value="{{ testcase_data.Code if testcase_data else '' }}" {% if testcase_data %} disabled {%
+                        endif %} />
+                </div>
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                    <input type="text" id="name" name="name" required class="form-control"
+                        value="{{ testcase_data.Name if testcase_data else '' }}" {% if testcase_data %} disabled {%
+                        endif %} />
+                </div>
+                <div class="custom-col-md-6 form-group-spacing mt-2 ">
+                    <label for="apptype" class="form-label">Application <span class="text-danger">*</span></label>
+                    <select id="apptype" name="apptype" required class="custom-form-select" {% if testcase_data %}
+                        disabled {% endif %}>
+                        {% if app_name %}
+                        <option value="{{ app_name }}">{{ app_name }}</option>
+                        {% else %}
+                        <option value="">Select Application</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="custom-col-md-6 form-group-spacing mt-2">
+                    <label for="module" class="form-label">Module (Test Suite) <span
+                            class="text-danger">*</span></label>
+                    <select id="module" name="module" required class="custom-form-select" {% if testcase_data %}
+                        disabled {% endif %}>
+                        {% if testcase_data %}
+                        <option value="{{ testcase_data.Module_id }}">{{ module_name }}</option>
+                        {% else %}
+                        <option value="">Select Module</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea id="description" name="description" rows="2" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <!-- Steps Section -->
+            <hr class="my-4">
+            <h5 class="mb-3">Steps</h5>
+            <div id="stepsContainer" class="mb-4">
+                <!-- Steps will be added here by JavaScript, or could be pre-filled by server -->
+            </div>
+
+            <!-- Submit -->
+            <hr class="my-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <button type="button" id="addStepBtn" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> Add Step
+                </button>
+                <button type="submit" class="btn btn-warning px-4">
+                    Create Test Case
+                </button>
+            </div>
+            {% if testcase_data %}
+            <input type="hidden" id="existing_testcase_id" name="existing_testcase_id"
+                value="{{ testcase_data.TestCaseID }}">
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- Module Modal -->
+<div id="addModuleModel" class="modal fade" tabindex="-1" aria-labelledby="addModuleModelLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModuleModelLabel">Add New Module</h5>
+                <button type="button" id="closeModel" class="custom-remove-step-btn" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="newModuleName" class="form-label">Module Name <span class="text-danger">*</span></label>
+                    <input type="text" id="newModuleName" required class="form-control" placeholder="Enter module name">
+                </div>
+                <div class="mb-3">
+                    <label for="descriptionModel" class="form-label">Description</label>
+                    <textarea id="descriptionModel" name="descriptionModel" rows="2" class="form-control"></textarea>
+                </div>
+                <div class="custom-col-md-12 form-group-spacing mb-3">
+                    <label for="apptypemodel" class="form-label">Application <span class="text-danger">*</span></label>
+                    <select id="apptypemodel" name="apptypemodel" required class="custom-form-select">
+                        <option value="">Loading Applications..</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                    id="closeModelSecondary">Close</button>
+                <button type="button" id="saveModuleBtn" class="btn btn-warning">Save Module</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="customAlertModal" tabindex="-1" role="dialog" aria-labelledby="customAlertModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content shadow">
+            <div class="modal-header">
+                <h5 class="modal-title text-gray-800" id="customAlertModalLabel">Alert</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="customAlertModalBody">
+                <!-- Message inserted by JS -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let stepCountGlobal = 0; // Used to track total steps, primarily for new step numbering.
+        const stepsContainer = document.getElementById('stepsContainer');
+        const addStepBtn = document.getElementById('addStepBtn');
+        const createForm = document.getElementById('createForm');
+        const appTypeSelect = document.getElementById('apptype');
+        const moduleSelect = document.getElementById('module');
+
+        function showAlert(message, title = 'Alert') {
+            document.getElementById('customAlertModalLabel').textContent = title;
+            document.getElementById('customAlertModalBody').textContent = message;
+            const modal = new bootstrap.Modal(document.getElementById('customAlertModal'));
+            modal.show();
+        }
+
+        // --- Helper function to initialize controls for a step row ---
+        function initializeStepControls(stepElement) {
+            const inputTypeSelect = stepElement.querySelector('select[name="input_type"]');
+            const dynamicFieldsRow = stepElement.querySelector('.dynamic-fields-row');
+            const paramNameInput = dynamicFieldsRow.querySelector('input[name="param_name"]');
+            const paramTypeSelect = dynamicFieldsRow.querySelector('select[name="param_input_type"]');
+            const inputValueInput = stepElement.querySelector('input[name="input_value"]'); // The input to be disabled/enabled
+
+            if (!inputTypeSelect || !dynamicFieldsRow || !paramNameInput || !paramTypeSelect || !inputValueInput) {
+                console.error("A step row is missing expected elements. Skipping initialization for:", stepElement);
+                return;
+            }
+
+            function updateDynamicFieldsState() {
+                const isDynamic = inputTypeSelect.value === 'dynamic';
+                dynamicFieldsRow.style.display = isDynamic ? 'flex' : 'none';
+
+                // Configure fields specific to 'dynamic' type
+                paramNameInput.required = isDynamic;
+                paramTypeSelect.required = isDynamic;
+
+                if (isDynamic) {
+                    // Dynamic type selected: Disable inputValueInput, make it not required, update placeholder
+                    inputValueInput.disabled = true;
+                    inputValueInput.removeAttribute('required');
+                    inputValueInput.value = ''; // Clear any previous value
+                    inputValueInput.placeholder = "N/A for dynamic type";
+
+                    // Optionally, clear dynamic fields if user switches away and back
+                    // paramNameInput.value = ''; // Or retain if user is just toggling
+                    // paramTypeSelect.value = '';
+                } else {
+                    // Static type selected: Enable inputValueInput, make it required, update placeholder
+                    inputValueInput.disabled = false;
+                    inputValueInput.setAttribute('required', 'required');
+                    inputValueInput.placeholder = "e.g. *685# (Static Input)";
+
+                    // Clear dynamic fields as they are not applicable for static type
+                    paramNameInput.value = '';
+                    paramTypeSelect.value = '';
+                }
+            }
+
+            inputTypeSelect.addEventListener('change', updateDynamicFieldsState);
+            updateDynamicFieldsState(); // Call once to set initial state based on current select value
+        }
+
+        // --- Step Management ---
+        function addStepRow() {
+            const newStepOrder = stepsContainer.querySelectorAll('.step-row').length + 1;
+            stepCountGlobal = newStepOrder; // Update global count
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'border rounded position-relative step-row';
+            wrapper.innerHTML = `
+            <button type="button" class="custom-remove-step-btn" aria-label="Remove Step"></button>
+            <div class="custom-row mb-2">
+                <div class="custom-col-md-2">
+                    <label class="form-label-sm small mb-1">Step Order</label>
+                    <input type="number" name="step_order" value="${newStepOrder}" min="1" required class="form-control-sm"/>
+                </div>
+                <div class="custom-col-md-3">
+                    <label class="form-label-sm small mb-1">Input Type</label>
+                    <select name="input_type" required class="custom-form-select-sm">
+                        <option value="static" selected>Static</option> <!-- Default to static -->
+                        <option value="dynamic">Dynamic</option>
+                    </select>
+                </div>
+                <div class="custom-col-md-7">
+                    <label class="form-label-sm small mb-1">Input / Param Name (if Dynamic)</label>
+                    <!-- Placeholder will be updated by initializeStepControls -->
+                    <input type="text" name="input_value" placeholder="" required class="form-control-sm"/>
+                </div>
+            </div>
+            <div class="custom-row mb-2 dynamic-fields-row" style="display: none;"> <!-- Initially hidden -->
+                <div class="custom-col-md-6 param-name-group">
+                    <label class="form-label-sm small mb-1">Actual Param Name (for code)</label>
+                    <input type="text" name="param_name" placeholder="e.g. pin_param (no spaces)" class="form-control-sm"/>
+                </div>
+                <div class="custom-col-md-6 param-type-group">
+                    <label class="form-label-sm small mb-1">Parameter Input Type</label>
+                    <select name="param_input_type" class="custom-form-select-sm">
+                        <option value="">Select Type</option>
+                        <option value="text">Text</option>
+                        <option value="password">Password</option>
+                        <option value="number">Number</option>
+                        <option value="select">Select</option>
+                    </select>
+                </div>
+            </div>
+            <div class="custom-row">
+                <div class="custom-col-md-12">
+                    <label class="form-label-sm small mb-1">Expected Keywords (comma-separated)</label>
+                    <input type="text" name="expected_keywords" placeholder="welcome,login,error" class="form-control-sm" required/>
+                </div>
+            </div>
+        `;
+            stepsContainer.appendChild(wrapper);
+
+            initializeStepControls(wrapper); // Apply dynamic behavior to the new step row
+
+            const removeButton = wrapper.querySelector('.custom-remove-step-btn');
+            if (removeButton) {
+                removeButton.addEventListener('click', () => {
+                    wrapper.remove();
+                    // Renumber steps and update global step count
+                    let currentOrder = 1;
+                    stepsContainer.querySelectorAll('.step-row input[name="step_order"]').forEach(input => {
+                        input.value = currentOrder++;
+                    });
+                    stepCountGlobal = stepsContainer.querySelectorAll('.step-row').length;
+                });
+            } else {
+                console.error("ERROR: Could not find .custom-remove-step-btn in the newly created step row!");
+            }
+        }
+
+        // Initialize controls for any steps already present (e.g., server-rendered for editing)
+        const existingStepRows = stepsContainer.querySelectorAll('.step-row');
+        existingStepRows.forEach(stepElement => {
+            initializeStepControls(stepElement);
+        });
+        stepCountGlobal = existingStepRows.length; // Set initial global step count
+
+        addStepBtn.addEventListener('click', addStepRow);
+
+        // If no steps exist (neither server-rendered nor dynamically added yet), add one initial step.
+        if (existingStepRows.length === 0) {
+            addStepRow();
+        }
+
+        // --- Form Submission ---
+        createForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const selectedModuleElement = moduleSelect;
+            const selectedSuiteId = selectedModuleElement.value;
+
+            if (!appTypeSelect.value) {
+                // alert('Please select an Application.');
+                showAlert('Please select an Application.');
+                appTypeSelect.focus();
+                return;
+            }
+            if (!selectedSuiteId) {
+                // alert('Please select a Module (Test Suite).');
+                showAlert('Please select a Module (Test Suite).');
+                selectedModuleElement.focus();
+                return;
+            }
+
+            const payload = {
+                code: createForm.code.value.trim(),
+                name: createForm.name.value.trim(),
+                module: selectedModuleElement.options[selectedModuleElement.selectedIndex].text,
+                description: createForm.description.value.trim(),
+                selected_suite_id: parseInt(selectedSuiteId),
+                steps: []
+            };
+
+            const stepRows = stepsContainer.querySelectorAll('.step-row');
+            if (stepRows.length === 0) {
+                // alert('Please add at least one step.');
+                showAlert('Please add at least one step.');
+                return;
+            }
+
+            for (let i = 0; i < stepRows.length; i++) {
+                const wrapper = stepRows[i];
+                const stepOrder = wrapper.querySelector('input[name="step_order"]').value;
+                const inputType = wrapper.querySelector('select[name="input_type"]').value;
+
+                const inputValueField = wrapper.querySelector('input[name="input_value"]');
+                const inputValue = inputValueField.value.trim();
+
+                const expectedKeywordsRaw = wrapper.querySelector('input[name="expected_keywords"]').value;
+                const expectedKeywords = expectedKeywordsRaw.split(',').map(s => s.trim()).filter(Boolean);
+
+                let paramName = null;
+                let paramInputType = null;
+
+                if (inputType === 'dynamic') {
+                    paramName = wrapper.querySelector('input[name="param_name"]').value.trim();
+                    paramInputType = wrapper.querySelector('select[name="param_input_type"]').value;
+
+                    if (!paramName && wrapper.querySelector('input[name="param_name"]').required) {
+                        // alert(`Please provide an 'Actual Param Name' for dynamic step with order ${stepOrder}.`);
+                        showAlert(`Please provide an 'Actual Param Name' for dynamic step with order ${stepOrder}.`);
+                        wrapper.querySelector('input[name="param_name"]').focus();
+                        return;
+                    }
+                    if (!paramInputType && wrapper.querySelector('select[name="param_input_type"]').required) {
+                        // alert(`Please select a 'Parameter Input Type' for dynamic step with order ${stepOrder}.`);
+                        showAlert(`Please select a 'Parameter Input Type' for dynamic step with order ${stepOrder}.`);
+                        wrapper.querySelector('select[name="param_input_type"]').focus();
+                        return;
+                    }
+                }
+
+                // Validate inputValue ONLY if it's required (i.e., for static type)
+                if (inputValueField.hasAttribute('required') && !inputValue) {
+                    // alert(`Please provide an 'Input Value' for static step with order ${stepOrder}.`);
+                    showAlert(`Please provide an 'Input Value' for static step with order ${stepOrder}.`);
+                    inputValueField.focus();
+                    return;
+                }
+
+                if (!expectedKeywords.length) {
+                    // alert(`Please provide 'Expected Keywords' for step with order ${stepOrder}.`);
+                    showAlert(`Please provide 'Expected Keywords' for step with order ${stepOrder}.`);
+                    wrapper.querySelector('input[name="expected_keywords"]').focus();
+                    return;
+                }
+
+                payload.steps.push({
+                    step_order: Number(stepOrder),
+                    input: inputValue, // Will be empty string if dynamic type and field was cleared
+                    expected_keywords: expectedKeywords,
+                    input_type: inputType,
+                    param_name: paramName,
+                    param_type: paramInputType,
+                });
+            }
+
+            console.log(payload);
+
+            try {
+                const resp = await fetch('/admin/create-testcase', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await resp.json();
+                if (result.success) {
+                    // alert('Test case created successfully! ID: ' + result.testcase_id);
+                    showAlert('Test case created successfully! ID: ' + result.testcase_id);
+                    createForm.reset();
+                    stepsContainer.innerHTML = ''; // Clear steps
+                    stepCountGlobal = 0;
+                    addStepRow(); // Add one fresh step
+                    appTypeSelect.value = "";
+                    moduleSelect.innerHTML = '<option value="">Select Module</option>';
+                    moduleSelect.disabled = true;
+                } else {
+                    throw new Error(result.error || 'Unknown error creating test case.');
+                }
+            } catch (err) {
+                console.error('Error creating test case:', err);
+                // alert('Failed to create test case: ' + err.message);
+                showAlert('Failed to create test case: ' + err.message);
+
+            }
+        });
+
+        // --- Application and Module Loading ---
+        let moduleChangeListenerAdded = false;
+        async function loadApplications() {
+            try {
+                const res = await fetch('/apptype');
+                if (!res.ok) throw new Error(`Failed to fetch applications: ${res.statusText}`);
+                const data = await res.json();
+
+                appTypeSelect.innerHTML = '<option value="">Select Application</option>';
+                data.forEach(app => {
+                    const opt = document.createElement('option');
+                    opt.value = app.id;
+                    opt.textContent = app.name;
+                    appTypeSelect.appendChild(opt);
+                });
+                moduleSelect.disabled = true;
+            } catch (err) {
+                console.error("Failed to load applications:", err);
+                appTypeSelect.innerHTML = '<option value="">Error loading applications</option>';
+            }
+        }
+
+        async function loadModules(selectedAppType) {
+            moduleSelect.innerHTML = '<option value="">Loading Modules...</option>';
+            moduleSelect.disabled = true;
+            try {
+                const res = await fetch(`/get-modules?appType=${selectedAppType}`);
+                if (!res.ok) throw new Error(`Failed to fetch modules: ${res.statusText}`);
+                const data = await res.json();
+
+                moduleSelect.innerHTML = '<option value="">Select Module</option>';
+                data.forEach(mod => {
+                    const opt = document.createElement('option');
+                    opt.value = mod.SuiteID;
+                    opt.textContent = mod.Name;
+                    moduleSelect.appendChild(opt);
+                });
+                moduleSelect.disabled = false;
+
+                if (!moduleChangeListenerAdded) {
+                    moduleSelect.addEventListener('change', () => {
+                        // const defaultOption = moduleSelect.querySelector('option[value=""]');
+                        // if (defaultOption && moduleSelect.value !== "") { /* defaultOption.remove(); */ }
+                    });
+                    moduleChangeListenerAdded = true;
+                }
+            } catch (err) {
+                console.error("Failed to load modules:", err);
+                moduleSelect.innerHTML = '<option value="">Error loading modules</option>';
+            }
+        }
+
+        appTypeSelect.addEventListener('change', () => {
+            const selectedAppType = appTypeSelect.value;
+            if (selectedAppType) {
+                loadModules(selectedAppType);
+            } else {
+                moduleSelect.disabled = true;
+                moduleSelect.innerHTML = '<option value="">Select Module</option>';
+            }
+        });
+
+        // --- Modal Management for "Add Module" ---
+        const addModuleBtnHeader = document.getElementById('addModuleBtn');
+        const moduleModalElement = document.getElementById('addModuleModel');
+        const moduleModal = new bootstrap.Modal(moduleModalElement);
+        const closeModalBtn = document.getElementById('closeModel');
+        const closeModelSecondary = document.getElementById('closeModelSecondary');
+        const saveModuleBtn = document.getElementById('saveModuleBtn');
+        const appTypeModelSelect = document.getElementById('apptypemodel');
+        let moduleChangeListenerAddedModel = false;
+
+        async function populateApplicationOptionsForModal() {
+            try {
+                const res = await fetch('/apptype');
+                if (!res.ok) throw new Error(`Failed to fetch applications for modal: ${res.statusText}`);
+                const apps = await res.json();
+                appTypeModelSelect.innerHTML = '<option value="">Select Application</option>';
+                apps.forEach(app => {
+                    const opt = document.createElement('option');
+                    opt.value = app.id;
+                    opt.textContent = app.name;
+                    appTypeModelSelect.appendChild(opt);
+                });
+
+                if (!moduleChangeListenerAddedModel) {
+                    appTypeModelSelect.addEventListener('change', () => { /* No action needed on change here */ });
+                    moduleChangeListenerAddedModel = true;
+                }
+            } catch (err) {
+                console.error("Failed to load applications for modal:", err);
+                appTypeModelSelect.innerHTML = '<option value="">Error loading applications</option>';
+            }
+        }
+
+        addModuleBtnHeader.addEventListener('click', () => {
+            populateApplicationOptionsForModal();
+            moduleModal.show();
+        });
+
+        closeModalBtn.addEventListener('click', () => moduleModal.hide());
+        closeModelSecondary.addEventListener('click', () => moduleModal.hide());
+
+        saveModuleBtn.addEventListener('click', async () => {
+            const newModuleName = document.getElementById("newModuleName").value.trim();
+            const descriptionModel = document.getElementById("descriptionModel").value.trim();
+            const selectedAppTypeForNewModule = appTypeModelSelect.value;
+
+            if (!newModuleName || !selectedAppTypeForNewModule) {
+                // alert("Please fill in Module Name and select an Application for the new module.");
+                showAlert("Please fill in Module Name and select an Application for the new module.");
+                return;
+            }
+
+            const modalPayload = {
+                module_name: newModuleName,
+                application_type: selectedAppTypeForNewModule,
+                description_model: descriptionModel || null
+            };
+
+            try {
+                const resp = await fetch('/add-module', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(modalPayload)
+                });
+                const result = await resp.json();
+                if (result.success) {
+                    // alert("Module added successfully!");
+                    showAlert("Module added successfully!");
+                    moduleModal.hide();
+                    document.getElementById("newModuleName").value = '';
+                    document.getElementById("descriptionModel").value = '';
+                    appTypeModelSelect.value = '';
+                    // If the main form's app type matches the one for which module was added, refresh module list
+                    if (appTypeSelect.value === selectedAppTypeForNewModule) {
+                        loadModules(selectedAppTypeForNewModule);
+                    }
+                } else {
+                    throw new Error(result.error || "Unknown error adding module.");
+                }
+            } catch (err) {
+                console.error('Error adding module:', err);
+                // alert("Failed to add module: " + err.message);
+                showAlert("Failed to add module: " + err.message);
+            }
+        });
+
+        // --- Initial Load ---
+        loadApplications();
+    });
+</script>
+{% endblock %}

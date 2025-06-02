@@ -1,0 +1,425 @@
+/* Common layout card */
+.content-card {
+    /* background-color: #ffffff; */
+    padding: 24px;
+    border-radius: 8px;
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); */
+    margin-bottom: 30px;
+}
+
+/* Info box */
+.item-info-box {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 15px 20px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+}
+
+.item-info-box p {
+    margin-bottom: 5px;
+    font-size: 0.95em;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 0.95em;
+}
+
+/* Fieldset & legends */
+.fieldset-box {
+    border: 1px solid #dee2e6;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+}
+
+.fieldset-box legend {
+    padding: 0 10px;
+    font-weight: 600;
+    color: #343a40;
+    font-size: 1.1em;
+}
+
+/* Buttons */
+.button {
+    display: inline-block;
+    background-color: #f7b731;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 18px;
+    font-size: 0.95em;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #e0a82a;
+}
+
+.button.secondary {
+    background-color: #6c757d;
+}
+
+.button.secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Errors */
+.has-error .form-control {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.error-messages .error,
+span.error {
+    color: #dc3545;
+    font-size: 0.85em;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Warning note */
+.no-testers-message {
+    padding: 10px 15px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+    border-radius: 6px;
+    font-size: 0.9em;
+}
+
+.no-testers-message i {
+    margin-right: 8px;
+}
+
+.table-responsive-custom {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+/* Step cards */
+.step-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.step-card h5 {
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+.step-card .btn-edit-step {
+    background-color: #17a2b8;
+    color: #fff;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.step-card .btn-edit-step:hover {
+    background-color: #138496;
+}
+
+/* Priority badges */
+.badge-priority {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.priority-high {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.priority-medium {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.priority-low {
+    background-color: #28a745;
+    color: #fff;
+}
+
+/* Output display area */
+.output-box {
+    background-color: #f1f3f5;
+    border: 1px solid #ced4da;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #212529;
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+    /* font-size: 1.2rem; */
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.section-header {
+    /* For h2 titles inside cards */
+    font-size: 1.4em;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.section-header i {
+    margin-right: 8px;
+    color: #f7b731;
+    /* Theme accent */
+}
+
+.dashboard-table th {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.82rem;
+    padding: 10px 12px;
+    vertical-align: middle;
+}
+
+.dashboard-table td {
+    color: #888a8d !important;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.79rem;
+    padding: 10px 12px;
+    vertical-align: middle;
+}
+
+/* Responsive form adjustments */
+@media (max-width: 768px) {
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .button {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Card-style section box */
+.section-box {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.section-box h4 {
+    font-size: 1.15rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* Custom field labels (optional enhancement) */
+.label-muted {
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+
+
+.dashboard-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #444;
+}
+
+/* Card and shadow */
+.dashboard-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.dashboard-table thead {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* Table header style */
+.table-header {
+    background-color: #6c757d;
+    color: white;
+    font-weight: 500;
+}
+
+/* Shadow and hover effect */
+.custom-table-shadow {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Priority badges */
+.priority-badge {
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 4px;
+    color: white;
+}
+
+
+.gap-2 {
+    gap: 0.5rem !important;
+}
+
+.gap-5 {
+    gap: 1rem !important;
+}
+
+
+
+.priority-high {
+    background-color: #dc3545;
+}
+
+.priority-medium {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.priority-low {
+    background-color: #28a745;
+}
+
+.priority-unknown {
+    background-color: #6c757d;
+}
+
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+    .stat-card {
+        background-color: #fff; padding: 20px; border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e7eaf3;
+        display: flex; align-items: center;
+    }
+    .stat-card-icon {
+        font-size: 2em; padding: 14px; margin-right: 18px; border-radius: 50%;
+        color: #fff; display: flex; align-items: center; justify-content: center;
+        width: 55px; height: 55px;
+    }
+    .stat-card-icon.bg-theme { background-color: #f7b731; }
+    .stat-card-icon.bg-blue { background-color: #007bff; }
+    .stat-card-icon.bg-green { background-color: #28a745; }
+    .stat-card-icon.bg-red { background-color: #dc3545; }
+    .stat-card-icon.bg-purple { background-color: #6f42c1; }
+
+    .stat-card-info h4 {
+        margin: 0 0 4px 0; font-size: 0.9em; color: #6c757d;
+        text-transform: uppercase; font-weight: 500;
+    }
+    .stat-card-info .stat-number { font-size: 1.8em; font-weight: 700; color: #343a40;}
+
+    /* --- Chart Container Styling --- */
+    .chart-container-wrapper {
+        background-color: #fff; padding: 25px; border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e7eaf3;
+        margin-bottom: 25px;
+    }
+    .chart-container-wrapper h3 {
+        font-size: 1.25em; color: #343a40; margin-top: 0; margin-bottom: 20px;
+        padding-bottom: 10px; border-bottom: 1px solid #e9ecef;
+    }
+    .svg-chart-container {
+        width: 100%;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 10px;
+        box-sizing: border-box;
+        position: relative;
+    }
+    .chart-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 25px;
+    }
+
+    /* --- SVG Chart Specific Styles --- */
+    .svg-bar { transition: height 0.3s ease-out; }
+    .svg-bar-label { font-size: 10px; text-anchor: middle; fill: #555; }
+    .svg-axis-line { stroke: #ccc; stroke-width: 1; }
+    .svg-axis-label { font-size: 10px; fill: #777; text-anchor: end; }
+    .svg-legend-item { display: flex; align-items: center; margin-right: 15px; font-size: 0.85em; color: #555;}
+    .svg-legend-color-box { width: 12px; height: 12px; margin-right: 5px; border-radius: 2px;}
+    .svg-pie-slice { transition: opacity 0.3s ease; }
+    .svg-pie-slice:hover { opacity: 0.8; }
+    .svg-chart-container p { color: #6c757d; font-style: italic; width: 100%; text-align: center;}
+    .pie-text {
+        font-weight: bold;
+        pointer-events: none; /* So text doesn't interfere with slice hover */
+    }
+
+  .svg-legend-color-box {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.svg-axis-line {
+    stroke: #ccc;
+    stroke-width: 1;
+}
+.svg-axis-label {
+    font-size: 10px;
+    fill: #666;
+    text-anchor: end;
+}
+
+svg {
+    overflow: visible;
+}
+

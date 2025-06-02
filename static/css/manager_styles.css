@@ -1,0 +1,285 @@
+
+
+/* Common layout card */
+.content-card {
+    margin: 25px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+/* Info box */
+.item-info-box {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 15px 20px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+}
+.item-info-box p {
+    margin-bottom: 5px;
+    font-size: 0.95em;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 20px;
+}
+.form-label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+}
+.form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 0.95em;
+}
+
+/* Fieldset & legends */
+.fieldset-box {
+    border: 1px solid #dee2e6;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+}
+.fieldset-box legend {
+    padding: 0 10px;
+    font-weight: 600;
+    color: #343a40;
+    font-size: 1.1em;
+}
+
+/* Buttons */
+.button {
+    display: inline-block;
+    background-color: #f7b731;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 18px;
+    font-size: 0.95em;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+.button:hover {
+    background-color: #e0a82a;
+}
+.button.secondary {
+    background-color: #6c757d;
+}
+.button.secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Errors */
+.has-error .form-control {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+.error-messages .error,
+span.error {
+    color: #dc3545;
+    font-size: 0.85em;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Warning note */
+.no-testers-message {
+    padding: 10px 15px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+    border-radius: 6px;
+    font-size: 0.9em;
+}
+.no-testers-message i {
+    margin-right: 8px;
+}
+
+.table-responsive-custom {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+/* Step cards */
+.step-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.step-card h5 {
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+.step-card .btn-edit-step {
+    background-color: #17a2b8;
+    color: #fff;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+.step-card .btn-edit-step:hover {
+    background-color: #138496;
+}
+
+/* Priority badges */
+.badge-priority {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+.priority-high {
+    background-color: #dc3545;
+    color: #fff;
+}
+.priority-medium {
+    background-color: #ffc107;
+    color: #212529;
+}
+.priority-low {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+    font-size: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.dashboard-table th {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    padding: 10px 12px;
+    vertical-align: middle;
+}
+
+/* Output display area */
+.output-box {
+    background-color: #f1f3f5;
+    border: 1px solid #ced4da;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #212529;
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Responsive form adjustments */
+@media (max-width: 768px) {
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .button {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Card-style section box */
+.section-box {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.section-box h4 {
+    font-size: 1.15rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* Custom field labels (optional enhancement) */
+.label-muted {
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+
+.email-input-group:hover .remove-email {
+    display: inline-block;
+}
+
+.btn i {
+    vertical-align: middle;
+}
+
+    select.custom-form-select,
+    select.custom-form-select-sm {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+
+    select.custom-form-select-sm {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        font-size: 0.875rem;
+    }
+
+    select.custom-form-select:focus,
+    select.custom-form-select-sm:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+.svg-legend-color-box {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.svg-axis-line {
+    stroke: #ccc;
+    stroke-width: 1;
+}
+.svg-axis-label {
+    font-size: 10px;
+    fill: #666;
+    text-anchor: end;
+}
+
+svg {
+    overflow: visible;
+}

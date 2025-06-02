@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Execution Detail - ID: {{ execution.ExecutionID }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleboa.css') }}">
+     <style>
+        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; }
+        header { background-color: #fff; padding: 15px 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; }
+        header img { height: 40px; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        h1, h2, h3 { color: #2c3e50; }
+        .summary-section, .steps-section { margin-bottom: 30px; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px; }
+        .summary-section h2, .steps-section h2 { margin-top: 0; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .summary-details p { margin: 8px 0; font-size: 0.95em; }
+        .summary-details strong { min-width: 120px; display: inline-block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 0.9em; vertical-align: top;}
+        th { background-color: #f0f4f7; font-weight: 600; }
+        .status-PASS { color: #2ecc71; font-weight: bold; }
+        .status-FAIL { color: #e74c3c; font-weight: bold; }
+        .status-NOT_EXECUTED { color: #95a5a6; font-weight: bold; }
+        .screenshot-link img { max-width: 100px; max-height: 100px; border: 1px solid #ccc; display: block; margin-top: 5px;}
+        .screenshot-link { text-decoration: none; }
+        pre { white-space: pre-wrap; word-wrap: break-word; background-color: #f9f9f9; padding: 8px; border-radius: 4px; font-size: 0.85em; max-height: 100px; overflow-y: auto; }
+        .btn {
+            background-color: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px;
+            border: none; cursor: pointer; font-size: 0.9em; display: inline-block; margin-top: 10px;
+        }
+        .btn:hover { background-color: #2980b9; }
+        .nav-links a { margin-left: 15px; color: #3498db; text-decoration: none; font-weight: 500; }
+        .nav-links a:hover { text-decoration: underline; }
+        /* Dark theme adjustments */
+        body.dark-theme { background-color: #2c3e50; color: #ecf0f1; }
+        body.dark-theme header, body.dark-theme .container, body.dark-theme .summary-section, body.dark-theme .steps-section {
+            background-color: #34495e; box-shadow: 0 2px 4px rgba(0,0,0,0.3); border-color: #4a6278;
+        }
+        body.dark-theme h1, body.dark-theme h2, body.dark-theme h3 { color: #ecf0f1; }
+        body.dark-theme th { background-color: #4a6278; }
+        body.dark-theme td, body.dark-theme th { border-color: #526c84; }
+        body.dark-theme pre { background-color: #2c3e50; border: 1px solid #4a6278; }
+        body.dark-theme .nav-links a { color: #5dade2; }
+    </style>
+</head>
+<body class="light-theme">
+  <header>
+    <a href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='images/apollo_logo.png') }}" alt="Apollo Logo">
+    </a>
+     <div class="nav-links">
+        <a href="{{ url_for('index') }}" class="btn">Run Test</a>
+        <a href="{{ url_for('create_testcase_form') }}" class="btn">Create Test Case</a>
+        <a href="{{ url_for('test_results_overview') }}" class="btn">View Results</a>
+    </div>
+    <div class="theme-toggle">
+      <input type="checkbox" id="themeToggle" />
+      <label for="themeToggle" class="theme-toggle-label"></label>
+      <span class="theme-toggle-icon">🌙</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>Execution Detail: {{ execution.ExecutionID }}</h1>
+    <a href="{{ url_for('test_results_overview') }}" class="btn">« Back to Results Overview</a>
+
+    <div class="summary-section">
+        <h2>Execution Summary</h2>
+        <div class="summary-details">
+            <p><strong>Test Case:</strong> {{ execution.TestCaseCode }} - {{ execution.TestCaseName }}</p>
+            <p><strong>Module:</strong> {{ execution.Module|capitalize }}</p>
+            <p><strong>Overall Status:</strong> <span class="status-{{ execution.OverallStatus }}">{{ execution.OverallStatus }}</span></p>
+            <p><strong>Execution Time:</strong> {{ execution.ExecutionTime.strftime('%Y-%m-%d %H:%M:%S') if execution.ExecutionTime else 'N/A' }}</p>
+            <p><strong>Device:</strong> {{ execution.DeviceName }} ({{ execution.DeviceSerial }})</p>
+            <p><strong>Executed By:</strong> {{ execution.ExecutedByUsername }}</p>
+            <p><strong>Suite:</strong> {{ execution.SuiteName }}</p>
+            {% if execution.Parameters and execution.Parameters != "{}" %}
+                <p><strong>Parameters:</strong></p>
+                <pre>{{ execution.Parameters }}</pre>
+            {% endif %}
+            {% if execution.ExecutionLog %}
+                <p><strong>Execution Log:</strong></p>
+                <pre>{{ execution.ExecutionLog }}</pre>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="steps-section">
+        <h2>Step Results</h2>
+        {% if steps %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Original Input</th>
+                        <th>Actual Input</th>
+                        <th>Expected Resp.</th>
+                        <th>Actual Output</th>
+                        <th>Status</th>
+                        <th>Duration (s)</th>
+                        <th>Screenshot</th>
+                        <th>Timings</th>
+                        <th>Log</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for step in steps %}
+                    <tr>
+                        <td>{{ step.StepOrder }}</td>
+                        <td><pre>{{ step.OriginalStepInput }}
+{% if step.InputType == 'dynamic' and step.ParamName %}
+(Dynamic: {{step.ParamName}})
+{% endif %}
+</pre></td>
+                        <td><pre>{{ step.ActualInput }}</pre></td>
+                        <td><pre>{{ step.OriginalExpectedResponse }}</pre></td>
+                        <td><pre>{{ step.ActualOutput }}</pre></td>
+                        <td><span class="status-{{ step.Status }}">{{ step.Status }}</span></td>
+                        <td>{{ "%.3f"|format(step.Duration|float) if step.Duration is not none else 'N/A' }}</td>
+                        <td>
+                            {% set normalized_screenshot_path = step.Screenshot | replace('\\', '/') %}
+                            {% if step.Screenshot %}
+                                {# Assuming screenshots are in 'reports/test_CASEID/step_ORDER.png' #}
+                                {# and your static folder is configured to serve 'reports' or you adjust the path #}
+                                {# For simplicity, just linking the path. Making it an actual image requires static serving setup. #}
+                                <a href="{{ url_for('static', filename=normalized_screenshot_path) }}" target="_blank" class="screenshot-link">
+                                    View
+                                    {# To display a thumbnail, ensure the path is correct relative to static folder #}
+                                    {# <img src="{{ url_for('static', filename=step.Screenshot.replace('reports/', '')) }}" alt="Screenshot"> #}
+                                </a>
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if step.StartTime %}Start: {{ step.StartTime.strftime('%H:%M:%S') }}<br>{% endif %}
+                            {% if step.EndTime %}End: {{ step.EndTime.strftime('%H:%M:%S') }}{% endif %}
+                        </td>
+                        <td><pre>{{ step.StepLog if step.StepLog else 'No log' }}</pre></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No step results found for this execution.</p>
+        {% endif %}
+    </div>
+  </div>
+
+  <script>
+    // Basic Theme Toggle Logic (same as your index.html)
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    const themeIcon = document.querySelector('.theme-toggle-icon');
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    body.classList.add(`${savedTheme}-theme`);
+    if (savedTheme === 'dark') {
+      themeToggle.checked = true;
+      themeIcon.textContent = '☀️';
+    } else {
+      themeIcon.textContent = '🌙';
+    }
+
+    themeToggle.addEventListener('change', () => {
+      if (themeToggle.checked) {
+        body.classList.remove('light-theme');
+        body.classList.add('dark-theme');
+        localStorage.setItem('theme', 'dark');
+        themeIcon.textContent = '☀️';
+      } else {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        localStorage.setItem('theme', 'light');
+        themeIcon.textContent = '🌙';
+      }
+    });
+  </script>
+</body>
+</html>

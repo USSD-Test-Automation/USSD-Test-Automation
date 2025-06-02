@@ -1,0 +1,245 @@
+{% extends "manager_base.html" %}
+
+{% block content_header %}
+<div class="content-card-header" style="border-bottom:none; padding-bottom:0; margin-bottom: 15px;">
+    <h2>Manager Dashboard</h2>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="content-card shadow-sm p-4 bg-white rounded">
+
+    {% include '_messages.html' %}
+
+    <div class="navigation-path">
+        <a href="{{ url_for('manager_dashboard') }}"><i class="fas fa-home"></i> All Applications</a>
+        {% if selected_app %}
+        » <a href="{{ url_for('manager_dashboard', app_id=selected_app.id) }}">{{ selected_app.name }}</a>
+        {% endif %}
+        {% if selected_suite %}
+        » <a href="{{ url_for('manager_dashboard', app_id=selected_app.id, suite_id=selected_suite.SuiteID) }}">{{
+            selected_suite.Name }}</a>
+        {% endif %}
+    </div>
+
+    {% if not selected_app_id %}
+    <div class="section-header">
+        <h3>Select Application</h3>
+        <a href="{{ url_for('list_custom_groups') }}" class="btn btn-warning rounded p-2 btn-sm">
+            <i class="fas fa-users"></i> Manage Custom Groups
+        </a>
+    </div>
+    <hr class="light-hr">
+    {% if applications %}
+    <ul class="item-list">
+        {% for app_item in applications %}
+        <li>
+            <a href="{{ url_for('manager_dashboard', app_id=app_item.id) }}" class="item-link text-warning">{{
+                app_item.name }}</a>
+            <a href="{{ url_for('assign_application', app_id=app_item.id) }}"
+                class="btn btn-warning p-2 rounded btn-sm">
+                <i class="fas fa-check-double"></i> Assign All for {{ app_item.name }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-warning">No applications found.</p>
+    {% endif %}
+
+    {% elif selected_app_id and not selected_suite_id %}
+    <div class="section-header">
+        <h3>Test Suites for {{ selected_app.name }}</h3>
+        <a href="{{ url_for('assign_application', app_id=selected_app.id) }}" class="btn btn-warning p-2 btn-sm" disabled>
+            <i class="fas fa-check-double"></i> Assign All for {{ selected_app.name }}
+        </a>
+    </div>
+    <hr class="light-hr">
+    {% if test_suites %}
+    <ul class="item-list">
+        {% for suite_item in test_suites %}
+        <li>
+            <a href="{{ url_for('manager_dashboard', app_id=selected_app_id, suite_id=suite_item.SuiteID) }}"
+                class="item-link text-warning">{{ suite_item.Name }}</a>
+            <a href="{{ url_for('assign_suite', suite_id=suite_item.SuiteID) }}" class="btn btn-warning p-2 btn-sm">
+                <i class="fas fa-layer-group"></i> Assign Suite: {{ suite_item.Name }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+       <p class="text-warning">No test suites found for {{ selected_app.name }}.</p>
+    {% endif %}
+    <p class="mt-4">
+        <a href="{{ url_for('manager_dashboard') }}" class="btn btn-secondary p-2 btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to All Applications
+        </a>
+    </p>
+
+    {% elif selected_app_id and selected_suite_id %}
+    <div class="section-header">
+        <h3>Test Cases for {{ selected_app.name }} - {{ selected_suite.Name }}</h3>
+        <a href="{{ url_for('assign_suite', suite_id=selected_suite.SuiteID) }}" class="btn btn-warning p-2 btn-sm"
+         {% if not test_suites %} disabled {% endif %}>
+            <i class="fas fa-layer-group"></i> Assign Entire Suite: {{ selected_suite.Name }}
+        </a>
+    </div>
+    <hr class="light-hr">
+    {% if test_cases %}
+
+        <div class="table-responsive">
+            <table class="table dashboard-table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Module</th>
+                        <th>Currently Pending For</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                <tbody>
+                    {% for tc in test_cases %}
+                    <tr>
+                        <td>{{ tc.Code }}</td>
+                        <td>{{ tc.Name }}</td>
+                        <td>{{ tc.Module }}</td>
+                        <td>
+                            {% if tc.pending_assigned_to_usernames %}
+                            {{ tc.pending_assigned_to_usernames }} ({{ tc.pending_assignments_count }})
+                            {% else %}
+                            <span class="text-muted">None</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('assign_test_case', testcase_id=tc.TestCaseID) }}"
+                                class="btn btn-warning btn-sm">
+                                <i class="fas fa-user-plus"></i> Assign Teste Case
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+      <p class="text-warning">No test cases found for this suite.</p>
+    {% endif %}
+    <p class="mt-4">
+        <a href="{{ url_for('manager_dashboard', app_id=selected_app_id) }}" class="btn btn-secondary p-2 btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to Test Suites for {{ selected_app.name }}
+        </a>
+    </p>
+    {% endif %}
+
+    <hr style="margin-top: 40px; margin-bottom: 20px;">
+    <div style="display: flex; gap: 10px;">
+        <a href="{{ url_for('test_results_overview') }}" class="btn btn-warning p-2"><i class="fas fa-chart-line"></i> View All Test
+            Results</a>
+        <a href="{{ url_for('generate_report') }}" class="btn btn-secondary p-2"><i class="fas fa-file-pdf"></i> Generate
+            Report</a>
+    </div>
+
+    <!-- <hr class="my-4">
+    <a href="{{ url_for('test_results_overview') }}" class="btn btn-warning p-2 rounded btn-sm">
+        <i class="fas fa-chart-line"></i> View All Test Results
+    </a>
+    <a href="{{ url_for('generate_report') }}" class="button button-info"><i class="fas fa-file-pdf"></i> Generate
+        Report</a> -->
+</div>
+{% endblock %}
+
+{% block head_extra %}
+{{ super() }}
+<style>
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 25px;
+        margin-bottom: 10px;
+    }
+
+    .section-header h3 {
+        font-size: 1.4em;
+        color: #333;
+        margin: 0;
+    }
+
+    hr.light-hr {
+        border: 0;
+        height: 1px;
+        background-color: #eee;
+        margin-bottom: 20px;
+    }
+
+    .navigation-path {
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 0.95em;
+        color: #555;
+    }
+
+    .navigation-path a {
+        color: #f7b731;
+        text-decoration: none;
+        font-weight: 500;
+        margin: 0 3px;
+    }
+
+    .navigation-path a:hover {
+        text-decoration: underline;
+        color: #e0a82a;
+    }
+
+    .navigation-path i {
+        margin-right: 4px;
+        color: #f7b731;
+    }
+
+    .item-list {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 0;
+    }
+
+    .item-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 18px;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        background-color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+    .item-list li:hover {
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .item-list .item-link {
+        flex-grow: 1;
+        margin-right: 15px;
+        font-size: 1.05em;
+        /* color: #0d6efd; */
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .item-list .item-link:hover {
+        text-decoration: underline;
+        /* color: #0a58ca; */
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+</style>
+{% endblock %}

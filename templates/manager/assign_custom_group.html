@@ -1,0 +1,154 @@
+{% extends "manager_base.html" %}
+
+{% block content_header %}
+
+<div class="content-card-header" style="border-bottom:none; padding-bottom:0; margin-bottom: 15px;">
+    <h2>Assign Custom Group: <span style="font-weight:normal; color: #555;">{{ custom_group.Name }}</span></h2>
+</div>
+{% endblock %}
+
+{% block head_extra %}
+{{ super() }}
+<style>
+    /* Styles for this page, or good candidates for base.html/main CSS */
+    .group-info {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        /* Light background for info section */
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+    }
+
+    .group-info p {
+        margin-bottom: 5px;
+        font-size: 0.95em;
+    }
+
+    .group-info strong {
+        color: #343a40;
+    }
+
+    /* General legend styling if not already in base.html */
+    fieldset {
+        border: 1px solid #dee2e6;
+        padding: 20px;
+        border-radius: 6px;
+        margin-bottom: 25px;
+    }
+
+    legend {
+        padding: 0 10px;
+        font-weight: 600;
+        color: #343a40;
+        font-size: 1.15em;
+        width: auto;
+        /* Important for proper border display */
+        margin-bottom: 15px;
+    }
+
+    .form-group.has-error .form-control {
+        /* Optional: highlight input field with error */
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    .error-messages .error {
+        /* General WTForms errors */
+        color: #dc3545;
+        font-size: 0.85em;
+        display: block;
+        margin-top: 4px;
+    }
+
+    .no-testers-message {
+        padding: 10px 15px;
+        background-color: #fff3cd;
+        /* Warning background */
+        border: 1px solid #ffeeba;
+        color: #856404;
+        /* Warning text color */
+        border-radius: 6px;
+        font-size: 0.9em;
+        margin-top: 5px;
+        /* Space from label */
+    }
+
+    .no-testers-message i {
+        margin-right: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-card p-4">
+
+    {% include '_messages.html' %}
+
+    <div class="group-info">
+        {% if custom_group.Description %}
+        <p><strong>Description:</strong> {{ custom_group.Description }}</p>
+        {% else %}
+        <p><strong>Description:</strong> <span style="font-style: italic; color: #6c757d;">No description
+                provided.</span></p>
+        {% endif %}
+    </div>
+    {#
+    <hr> removed, as the card structure provides separation #}
+
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <legend><i class="fas fa-user-tag"></i> Assignment Details</legend>
+            <div class="form-group {% if form.tester_id.errors %}has-error{% endif %}">
+                {{ form.tester_id.label(class="form-label") }}
+                {% if form.tester_id.choices %}
+                {{ form.tester_id(class="form-control") }}
+                {% else %}
+                <div class="no-testers-message">
+                    <i class="fas fa-exclamation-triangle"></i> No active testers available to assign to.
+                </div>
+                {% endif %}
+                {% if form.tester_id.errors %}
+                <div class="error-messages">
+                    {% for error in form.tester_id.errors %}<span class="error">{{ error }}</span>{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group {% if form.priority.errors %}has-error{% endif %}">
+                {{ form.priority.label(class="form-label") }}
+                {{ form.priority(class="form-control") }}
+                {% if form.priority.errors %}
+                <div class="error-messages">
+                    {% for error in form.priority.errors %}<span class="error">{{ error }}</span>{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group {% if form.notes.errors %}has-error{% endif %}">
+                {{ form.notes.label(class="form-label") }}
+                {{ form.notes(class="form-control", rows=3, placeholder="Add any specific instructions or notes...") }}
+                {% if form.notes.errors %}
+                <div class="error-messages">
+                    {% for error in form.notes.errors %}<span class="error">{{ error }}</span>{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </fieldset>
+
+        <div class="form-group" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef;">
+            {% if form.tester_id.choices %}
+            {{ form.submit(class="button") }} {# Primary yellow button #}
+            {% else %}
+            {# Disabled state for .button class should be handled by base CSS if possible,
+            or add specific styles: .button:disabled { opacity: 0.65; cursor: not-allowed; } #}
+            <button type="submit" class="button" disabled title="No testers available">
+                {{ form.submit.label.text }}
+            </button>
+            {% endif %}
+            <a href="{{ url_for('list_custom_groups') }}" class="btn btn-secondary p-2 rounded">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

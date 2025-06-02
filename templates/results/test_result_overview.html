@@ -1,0 +1,158 @@
+{% if user_role == 'admin' %}
+{% extends "admin_base.html" %}
+{% elif user_role == 'manager' %}
+{% extends "manager_base.html" %}
+{% else %}
+{% extends "tester_base.html" %}
+{% endif %}
+
+{% block title %}Test Results{% endblock %}
+
+{% block head_extra %}
+{{ super() }}
+<style>
+    .status-PASS {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .status-FAIL,
+    .status-COMPLETED_FAIL {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .status-COMPLETED_PASS {
+        color: #20c997;
+        font-weight: bold;
+    }
+
+    .status-IN_PROGRESS {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    .status-NOT_EXECUTED,
+    .status-PENDING,
+    .status-CANCELLED {
+        color: #6c757d;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Batch Test Runs -->
+    <div class="dashboard-card shadow-sm p-4 mb-5 bg-white rounded">
+        <h4 class="section-header" style="margin-bottom: 20px;">Batch Test Run Summaries</h4>
+
+        <div class="row mb-3">
+            <div class="col-12 col-md-6">
+                <form method="GET" action="{{ url_for('test_results_overview') }}" class="form-inline">
+                    <div class="input-group w-100">
+                        <input type="text" name="search" class="form-control" placeholder="Search test result ..."
+                            value="{{ request.args.get('search', '') }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-warning" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if batch_assignments %}
+        <div class="table-responsive">
+            <table class="table dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Batch Name</th>
+                        <th>Type</th>
+                        <th>Assigned To</th>
+                        <th>Assigned By</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Progress</th>
+                        <th>Priority</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for batch in batch_assignments %}
+                    <tr>
+                        <td>{{ batch.ReferenceName }}</td>
+                        <td>{{ batch.AssignmentType | capitalize }}</td>
+                        <td>{{ batch.AssignedToUsername }}</td>
+                        <td>{{ batch.AssignedByUsername }}</td>
+                        <td>{{ batch.AssignmentDate.strftime('%Y-%m-%d %H:%M') if batch.AssignmentDate else 'N/A' }}
+                        </td>
+                        <td><span class="status-{{ batch.Status }}">{{ batch.Status | replace('_', ' ') | title
+                                }}</span></td>
+                        <td>{{ batch.CompletedTestCases }}/{{ batch.TotalTestCases }}</td>
+                        <td class="small">
+                            {% if batch.Priority == 'HIGH' %}
+                            <span class="bg-danger text-white rounded p-1 text-uppercase">High</span>
+                            {% elif batch.Priority == 'MEDIUM' %}
+                            <span class="bg-warning text-white text-uppercase rounded p-1">Medium</span>
+                            {% elif batch.Priority == 'LOW' %}
+                            <span class="bg-success text-white text-uppercase rounded p-1">Low</span>
+                            {% else %}
+                            <span class="bg-secondary text-white text-uppercase rounded p-1">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('batch_execution_detail', batch_assignment_id=batch.BatchAssignmentID) }}"
+                                class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.85em;">Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No batch test executions found.</p>
+        {% endif %}
+    </div>
+
+    <!-- Individual Test Executions -->
+    <div class="dashboard-card shadow-sm p-4 mb-5 bg-white rounded">
+        <h2 class="section-header" style="margin-bottom: 20px;">Individual Test Executions</h2>
+
+        {% if grouped_adhoc_executions %}
+        {% for module_name, executions in grouped_adhoc_executions.items() %}
+        <div class="fieldset-box">
+            <legend>Module: {{ module_name | capitalize }}</legend>
+
+            {% if executions %}
+            {% for exec in executions %}
+            <div class="item-info-box d-flex justify-content-between flex-column flex-md-row align-items-md-center">
+                <div class="mb-2 mb-md-0">
+                    <p class="mb-1"><strong>Exec. ID:</strong> {{ exec.ExecutionID }} |
+                        <strong>Test Case:</strong> {{ exec.TestCaseCode }} - {{ exec.TestCaseName }}
+                    </p>
+                    <p class="mb-0">
+                        <strong>Status:</strong>
+                        <span class="status-{{ exec.OverallStatus }}">{{ exec.OverallStatus }}</span> |
+                        <strong>Time:</strong>
+                        {{ exec.ExecutionTime.strftime('%Y-%m-%d %H:%M:%S') if exec.ExecutionTime else 'N/A' }} |
+                        <strong>Executor:</strong> {{ exec.ExecutedByUsername }}
+                    </p>
+                </div>
+                <a href="{{ url_for('execution_detail', execution_id=exec.ExecutionID) }}" class="btn btn-secondary"
+                    style="padding: 5px 10px; font-size: 0.85em;">View Details</a>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="text-muted">No ad-hoc executions found for this module.</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-muted">No individual ad-hoc test executions found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

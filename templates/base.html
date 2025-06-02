@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title if title else 'App Testing Platform' }} - Bank of Abyssinia Style</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Basic Reset & Font */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9; /* Light gray background for the page */
+            display: flex;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            background-color: #f7b731; /* Main yellow accent */
+            color: white;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .sidebar-header .logo i { /* Example for a star logo */
+            font-size: 1.8em;
+            margin-right: 10px;
+        }
+        .sidebar-header .logo-text span {
+            display: block;
+            line-height: 1.2;
+        }
+        .sidebar-header .logo-text .main-title {
+            font-size: 0.8em; /* Adjust as needed */
+        }
+         .sidebar-header .logo-text .sub-title {
+            font-size: 0.6em; /* Adjust as needed */
+            opacity: 0.9;
+        }
+
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav ul li a {
+            display: flex; /* Changed to flex for icon alignment */
+            align-items: center; /* Vertically align icon and text */
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            font-size: 0.95em;
+        }
+        .sidebar nav ul li a i {
+            margin-right: 12px; /* Space between icon and text */
+            width: 20px; /* Fixed width for icon alignment */
+            text-align: center;
+        }
+
+        .sidebar nav ul li a:hover, .sidebar nav ul li.active a {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left: 3px solid white;
+            padding-left: 17px; /* Adjust for border */
+        }
+        .sidebar nav ul li.nav-category {
+            padding: 15px 20px 5px;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+        }
+        .sidebar .sidebar-toggle {
+            margin-top: auto; /* Pushes toggle to the bottom */
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            background-color: rgba(0,0,0,0.1);
+        }
+        .sidebar .sidebar-toggle i {
+            font-size: 1.2em;
+        }
+
+
+        /* Main Content Area Styling */
+        .main-wrapper {
+            margin-left: 260px; /* Same as sidebar width */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            background-color: #ffffff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .top-bar .search-bar {
+            display: flex;
+            align-items: center;
+        }
+        .top-bar .search-bar input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px 0 0 20px;
+            outline: none;
+            font-size: 0.9em;
+            min-width: 250px;
+        }
+        .top-bar .search-bar button {
+            padding: 8px 12px;
+            background-color: #f7b731;
+            color: white;
+            border: 1px solid #f7b731;
+            border-left: none;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .top-bar .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        .top-bar .user-actions i {
+            font-size: 1.3em;
+            margin-left: 20px;
+            color: #555;
+            cursor: pointer;
+        }
+        .top-bar .user-actions .user-profile {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+        .top-bar .user-actions .user-profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            object-fit: cover; /* In case image is not square */
+        }
+        .top-bar .user-actions .user-profile span {
+            font-size: 0.9em;
+            color: #333;
+        }
+
+
+        .content-area {
+            padding: 30px;
+            flex-grow: 1;
+            overflow-y: auto; /* For scrolling long content */
+        }
+
+        /* Card styling for content sections */
+        .content-card {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+        .content-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .content-card-header h1, .content-card-header h2 {
+            font-size: 1.6em;
+            color: #333;
+            margin: 0;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.95em;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group input[type="password"]:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #f7b731;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(247, 183, 49, 0.25);
+        }
+
+
+        .button, input[type="submit"].button-link { /* Target your existing class or use a new one */
+            background-color: #f7b731;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.2s ease;
+            text-align: center;
+        }
+
+        .button:hover, input[type="submit"].button-link:hover {
+            background-color: #e0a82a; /* Darker yellow for hover */
+        }
+
+        .button.secondary, a.button-link.secondary {
+            background-color: #6c757d; /* Gray for secondary actions */
+            color: white;
+        }
+        .button.secondary:hover, a.button-link.secondary:hover {
+            background-color: #5a6268;
+        }
+
+
+        .error {
+            color: #dc3545; /* Bootstrap danger color */
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            margin-bottom: 20px; /* Space below flash messages */
+        }
+        .flash-messages .alert {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            font-size: 0.95em;
+        }
+        .flash-messages .alert-success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .flash-messages .alert-danger { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+        .flash-messages .alert-info { background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb; }
+        .flash-messages .alert-warning { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
+
+        /* "Back to" link styling */
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #007bff; /* Standard link blue, or use theme color */
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .back-link i {
+            margin-right: 5px;
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                /* Add more styles for a mobile-friendly sidebar if needed, e.g., hamburger menu */
+            }
+            .main-wrapper {
+                margin-left: 0;
+            }
+            .top-bar .search-bar input[type="text"] {
+                min-width: 150px;
+            }
+        }
+
+    </style>
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-star"></i> <!-- Placeholder logo icon -->
+                <div class="logo-text">
+                    <span class="main-title">አቢሲንያ ባንክ</span>
+                    <span class="sub-title">Bank of Abyssinia</span>
+                </div>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <!-- ========================== -->
+                <!--      DASHBOARD LINK        -->
+                <!-- ========================== -->
+                {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'admin' %}
+                        <li class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+                            <a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                        </li>
+                    {% elif current_user.role == 'manager' %}
+                        <li class="{% if request.endpoint == 'manager_dashboard' %}active{% endif %}">
+                            <a href="{{ url_for('manager_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                        </li>
+                    {% elif current_user.role == 'tester' %}
+                        <li class="{% if request.endpoint == 'tester_dashboard' %}active{% endif %}">
+                            <a href="{{ url_for('tester_dashboard') }}"><i class="fas fa-user-clock"></i> My Dashboard</a>
+                        </li>
+                    {% else %} {# Fallback for an authenticated user with an unrecognized role #}
+                        <li class="{% if request.endpoint == 'index' %}active{% endif %}">
+                            <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Home</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+
+
+                <!-- ========================== -->
+                <!--    USER MANAGEMENT         -->
+                <!-- ========================== -->
+                {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                    <li class="nav-category">User Management</li>
+                    <li class="{% if request.endpoint in ['list_users', 'create_user', 'edit_user'] %}active{% endif %}">
+                        <a href="{{ url_for('list_users') }}"><i class="fas fa-users-cog"></i> Manage Users</a>
+                    </li>
+                {% endif %}
+
+
+                <!-- ========================== -->
+                <!--    TEST MANAGEMENT         -->
+                <!-- ========================== -->
+                {% if current_user.is_authenticated %}
+                    <li class="nav-category">Test Management</li>
+                    
+                    {# Role-specific Test Management Links #}
+                    {% if current_user.role == 'admin' %}
+                        <li class="{% if request.endpoint in ['list_testcases', 'create_testcase_form', 'edit_testcase_form'] %}active{% endif %}">
+                            <a href="{{ url_for('create_testcase_form') }}"><i class="fas fa-tasks"></i> Manage Test Cases</a>
+                        </li>
+                    {% elif current_user.role == 'manager' %}
+                        <li class="{% if request.endpoint == 'manager_dashboard' or 
+                                        'assign_application' in request.endpoint or 
+                                        'assign_suite' in request.endpoint or 
+                                        'assign_test_case' in request.endpoint or 
+                                        'list_custom_groups' in request.endpoint or
+                                        'create_custom_group' in request.endpoint or
+                                        'edit_custom_group' in request.endpoint or
+                                        'assign_custom_group' in request.endpoint %}active{% endif %}">
+                            <a href="{{ url_for('manager_dashboard') }}"><i class="fas fa-clipboard-check"></i> Manage Assignments</a>
+                        </li>
+                    {% elif current_user.role == 'tester' %}
+                        <li class="{% if request.endpoint == 'tester_dashboard' or 
+                                        'run_assigned_test_page' in request.endpoint or 
+                                        'run_batch_assignment_page' in request.endpoint %}active{% endif %}">
+                            <a href="{{ url_for('tester_dashboard') }}"><i class="fas fa-play-circle"></i> My Assigned Tests</a>
+                        </li>
+                    {% endif %}
+
+                    {# Test Results - Common to all authenticated users under Test Management category #}
+                    <li class="{% if request.endpoint in ['test_results_overview', 'batch_execution_detail', 'execution_detail'] %}active{% endif %}">
+                        <a href="{{ url_for('test_results_overview') }}"><i class="fas fa-clipboard-list"></i> Test Results</a>
+                    </li>
+                {% endif %}
+
+
+                <!-- ========================== -->
+                <!--        analytics dashboard -->
+                <!-- ========================== -->
+                 {% if current_user.is_authenticated %}
+                    {# Show Analytics link to Admin and Manager roles #}
+                    {% if current_user.role in ['admin', 'manager'] %}
+                        <li class="nav-category">Analytics & Reports</li>
+                        <li class="{% if request.endpoint == 'analytics_dashboard' %}active{% endif %}">
+                            <a href="{{ url_for('analytics_dashboard') }}"><i class="fas fa-chart-pie"></i> Analytics</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+
+                <!-- ========================== -->
+                <!--          LOGIN             -->
+                <!-- ========================== -->
+                {% if not current_user.is_authenticated %}
+                    <li><a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% if current_user.is_authenticated %}
+        <div class="sidebar-toggle">
+            <a href="{{ url_for('logout') }}" style="color:white; text-decoration:none;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="main-wrapper">
+        <div class="top-bar">
+            <div class="search-bar">
+                <input type="text" placeholder="Search for...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-actions">
+                <i class="fas fa-bell"></i> <!-- Notification icon -->
+                <i class="fas fa-envelope"></i> <!-- Messages icon -->
+                {% if current_user.is_authenticated %}
+                <div class="user-profile">
+                    <!-- You can use a generic avatar or current_user.avatar_url if you have one -->
+                    <img src="https://via.placeholder.com/40" alt="User Avatar">
+                    <span>{{ current_user.username }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="content-area">
+
+
+            {% block content_header %}
+            <!-- Default content header, can be overridden by child templates -->
+            {% if title %}
+            <div class="content-card-header" style="border-bottom:none; padding-bottom:0; margin-bottom: 15px;">
+                 <h2>{{ title }}</h2>
+            </div>
+            {% endif %}
+            {% endblock %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <!-- <script src="{{ url_for('static', filename='js/main.js') }}"></script> -->
+    {% block scripts %}{% endblock %}
+</body>
+</html>

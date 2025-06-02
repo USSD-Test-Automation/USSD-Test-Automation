@@ -1,0 +1,155 @@
+{% if user_role == 'admin' %}
+{% extends "admin_base.html" %}
+{% elif user_role == 'manager' %}
+{% extends "manager_base.html" %}
+{% else %}
+{% extends "tester_base.html" %}
+{% endif %}
+
+{% block title %}Test Execution Details{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-3 py-4">
+    {% if execution %}
+
+
+
+    <div class="row align-items-center mb-4">
+        <div class="col-12 col-md-3 mb-2 mb-md-0">
+            <a href="{{ url_for('test_results_overview') }}" class="btn btn-secondary w-100">
+                <i class="fas fa-arrow-left"></i> Back to Results Overview
+            </a>
+        </div>
+        {% if batch_assignment_id_context %}
+        <div class="col-12 col-md-3 text-md-right">
+            <a href="{{ url_for('batch_execution_detail', batch_assignment_id=batch_assignment_id_context) }}"
+                class="btn btn-warning w-100">
+                <i class="fas fa-stream"></i> Batch Overview (ID: {{ batch_assignment_id_context }})
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header section-header">
+            <h4 class="mb-0">Test Case Execution - ID {{ execution.ExecutionID }}</h4>
+        </div>
+
+
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Test Case</dt>
+                <dd class="col-sm-9">{{ execution.TestCaseCode }} - {{ execution.TestCaseName }} <small
+                        class="text-muted">(Module: {{ execution.TestCaseModule }})</small></dd>
+
+                <dt class="col-sm-3">Executed By</dt>
+                <dd class="col-sm-9">{{ execution.ExecutedByUsername }}</dd>
+
+                <dt class="col-sm-3">Execution Time</dt>
+                <dd class="col-sm-9">{{ execution.ExecutionTime.strftime('%Y-%m-%d %H:%M:%S') if execution.ExecutionTime
+                    else 'N/A' }}</dd>
+
+                <dt class="col-sm-3">Overall Status</dt>
+                <dd class="col-sm-9">
+                    <span
+                        class="badge {% if execution.OverallStatus == 'PASS' %}badge-success{% elif execution.OverallStatus == 'FAIL' %}badge-danger{% else %}badge-secondary{% endif %}">
+                        {{ execution.OverallStatus }}
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">Device</dt>
+                <dd class="col-sm-9">{{ execution.DeviceName or execution.DeviceSerial or 'N/A' }}</dd>
+
+                <dt class="col-sm-3">Parameters Used</dt>
+                <dd class="col-sm-9">
+                    {% if execution.Parameters_parsed and not execution.Parameters_is_string %}
+                    <pre>{{ execution.Parameters_parsed | tojson(indent=2) }}</pre>
+                    {% else %}
+                    <pre>{{ execution.Parameters or 'None' }}</pre>
+                    {% endif %}
+                </dd>
+
+                <dt class="col-sm-3">Execution Log Summary</dt>
+                <dd class="col-sm-9">
+                    <pre>{{ execution.ExecutionLog or 'No summary log.' }}</pre>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header section-header">
+            <h4 class="mb-0">Step Results</h4>
+        </div>
+        <div class="card-body">
+            {% if steps %}
+
+            <div class="table-responsive">
+                <table class="table dashboard-table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Original Input</th>
+                            <th>Actual Input</th>
+                            <th>Expected Response</th>
+                            <th>Actual Output</th>
+                            <th>Status</th>
+                            <th>Duration (s)</th>
+                            <th>Screenshot</th>
+                            <th>Log</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+
+                    <tbody>
+                        {% for step in steps %}
+                        <tr
+                            class="{% if step.Status == 'PASS' %}table-success{% elif step.Status == 'FAIL' %}table-danger{% else %}table-secondary{% endif %}">
+                            <td>{{ step.StepOrder }}</td>
+                            <td>
+                                <pre>{{ step.OriginalStepInput }}</pre>
+                            </td>
+                            <td>
+                                <pre>{{ step.ActualInput or '-' }}</pre>
+                            </td>
+                            <td>
+                                <pre>{{ step.OriginalExpectedResponse }}</pre>
+                            </td>
+                            <td>
+                                <pre>{{ step.ActualOutput or '-' }}</pre>
+                            </td>
+                            <td>{{ step.Status }}</td>
+                            <td>{{ "%.3f"|format(step.Duration|float) if step.Duration is not none else '-'
+                                }}</td>
+                            <td>
+                                {% if step.Screenshot %}
+                                <a href="{{ url_for('static', filename='reports/' + step.Screenshot) }}"
+                                    target="_blank">View</a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <pre>{{ step.StepLog or '-' }}</pre>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No step results found for this execution.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% else %}
+    <div class="alert alert-warning">Execution details not found.</div>
+    {% endif %}
+
+
+
+</div>
+
+{% endblock %}

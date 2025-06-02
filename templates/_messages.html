@@ -1,0 +1,74 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+<style>
+  .custom-remove-step-btn {
+    position: absolute;
+    top: 0.5rem;
+    /* Position from the top of .step-row */
+    right: 0.5rem;
+    /* Position from the right of .step-row */
+    width: 28px;
+    height: 28px;
+    background-color: transparent;
+    border: none;
+    color: #1cc88a;
+    /* Red color for the 'X' */
+    font-size: 1.7rem;
+    /* Size of the 'X' character */
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.7;
+    z-index: 10;
+    /* Ensure it's above other content in the step row */
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .custom-remove-step-btn::before {
+    content: "×";
+  }
+
+  .alert-dismissible { 
+        padding-right: 3.5rem;
+  }
+</style>
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show mt-3"
+  role="alert">
+  {{ message }}
+  <button type="button" class="custom-remove-step-btn" aria-label="Close Message"></button>
+
+</div>
+{% endfor %}
+{% endif %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+    const customCloseButtons = document.querySelectorAll('.custom-remove-step-btn');
+
+    customCloseButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+
+        const alertToDismiss = this.closest('.alert'); // .closest() is robust
+
+        if (alertToDismiss) {
+
+          if (alertToDismiss.classList.contains('fade')) {
+            alertToDismiss.classList.remove('show'); // Trigger the fade-out
+
+            alertToDismiss.addEventListener('transitionend', function () {
+              alertToDismiss.remove();
+            }, { once: true }); 
+          } else {
+
+            alertToDismiss.remove();
+          }
+        }
+      });
+    });
+  });
+</script>
+{% endwith %}

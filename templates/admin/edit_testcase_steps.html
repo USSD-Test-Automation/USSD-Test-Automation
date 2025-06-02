@@ -1,0 +1,96 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Edit Step{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <div class="row align-items-center mb-4">
+        <div class="col-12 col-md-6">
+            <h1 class="h3 text-gray-800 mb-4">Edit Step: {{ step.StepOrder }}</h1>
+
+            {% include '_messages.html' %}
+
+        </div>
+
+        <div class="col-12 col-md-6 text-md-right">
+            <a href="{{ url_for('testcase_steps', testcase_id=step.TestCaseID) }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Steps
+            </a>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('edit_testcase_step', step_id=step.StepID) }}">
+        <div class="card shadow-sm">
+            <div class="card-body row g-3">
+
+                <div class="form-group col-md-6">
+                    <label><strong>Input</strong></label>
+                    <input type="text" name="input" class="form-control" value="{{ step.Input }}">
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label><strong>Expected Response</strong></label>
+                    <input type="text" name="expected_response" class="form-control" value="{{ step.ExpectedResponse }}"
+                        required>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label><strong>Param Name</strong></label>
+                    <input type="text" name="param_name" class="form-control" value="{{ step.ParamName or '' }}">
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label><strong>Input Field Type</strong></label>
+                    <select name="input_type" class="form-control" required onchange="toggleRequiredFields(this)">
+                        <option value="static" {{ 'selected' if step.InputType=='static' else '' }}>Static</option>
+                        <option value="dynamic" {{ 'selected' if step.InputType=='dynamic' else '' }}>Dynamic</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label><strong>Input Type</strong></label>
+                    <select name="inp_type" class="form-control" required>
+                        <option value="text" {{ 'selected' if step.InpType=='text' else '' }}>Text</option>
+                        <option value="password" {{ 'selected' if step.InpType=='password' else '' }}>Password</option>
+                        <option value="number" {{ 'selected' if step.InpType=='number' else '' }}>Number</option>
+                    </select>
+                </div>
+
+                <div class="col-12 text-right mt-4">
+                    <button type="submit" class="btn btn-warning">Save Changes</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    function toggleRequiredFields(select) {
+        const inputField = document.querySelector('input[name="input"]');
+        const paramNameField = document.querySelector('input[name="param_name"]');
+
+        if (select.value === 'static') {
+            inputField.setAttribute('required', 'required');
+            paramNameField.removeAttribute('required');
+        } else if (select.value === 'dynamic') {
+            paramNameField.setAttribute('required', 'required');
+            inputField.removeAttribute('required');
+        } else {
+            inputField.removeAttribute('required');
+            paramNameField.removeAttribute('required');
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const select = document.querySelector('select[name="input_type"]');
+        toggleRequiredFields(select);
+        select.addEventListener('change', function () {
+            toggleRequiredFields(this);
+        });
+    });
+</script>
+
+{% endblock %}

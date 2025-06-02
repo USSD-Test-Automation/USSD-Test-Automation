@@ -1,0 +1,488 @@
+{# templates admin/create_testcase.html #}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Test Case</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+    <div class="bg-white shadow-lg rounded-lg w-full max-w-4xl p-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold">🆕 Create Test Case</h2>
+            <button type="button" id="addModuleBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                + Add Module
+            </button>
+        </div>
+        <form id="createForm" class="space-y-6">
+
+            <!-- Test Case Metadata -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700">Code <span class="text-red-500">*</span></label>
+                    <input type="text" id="code" name="code" required
+                        class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring" />
+                </div>
+                <div>
+                    <label class="block text-gray-700">Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="name" name="name" required
+                        class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring" />
+                </div>
+                <div>
+                    <label class="block text-gray-700">Applications<span class="text-red-500">*</span></label>
+                    <select id="apptype" name="apptype" required
+                        class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring">
+                        <option value="">Loading Applications..</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Module (Test Suite)<span class="text-red-500">*</span></label>
+                    <select id="module" name="module" required disabled
+                        class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring">
+                        <option value="">Select Module</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Description</label>
+                    <textarea id="description" name="description" rows="2"
+                        class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring"></textarea>
+                </div>
+            </div>
+
+            <!-- Steps Section -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xl font-medium">Steps</h3>
+                    <!-- <button type="button" id="addStepBtn"
+                        class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+                        + Add Step
+                    </button> -->
+                </div>
+                <div id="stepsContainer" class="space-y-4"></div>
+            </div>
+
+            <!-- Submit -->
+            <div class="text-right">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <button type="button" id="addStepBtn"
+                            class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+                            + Add Step
+                        </button>
+                    
+                    <!-- <div id="stepsContainer" class="space-y-4"></div> -->
+                
+                <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+                    Create Test Case
+                </button>
+                </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Module Model -->
+    <div id="addModuleModel" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Add New Module</h3>
+                <button id="closeModel" class="text-gray-500 hover:text-red-600 text-2xl">×</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-700">Module Name</label>
+                    <input type="text" id="newModuleName" required
+                        class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring"
+                        placeholder="Enter module name">
+                </div>
+                <div>
+                    <label class="block text-gray-700">Description</label>
+                    <textarea id="descriptionModel" name="descriptionModel" required rows="2"
+                        class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Applications<span class="text-red-500">*</span></label>
+                    <select id="apptypemodel" name="apptypemodel" required
+                        class="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring">
+                        <option value="">Loading Applications..</option>
+                    </select>
+                </div>
+                <div>
+                </div>
+                <div class="text-right">
+                    <button id="saveModuleBtn"
+                        class="w-full mt-5 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let stepCount = 0;
+    const stepsContainer = document.getElementById('stepsContainer');
+    const addStepBtn = document.getElementById('addStepBtn');
+    const createForm = document.getElementById('createForm');
+    const appTypeSelect = document.getElementById('apptype');
+    const moduleSelect = document.getElementById('module');
+
+    // --- Step Management ---
+    function addStepRow() {
+        stepCount++;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'p-4 border rounded bg-gray-50 relative step-row';
+        wrapper.innerHTML = `
+        <button type="button" class="remove-step absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl font-bold">×</button>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-gray-700 text-sm">Step Order</label>
+                <input type="number" name="step_order" value="${stepCount}" min="1" required
+                    class="mt-1 w-full border rounded px-2 py-1 text-sm"/>
+            </div>
+            <div>
+                <label class="block text-gray-700 text-sm">Input Type</label>
+                <select name="input_type" required class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                    <option value="static">Static</option>
+                    <option value="dynamic">Dynamic</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-gray-700 text-sm">Input / Param Name (if Dynamic)</label>
+                <input type="text" name="input_value" placeholder="e.g. *685# or pin_param" required
+                    class="mt-1 w-full border rounded px-2 py-1 text-sm"/>
+            </div>
+        </div>
+        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="param-name-group"> 
+                <label class="block text-gray-700 text-sm">Actual Param Name (for code)</label>
+                <input type="text" name="param_name" placeholder="e.g. pin_param (no spaces)" 
+                    class="mt-1 w-full border rounded px-2 py-1 text-sm"/> 
+            </div>
+            <div class="param-type-group"> 
+                <label class="block text-gray-700 text-sm">Parameter Input Type</label> 
+                <select name="param_input_type" class="mt-1 w-full border rounded px-2 py-1 text-sm"> 
+                    <option value="text">Text</option>
+                    <option value="password">Password</option>
+                    <option value="number">Number</option>
+                    <option value="select">Select</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-gray-700 text-sm">Expected Keywords (comma-separated)</label>
+                <input type="text" name="expected_keywords" placeholder="welcome,login,error"
+                    class="mt-1 w-full border rounded px-2 py-1 text-sm" required/>
+            </div>
+        </div>
+        `;
+        stepsContainer.appendChild(wrapper);
+
+        wrapper.querySelector('.remove-step').addEventListener('click', () => {
+            wrapper.remove();
+            // Re-number steps if needed, or ensure backend handles sparse step_order
+            let currentOrder = 1;
+            stepsContainer.querySelectorAll('.step-row input[name="step_order"]').forEach(input => {
+                input.value = currentOrder++;
+            });
+            stepCount = stepsContainer.querySelectorAll('.step-row').length; // Update global stepCount
+        });
+
+        const inputTypeSelect = wrapper.querySelector('select[name="input_type"]');
+        const paramNameGroup = wrapper.querySelector('.param-name-group');
+        const paramNameInput = paramNameGroup.querySelector('input[name="param_name"]');
+        const paramTypeGroup = wrapper.querySelector('.param-type-group'); // Corrected variable name from ptypeGroup
+        const paramTypeSelect = paramTypeGroup.querySelector('select[name="param_input_type"]');
+        // const inputValueField = wrapper.querySelector('input[name="input_value"]'); // Not strictly needed for this fix but good to have
+
+        // Function to update visibility and required attributes
+        function updateDynamicFieldsState() {
+            const isDynamic = inputTypeSelect.value === 'dynamic';
+            paramNameGroup.classList.toggle('hidden', !isDynamic);
+            paramTypeGroup.classList.toggle('hidden', !isDynamic); // Use paramTypeGroup
+
+            paramNameInput.required = isDynamic;
+            paramTypeSelect.required = isDynamic; // Make param_input_type required if dynamic
+
+            if (!isDynamic) {
+                paramNameInput.value = ''; // Clear value when not dynamic
+                paramTypeSelect.selectedIndex = 0; // Reset select
+            }
+        }
+
+        // Initial state setup
+        updateDynamicFieldsState();
+
+        // Event listener for changes
+        inputTypeSelect.addEventListener('change', updateDynamicFieldsState);
+    }
+
+    addStepBtn.addEventListener('click', addStepRow);
+    addStepRow(); // Add initial step
+
+    // --- Form Submission ---
+    createForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // ... (your existing validation for appType, module) ...
+        if (!appTypeSelect.value) {
+            alert('Please select an Application.');
+            appTypeSelect.focus();
+            return;
+        }
+        const selectedModuleElement = moduleSelect;
+        const selectedSuiteId = selectedModuleElement.value;
+        if (!selectedSuiteId) {
+            alert('Please select a Module (Test Suite).');
+            selectedModuleElement.focus();
+            return;
+        }
+
+
+        const payload = {
+            code: createForm.code.value.trim(),
+            name: createForm.name.value.trim(),
+            module: selectedModuleElement.options[selectedModuleElement.selectedIndex].text,
+            description: createForm.description.value.trim(),
+            selected_suite_id: parseInt(selectedSuiteId),
+            steps: []
+        };
+
+        const stepRows = stepsContainer.querySelectorAll('.step-row');
+        if (stepRows.length === 0) {
+            alert('Please add at least one step.');
+            return;
+        }
+
+        for (let i = 0; i < stepRows.length; i++) { // Changed to indexed loop for easier debugging if needed
+            const wrapper = stepRows[i];
+            const stepOrder = wrapper.querySelector('input[name="step_order"]').value;
+            const inputType = wrapper.querySelector('select[name="input_type"]').value;
+            const inputValue = wrapper.querySelector('input[name="input_value"]').value.trim();
+            const expectedKeywordsRaw = wrapper.querySelector('input[name="expected_keywords"]').value;
+            const expectedKeywords = expectedKeywordsRaw.split(',').map(s => s.trim()).filter(Boolean);
+
+            let paramName = null;
+            let paramInputType = null; // Renamed from inpType for clarity
+
+            if (inputType === 'dynamic') {
+                paramName = wrapper.querySelector('input[name="param_name"]').value.trim();
+                paramInputType = wrapper.querySelector('select[name="param_input_type"]').value; // Get selected value
+
+                // HTML5 validation should catch empty required fields if they are visible.
+                // This JS check is a fallback or for cases where HTML5 validation is bypassed.
+                if (!paramName && wrapper.querySelector('input[name="param_name"]').required) {
+                    alert(`Please provide an 'Actual Param Name' for dynamic step with order ${stepOrder}.`);
+                    wrapper.querySelector('input[name="param_name"]').focus();
+                    return;
+                }
+                if (!paramInputType && wrapper.querySelector('select[name="param_input_type"]').required) {
+                     alert(`Please select a 'Parameter Input Type' for dynamic step with order ${stepOrder}.`);
+                     wrapper.querySelector('select[name="param_input_type"]').focus();
+                     return;
+                }
+            }
+
+            if (!expectedKeywords.length) {
+                alert(`Please provide 'Expected Keywords' for step with order ${stepOrder}.`);
+                wrapper.querySelector('input[name="expected_keywords"]').focus();
+                return;
+            }
+
+            payload.steps.push({
+                step_order: Number(stepOrder),
+                input: inputValue,
+                expected_keywords: expectedKeywords,
+                input_type: inputType,
+                param_name: paramName,
+                param_type: paramInputType, // Use the correct variable
+            });
+        }
+
+        console.log(payload);
+
+        try {
+            const resp = await fetch('/create-testcase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await resp.json();
+            if (result.success) {
+                alert('Test case created successfully! ID: ' + result.testcase_id);
+                createForm.reset();
+                stepsContainer.innerHTML = '';
+                stepCount = 0; // Reset stepCount
+                addStepRow();
+                appTypeSelect.value = "";
+                moduleSelect.innerHTML = '<option value="">Select Module</option>';
+                moduleSelect.disabled = true;
+            } else {
+                throw new Error(result.error || 'Unknown error creating test case.');
+            }
+        } catch (err) {
+            console.error('Error creating test case:', err);
+            alert('Failed to create test case: ' + err.message);
+        }
+    });
+
+    // ... (rest of your existing JavaScript: Application/Module Loading, Modal Management) ...
+    // --- Application and Module Loading ---
+    let moduleChangeListenerAdded = false;
+    async function loadApplications() {
+        try {
+            const res = await fetch('/apptype'); // Your endpoint to get applications
+            if (!res.ok) throw new Error(`Failed to fetch applications: ${res.statusText}`);
+            const data = await res.json();
+
+            appTypeSelect.innerHTML = '<option value="">Select Application</option>';
+            data.forEach(app => {
+                const opt = document.createElement('option');
+                opt.value = app.id;
+                opt.textContent = app.name;
+                appTypeSelect.appendChild(opt);
+            });
+            moduleSelect.disabled = true;
+        } catch (err) {
+            console.error("Failed to load applications:", err);
+            appTypeSelect.innerHTML = '<option value="">Error loading applications</option>';
+        }
+    }
+
+    async function loadModules(selectedAppType) {
+        moduleSelect.innerHTML = '<option value="">Loading Modules...</option>';
+        moduleSelect.disabled = true;
+        try {
+            const res = await fetch(`/get-modules?appType=${selectedAppType}`); // Your endpoint
+            if (!res.ok) throw new Error(`Failed to fetch modules: ${res.statusText}`);
+            const data = await res.json();
+
+            moduleSelect.innerHTML = '<option value="">Select Module</option>';
+            data.forEach(mod => {
+                const opt = document.createElement('option');
+                opt.value = mod.SuiteID; // Value should be the SuiteID
+                opt.textContent = mod.Name;
+                moduleSelect.appendChild(opt);
+            });
+            moduleSelect.disabled = false;
+
+            if (!moduleChangeListenerAdded) {
+                moduleSelect.addEventListener('change', () => {
+                    const defaultOption = moduleSelect.querySelector('option[value=""]');
+                    if (defaultOption && moduleSelect.value !== "") {
+                        defaultOption.remove();
+                    }
+                });
+                moduleChangeListenerAdded = true;
+            }
+        } catch (err) {
+            console.error("Failed to load modules:", err);
+            moduleSelect.innerHTML = '<option value="">Error loading modules</option>';
+        }
+    }
+
+    appTypeSelect.addEventListener('change', () => {
+        const selectedAppType = appTypeSelect.value;
+        if (selectedAppType) {
+            const defaultOption = appTypeSelect.querySelector('option[value=""]');
+            if (defaultOption) defaultOption.remove();
+            loadModules(selectedAppType);
+        } else {
+            moduleSelect.disabled = true;
+            moduleSelect.innerHTML = '<option value="">Select Module</option>';
+        }
+    });
+
+    // --- Modal Management for "Add Module" ---
+    const addModuleBtnModal = document.getElementById('addModuleBtn'); // Renamed to avoid conflict with step add button
+    const moduleModal = document.getElementById('addModuleModel');
+    const closeModalBtn = document.getElementById('closeModel');
+    const saveModuleBtn = document.getElementById('saveModuleBtn');
+    const appTypeModelSelect = document.getElementById('apptypemodel');
+    let moduleChangeListenerAddedModel = false;
+
+
+    async function populateApplicationOptionsForModal() {
+        try {
+            const res = await fetch('/apptype');
+            if (!res.ok) throw new Error(`Failed to fetch applications for modal: ${res.statusText}`);
+            const apps = await res.json();
+            appTypeModelSelect.innerHTML = '<option value="">Select Application</option>';
+            apps.forEach(app => {
+                const opt = document.createElement('option');
+                opt.value = app.id;
+                opt.textContent = app.name;
+                appTypeModelSelect.appendChild(opt);
+            });
+
+            if (!moduleChangeListenerAddedModel) {
+                appTypeModelSelect.addEventListener('change', () => {
+                    const defaultOption = appTypeModelSelect.querySelector('option[value=""]');
+                    if (defaultOption && appTypeModelSelect.value !== "") {
+                        defaultOption.remove();
+                    }
+                });
+                moduleChangeListenerAddedModel = true;
+            }
+        } catch (err) {
+            console.error("Failed to load applications for modal:", err);
+            appTypeModelSelect.innerHTML = '<option value="">Error loading applications</option>';
+        }
+    }
+
+
+    addModuleBtnModal.addEventListener('click', () => { // Use renamed variable
+        moduleModal.classList.remove('hidden');
+        populateApplicationOptionsForModal(); // Populate apps in modal
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        moduleModal.classList.add('hidden');
+    });
+
+    saveModuleBtn.addEventListener('click', async () => {
+        const newModuleName = document.getElementById("newModuleName").value.trim();
+        const descriptionModel = document.getElementById("descriptionModel").value.trim();
+        const selectedAppTypeForNewModule = appTypeModelSelect.value;
+
+        if (!newModuleName || !selectedAppTypeForNewModule) {
+            alert("Please fill in Module Name and select an Application for the new module.");
+            return;
+        }
+
+        const modalPayload = {
+            module_name: newModuleName,
+            application_type: selectedAppTypeForNewModule,
+            description_model: descriptionModel || null // Send null if empty
+        };
+
+        try {
+            const resp = await fetch('/add-module', { // Your endpoint to add a module
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(modalPayload)
+            });
+            const result = await resp.json();
+            if (result.success) {
+                alert("Module added successfully!");
+                moduleModal.classList.add('hidden');
+                document.getElementById("newModuleName").value = '';
+                document.getElementById("descriptionModel").value = '';
+                appTypeModelSelect.value = '';
+                if (appTypeSelect.value === selectedAppTypeForNewModule) {
+                    loadModules(selectedAppTypeForNewModule);
+                }
+            } else {
+                throw new Error(result.error || "Unknown error adding module.");
+            }
+        } catch (err) {
+            console.error('Error adding module:', err);
+            alert("Failed to add module: " + err.message);
+        }
+    });
+
+    // --- Initial Load ---
+    loadApplications();
+});
+    </script>
+</body>
+
+</html>

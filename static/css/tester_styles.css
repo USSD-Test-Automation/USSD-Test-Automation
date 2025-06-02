@@ -1,0 +1,375 @@
+/* Common layout card */
+.content-card {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+/* Info box */
+.item-info-box {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 15px 20px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+}
+
+.item-info-box p {
+    margin-bottom: 5px;
+    font-size: 0.95em;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 0.95em;
+}
+
+/* Fieldset & legends */
+.fieldset-box {
+    border: 1px solid #dee2e6;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+}
+
+.fieldset-box legend {
+    padding: 0 10px;
+    font-weight: 600;
+    color: #343a40;
+    font-size: 1.1em;
+}
+
+/* Buttons */
+.button {
+    display: inline-block;
+    background-color: #f7b731;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 18px;
+    font-size: 0.95em;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #e0a82a;
+}
+
+.button.secondary {
+    background-color: #6c757d;
+}
+
+.button.secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Errors */
+.has-error .form-control {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.error-messages .error,
+span.error {
+    color: #dc3545;
+    font-size: 0.85em;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Warning note */
+.no-testers-message {
+    padding: 10px 15px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+    border-radius: 6px;
+    font-size: 0.9em;
+}
+
+.no-testers-message i {
+    margin-right: 8px;
+}
+
+.table-responsive-custom {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+/* Step cards */
+.step-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.step-card h5 {
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+.step-card .btn-edit-step {
+    background-color: #17a2b8;
+    color: #fff;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.step-card .btn-edit-step:hover {
+    background-color: #138496;
+}
+
+/* Priority badges */
+.badge-priority {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.priority-high {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.priority-medium {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.priority-low {
+    background-color: #28a745;
+    color: #fff;
+}
+
+/* Output display area */
+.output-box {
+    background-color: #f1f3f5;
+    border: 1px solid #ced4da;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #212529;
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+    /* font-size: 1.2rem; */
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.section-header {
+    /* For h2 titles inside cards */
+    font-size: 1.4em;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.section-header i {
+    margin-right: 8px;
+    color: #f7b731;
+    /* Theme accent */
+}
+
+.dashboard-table th {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.82rem;
+    padding: 10px 12px;
+    vertical-align: middle;
+}
+
+.dashboard-table td {
+    color: #888a8d !important;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 10px 12px;
+    vertical-align: middle;
+}
+
+/* Responsive form adjustments */
+@media (max-width: 768px) {
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .button {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Card-style section box */
+.section-box {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.section-box h4 {
+    font-size: 1.15rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* Custom field labels (optional enhancement) */
+.label-muted {
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+
+
+/* Dashboard titles and sections */
+.dashboard-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #444;
+}
+
+/* Card and shadow */
+.dashboard-card {
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+/* Table header style */
+.table-header {
+    background-color: #6c757d;
+    color: white;
+    font-weight: 500;
+}
+
+/* Shadow and hover effect */
+.custom-table-shadow {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Priority badges */
+.priority-badge {
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 4px;
+    color: white;
+}
+
+.priority-high {
+    background-color: #dc3545;
+}
+
+.priority-medium {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.priority-low {
+    background-color: #28a745;
+}
+
+.priority-unknown {
+    background-color: #6c757d;
+}
+
+.content-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Heading styles */
+.batch-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.batch-subtitle {
+    font-weight: normal;
+    font-size: 1.5rem;
+    color: #555;
+}
+
+/* Back button adjustments */
+.back-button {
+    padding: 8px 14px;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Responsive behavior */
+@media (max-width: 576px) {
+    .content-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .back-button {
+        width: 100%;
+        justify-content: center;
+    }
+    .batch-title {
+        font-size: 1.25rem;
+    }
+    .batch-subtitle {
+        font-size: 1.2rem;
+    }
+}
+
+.svg-legend-color-box {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 5px;
+    vertical-align: middle;
+}

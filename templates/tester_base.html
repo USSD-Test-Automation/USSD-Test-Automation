@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Tester{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- External CSS -->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tester_styles.css') }}">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+
+        .btn-report,
+        .btn-search {
+            background-color: #f1ab15;
+            color: white;
+        }
+
+        .btn-report:hover,
+        .btn-search:hover {
+            background-color: #f5b11f;
+            color: white;
+        }
+
+        .sidebar-brand-text {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-brand-text {
+                display: none;
+            }
+        }
+
+        /* Flash Messages */
+        .flash-messages .alert {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+        .alert-success { background-color: #d4edda; color: #155724; }
+        .alert-danger { background-color: #f8d7da; color: #721c24; }
+        .alert-info { background-color: #d1ecf1; color: #0c5460; }
+        .alert-warning { background-color: #fff3cd; color: #856404; }
+
+        
+    </style>
+    {% block custom_styles %}{% endblock %}
+    
+    {% block head_extra %}{% endblock %}
+</head>
+<body id="page-top">
+    <div id="wrapper">
+        {% include 'tester/components/_tester_sidebar.html' %}
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                {% include 'tester/components/_tester_topbar.html' %}
+                <div class="container-fluid">
+                    <div class="flash-messages">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                          {% if messages %}
+                            {% for category, message in messages %}
+                              <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                          {% endif %}
+                        {% endwith %}
+                    </div>
+
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

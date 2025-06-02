@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Login</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+
+    <link href="static/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            height: 100%;
+            background-color: #f8f9fc;
+        }
+
+        .container {
+            height: 100vh;
+            /* display: flex;  */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-body {
+            height: 100%;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .row.full-height {
+            height: 100%;
+            min-height: 400px;
+        }
+
+        .flashcontainer {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            /* box-shadow: 0 0 10px rgba(0,0,0,0.1);  */
+        }
+
+        .flash-messages .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .flash-messages .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash-messages .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .flash-messages .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .flash-messages .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .welcome {
+            font-size: 30px;
+            color: black;
+            font-weight: 800;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 40px;
+            background-color: #fff;
+        }
+
+        .logo-img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .row.full-height {
+            min-height: 400px;
+            height: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .welcome {
+                font-size: 20px;
+            }
+        }
+
+        @keyframes logoEnter {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(-30px) rotate(-5deg);
+            }
+
+            60% {
+                opacity: 0.8;
+                transform: scale(1.05) translateY(5px) rotate(2deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0) rotate(0deg);
+            }
+        }
+
+        .logo-img {
+            opacity: 0;
+            animation: logoEnter 1.2s ease-out forwards;
+            animation-delay: 0.2s;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: auto;
+        }
+
+        /* Optional: Make sure it’s centered properly on small screens */
+        @media (max-width: 767px) {
+            .logo-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+        }
+    </style>
+
+</head>
+
+<body class="">
+
+    <div class="container">
+
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row full-height align-items-center" style="min-height: 500px;">
+                            <div class="col-lg-6 logo-container align-items-center">
+                                <img src="static/img/loginlogo.png" class="logo-img" alt="Logo">
+                            </div>
+                            <!-- <div class="col-lg-6 logo-container">
+                               
+                            </div> -->
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="welcome h4 mb-4">Welcome Back!</h1>
+
+                                        <!-- Flash Messages -->
+                                        <div class="flashcontainer">
+                                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                            {% if messages %}
+                                            <div class="flash-messages">
+                                                {% for category, message in messages %}
+                                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                            {% endwith %}
+                                        </div>
+                                    </div>
+                                    {% block content %}
+                                    <form class="user" method="POST" action="">
+                                        {{ form.hidden_tag() }}
+                                        <div class="form-group">
+                                            {{ form.username.label }}
+                                            {{ form.username(class_="form-control form-control-user", placeholder="Enter  User Name", required=True) }}
+                                            {% if form.username.errors %}
+                                            {% for error in form.username.errors %}
+                                            <span class="error">[{{ error }}]</span>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="form-group">
+                                            {{ form.password.label }}
+                                            {{ form.password(class_="form-control form-control-user", placeholder="Enter  Password", required=True) }}
+                                            {% if form.password.errors %}
+                                            {% for error in form.password.errors %}
+                                            <span class="error">[{{ error }}]</span>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                <label class="custom-control-label" for="customCheck">Remember
+                                                    Me</label>
+
+                                            </div>
+                                        </div> -->
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                {{ form.remember_me(class="custom-control-input", id="customCheck") }}
+                                                {{ form.remember_me.label(class="custom-control-label",
+                                                for="customCheck") }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.submit(class="btn bg-gradient-primary btn-user btn-block",
+                                            style="color: white; font-size: medium;") }}
+                                        </div>
+                                    </form>
+                                    <hr>
+                                    <div class="text-center">
+                                        <a class="small text-warning" href="{{ url_for('forgot_password') }}">Forgot
+                                            Password?</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endblock %}
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="static/js/sb-admin-2.min.js"></script>
+
+</body>
+
+</html>

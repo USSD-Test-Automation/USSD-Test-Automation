@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Execution Results</title>
+    <!-- Link to your existing CSS or add new styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; }
+        header { background-color: #fff; padding: 15px 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; }
+        header img { height: 40px; }
+        .theme-toggle { /* Styles from your index.html */ }
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        h1, h2 { color: #2c3e50; }
+        .module-group { margin-bottom: 30px; border: 1px solid #e0e0e0; border-radius: 5px; padding: 15px; }
+        .module-group h2 { margin-top: 0; border-bottom: 2px solid #3498db; padding-bottom: 10px; font-size: 1.5em; }
+        .execution-item { border-bottom: 1px solid #eee; padding: 15px 0; display: flex; justify-content: space-between; align-items: center; }
+        .execution-item:last-child { border-bottom: none; }
+        .execution-info p { margin: 5px 0; font-size: 0.9em; }
+        .execution-info strong { color: #555; }
+        .status-PASS { color: #2ecc71; font-weight: bold; }
+        .status-FAIL { color: #e74c3c; font-weight: bold; }
+        .status-NOT_EXECUTED { color: #95a5a6; font-weight: bold; }
+        .btn, .btn-view-details {
+            background-color: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px;
+            border: none; cursor: pointer; font-size: 0.9em; transition: background-color 0.3s ease;
+        }
+        .btn:hover, .btn-view-details:hover { background-color: #2980b9; }
+        .nav-links a { margin-left: 15px; color: #3498db; text-decoration: none; font-weight: 500; }
+        .nav-links a:hover { text-decoration: underline; }
+        /* Dark theme adjustments (basic) */
+        body.dark-theme { background-color: #2c3e50; color: #ecf0f1; }
+        body.dark-theme header, body.dark-theme .container { background-color: #34495e; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        body.dark-theme h1, body.dark-theme h2 { color: #ecf0f1; }
+        body.dark-theme .module-group { border-color: #4a6278; }
+        body.dark-theme .execution-item { border-bottom-color: #4a6278; }
+        body.dark-theme .execution-info strong { color: #bdc3c7; }
+        body.dark-theme .nav-links a { color: #5dade2; }
+    </style>
+</head>
+<body class="light-theme"> {/* Assuming you have theme toggle logic */}
+  <header>
+    <a href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='images/apollo_logo.png') }}" alt="Apollo Logo">
+    </a>
+    <div class="nav-links">
+        <a href="{{ url_for('index') }}" class="btn">Run Test</a>
+        <a href="{{ url_for('create_testcase_form') }}" class="btn">Create Test Case</a>
+        <a href="{{ url_for('test_results_overview') }}" class="btn">View Results</a>
+    </div>
+    <div class="theme-toggle">
+      <input type="checkbox" id="themeToggle" />
+      <label for="themeToggle" class="theme-toggle-label"></label>
+      <span class="theme-toggle-icon">🌙</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>Test Execution Results</h1>
+    {% if grouped_executions %}
+      {% for module_name, executions in grouped_executions.items() %}
+        <div class="module-group">
+          <h2>Module: {{ module_name|capitalize }}</h2>
+          {% if executions %}
+            {% for exec in executions %}
+              <div class="execution-item">
+                <div class="execution-info">
+                  <p><strong>Execution ID:</strong> {{ exec.ExecutionID }}</p>
+                  <p><strong>Test Case:</strong> {{ exec.TestCaseCode }} - {{ exec.TestCaseName }}</p>
+                  <p><strong>Status:</strong> <span class="status-{{ exec.OverallStatus }}">{{ exec.OverallStatus }}</span></p>
+                  <p><strong>Time:</strong> {{ exec.ExecutionTime.strftime('%Y-%m-%d %H:%M:%S') if exec.ExecutionTime else 'N/A' }}</p>
+                  <p><strong>Device:</strong> {{ exec.DeviceName }} ({{ exec.DeviceSerial }})</p>
+                  <p><strong>Executor:</strong> {{ exec.ExecutedByUsername }}</p>
+                  <p><strong>Suite:</strong> {{ exec.SuiteName }}</p>
+                  {% if exec.Parameters and exec.Parameters != '{}' %}
+                  <p><strong>Params:</strong> <small>{{ exec.Parameters }}</small></p>
+                  {% endif %}
+                </div>
+                <a href="{{ url_for('execution_detail', execution_id=exec.ExecutionID) }}" class="btn-view-details">View Details</a>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p>No executions found for this module.</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No test executions found.</p>
+    {% endif %}
+  </div>
+
+  <script>
+    // Basic Theme Toggle Logic (same as your index.html)
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    const themeIcon = document.querySelector('.theme-toggle-icon');
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    body.classList.add(`${savedTheme}-theme`);
+    if (savedTheme === 'dark') {
+      themeToggle.checked = true;
+      themeIcon.textContent = '☀️';
+    } else {
+      themeIcon.textContent = '🌙';
+    }
+
+    themeToggle.addEventListener('change', () => {
+      if (themeToggle.checked) {
+        body.classList.remove('light-theme');
+        body.classList.add('dark-theme');
+        localStorage.setItem('theme', 'dark');
+        themeIcon.textContent = '☀️';
+      } else {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        localStorage.setItem('theme', 'light');
+        themeIcon.textContent = '🌙';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>Welcome to the Admin Dashboard. From here you can manage users, create test cases, and oversee the system.</p>
+<ul>
+    <li><a href="{{ url_for('list_users') }}" class="button-link">Manage Users</a></li>
+    <li><a href="{{ url_for('create_user') }}" class="button-link">Create New User</a></li>
+    <li><a href="{{ url_for('create_testcase_form') }}" class="button-link">Create New Test Case</a></li>
+    <li><a href="{{ url_for('test_results_overview') }}" class="button-link">View All Test Results</a></li>
+    <li><a href="{{ url_for('admindashboard') }}" class="button-link">Admin Dashboard</a></li>
+    <!-- Add more admin-specific links as needed -->
+</ul>
+{% endblock %}

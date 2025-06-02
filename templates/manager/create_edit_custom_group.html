@@ -1,0 +1,389 @@
+{% extends "manager_base.html" %}
+
+{% block content_header %}
+    <div class="content-card-header" style="border-bottom:none; padding-bottom:0; margin-bottom: 15px;">
+        <h2>{{ title }}</h2>
+        {# Optional: A button here if relevant for the whole page, e.g., "Back to List" #}
+        {# <a href="{{ url_for('list_custom_groups') }}" class="button secondary"><i class="fas fa-list"></i> View All Groups</a> #}
+    </div>
+{% endblock %}
+
+
+{% block head_extra %}
+{{ super() }}
+<style>
+    /* --- Collapsible List Styling --- */
+    .collapsible-group {
+        margin-bottom: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        background-color: #ffffff; /* White background for groups */
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .collapsible-header {
+        font-weight: 600; /* Bolder header */
+        font-size: 1.05em;
+        margin-bottom: 0; /* Remove bottom margin, padding will handle space */
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px; /* Increased padding */
+        background-color: #f8f9fa; /* Lighter, cleaner header background */
+        border-bottom: 1px solid #e9ecef;
+        transition: background-color 0.2s ease;
+    }
+    .collapsible-header:hover {
+        background-color: #f1f3f5;
+    }
+    .collapsible-header i.toggle-icon { /* Using Font Awesome icons */
+        font-size: 0.9em;
+        transition: transform 0.2s ease-in-out;
+        color: #6c757d;
+    }
+    .collapsible-header.collapsed i.toggle-icon {
+        transform: rotate(-90deg);
+    }
+
+    .collapsible-content {
+        padding: 15px; /* Padding for the content area */
+        /* border-top: 1px solid #e9ecef; Removed, header has bottom border */
+        display: block; /* Default to visible */
+    }
+    .collapsible-content.collapsed {
+        display: none;
+    }
+
+    .suite-group { /* Nested group styling */
+        margin-top: 10px;
+        margin-bottom: 10px; /* Space between suite groups */
+        border-left: 3px solid #f7b731; /* Accent color for suite indentation */
+        background-color: #fff; /* Ensure white background for nested suite content */
+        padding-left: 10px;
+    }
+    .suite-group .collapsible-header { /* Slightly different style for suite headers if needed */
+        font-size: 1em;
+        padding: 10px 12px;
+        background-color: #fafbfc;
+    }
+
+
+    .test-case-checkbox-list label { /* Checkbox labels */
+        display: block;
+        margin-bottom: 8px;
+        font-weight: normal;
+        cursor: pointer;
+        padding: 5px 8px;
+        border-radius: 4px;
+        transition: background-color 0.2s ease;
+        position: relative; /* For potential custom checkbox styling */
+    }
+    .test-case-checkbox-list label:hover {
+        background-color: #f1f3f5;
+    }
+    .test-case-checkbox-list input[type="checkbox"] {
+        margin-right: 10px;
+        vertical-align: middle;
+        width: 16px; /* Custom checkbox size */
+        height: 16px;
+    }
+    .test-case-checkbox-list label small {
+        color: #6c757d;
+        font-size: 0.85em;
+        margin-left: 5px;
+    }
+
+    /* --- Filter Controls Styling --- */
+    .filter-controls {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #f8f9fa; /* Light background for filter area */
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    }
+    .filter-controls label {
+        margin-right: 8px;
+        font-weight: 500;
+    }
+    .filter-controls input[type="text"], .filter-controls select {
+        padding: 8px 10px; /* Consistent padding with other form inputs */
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        margin-right: 12px;
+        min-width: 200px; /* Give search input some width */
+        margin-bottom: 5px; /* For wrapping */
+    }
+    .filter-controls .button { /* Style buttons within filter controls */
+        margin-left: 5px;
+        margin-bottom: 5px; /* For wrapping */
+    }
+
+
+    /* --- Error Message Styling --- */
+    .error-messages .error { /* General WTForms errors */
+        color: #dc3545;
+        font-size: 0.85em;
+        display: block;
+        margin-top: 4px;
+    }
+    #testCasesFieldset .flashed-error { /* Specifically for our flashed message */
+         color: #dc3545;
+         font-weight: 600; /* Bolder for more emphasis */
+         margin-bottom: 15px;
+         padding: 10px;
+         background-color: #f8d7da;
+         border: 1px solid #f5c6cb;
+         border-radius: 6px;
+         font-size: 0.9em;
+    }
+    .form-group.has-error .form-control { /* Optional: highlight input field with error */
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+    /* General legend styling if not already in base.html */
+    fieldset {
+        border: 1px solid #dee2e6;
+        padding: 20px;
+        border-radius: 6px;
+        margin-bottom: 25px;
+    }
+    legend {
+        padding: 0 10px;
+        font-weight: 600;
+        color: #343a40;
+        font-size: 1.15em;
+        width: auto; /* Important for proper border display */
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-card p-4">
+    <form method="POST" action="" novalidate>
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <legend><i class="fas fa-info-circle"></i> Group Details</legend>
+            <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control", size=50, placeholder="Enter a unique group name") }}
+                {% if form.name.errors %}
+                    <div class="error-messages">
+                    {% for error in form.name.errors %}<span class="error">{{ error }}</span>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group {% if form.description.errors %}has-error{% endif %}">
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control", rows=4, placeholder="Provide a brief description (optional)") }}
+                {% if form.description.errors %}
+                    <div class="error-messages">
+                    {% for error in form.description.errors %}<span class="error">{{ error }}</span>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </fieldset>
+
+        <fieldset id="testCasesFieldset">
+            <legend><i class="fas fa-tasks"></i> Select Test Cases</legend>
+            {% with messages = get_flashed_messages(category_filter=["warning"]) %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if "select at least one test case" in message %}
+                            <p class="flashed-error"><i class="fas fa-exclamation-triangle"></i> {{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="filter-controls">
+                <label for="tcSearch"><i class="fas fa-search"></i> Search:</label>
+                <input type="text" id="tcSearch" placeholder="Code or name..." class="form-control" style="width: auto; display: inline-block; min-width: 220px;">
+                <button type="button" id="checkAllVisibleBtn" class="button button-small secondary"><i class="fas fa-check-square"></i> Check All Visible</button>
+                <button type="button" id="uncheckAllVisibleBtn" class="button button-small secondary"><i class="far fa-square"></i> Uncheck All Visible</button>
+            </div>
+
+            <div class="form-group {% if form.test_cases.errors %}has-error{% endif %}">
+                {% if form.test_cases.choices or applications_with_suites %}
+                    {% for app_data in applications_with_suites %}
+                        <div class="collapsible-group">
+                            <div class="collapsible-header" data-target="app-tc-list-{{ app_data.id }}">
+                                <span><i class="fas fa-folder-open" style="margin-right: 8px; color: #f7b731;"></i> {{ app_data.name }}</span>
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </div>
+                            <div class="collapsible-content" id="app-tc-list-{{ app_data.id }}">
+                                {% if app_data.suites %}
+                                    {% for suite_data in app_data.suites %}
+                                        <div class="collapsible-group suite-group">
+                                            <div class="collapsible-header" data-target="suite-tc-list-{{ suite_data.id }}">
+                                                <span><i class="fas fa-list-alt" style="margin-right: 8px; color: #5bc0de;"></i> {{ suite_data.name }}</span>
+                                                <i class="fas fa-chevron-down toggle-icon"></i>
+                                            </div>
+                                            <div class="collapsible-content test-case-checkbox-list" id="suite-tc-list-{{ suite_data.id }}">
+                                                {% if suite_data.test_cases %}
+                                                    {% for tc in suite_data.test_cases %}
+                                                        <label for="test_cases-app{{app_data.id}}-suite{{suite_data.id}}-tc{{tc.TestCaseID}}">
+                                                            <input type="checkbox" name="test_cases" value="{{ tc.TestCaseID }}" id="test_cases-app{{app_data.id}}-suite{{suite_data.id}}-tc{{tc.TestCaseID}}"
+                                                                   {% if tc.TestCaseID in (form.test_cases.data or []) %}checked{% endif %}>
+                                                            {{ tc.Code }} - {{ tc.Name }}
+                                                            <small>(Module: {{ tc.TestCaseModule if tc.TestCaseModule else 'N/A' }})</small>
+                                                        </label>
+                                                    {% endfor %}
+                                                {% else %}
+                                                     <p style="font-style: italic; color: #6c757d; padding: 5px 0;">No test cases in this suite.</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p style="font-style: italic; color: #6c757d; padding: 5px 0;">No test suites defined for this application.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {% if uncategorized_tcs %}
+                        <div class="collapsible-group">
+                            <div class="collapsible-header" data-target="uncategorized-tc-list">
+                                <span><i class="fas fa-question-circle" style="margin-right: 8px; color: #6c757d;"></i> Uncategorized Test Cases</span>
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </div>
+                            <div class="collapsible-content test-case-checkbox-list" id="uncategorized-tc-list">
+                                {% for tc in uncategorized_tcs %}
+                                    <label for="test_cases-uncat-{{tc.TestCaseID}}">
+                                        <input type="checkbox" name="test_cases" value="{{ tc.TestCaseID }}" id="test_cases-uncat-{{tc.TestCaseID}}"
+                                               {% if tc.TestCaseID in (form.test_cases.data or []) %}checked{% endif %}>
+                                        {{ tc.Code }} - {{ tc.Name }}
+                                        <small>(Module: {{ tc.TestCaseModule if tc.TestCaseModule else 'N/A' }})</small>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    {# Hidden field for WTForms to process selections if no JS or for initial data binding #}
+                    <div style="display:none;">
+                        {% for value, label in form.test_cases.choices %}
+                            <input type="checkbox" name="{{ form.test_cases.name }}" value="{{ value }}" {% if value|string in (form.test_cases.data|map('string')|list or []) %}checked{% endif %}>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-warning" style="padding:15px; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px;">
+                        <i class="fas fa-exclamation-triangle"></i> No test cases available to select.
+                    </p>
+                {% endif %}
+
+                {% if form.test_cases.errors %}
+                    <div class="error-messages" style="margin-top:10px;">
+                    {% for error in form.test_cases.errors %}<span class="flashed-error" style="display:block; margin-bottom:5px;">{{ error }}</span>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </fieldset>
+
+        <div class="form-group" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef;">
+            {{ form.submit(class="button") }} {# Primary yellow button #}
+            <a href="{{ url_for('list_custom_groups') }}" class="btn btn-secondary p-2 rounded">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const testCasesFieldset = document.getElementById('testCasesFieldset');
+    const hasTestCaseError = {{ True if form.test_cases.errors or (get_flashed_messages(category_filter=["warning"]) | select('contains', 'select at least one test case') | list | length > 0) else False }};
+
+    document.querySelectorAll('.collapsible-header').forEach(header => {
+        const targetId = header.dataset.target;
+        const targetElement = document.getElementById(targetId);
+        const icon = header.querySelector('.toggle-icon');
+
+        if (targetElement) {
+            if (hasTestCaseError) {
+                targetElement.classList.remove('collapsed');
+                header.classList.remove('collapsed');
+                if (icon) icon.classList.remove('fa-chevron-right'); // Ensure it shows as expanded
+                if (icon) icon.classList.add('fa-chevron-down');
+            } else {
+                // Default: Start all collapsed. If you want them open, comment out/remove the next 2 lines.
+                targetElement.classList.add('collapsed');
+                header.classList.add('collapsed');
+                 if (icon) icon.classList.remove('fa-chevron-down');
+                 if (icon) icon.classList.add('fa-chevron-right'); // Start with right-pointing icon for collapsed
+            }
+
+            header.addEventListener('click', function() {
+                targetElement.classList.toggle('collapsed');
+                this.classList.toggle('collapsed');
+                if (icon) {
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-right');
+                }
+            });
+        }
+    });
+
+    if (hasTestCaseError && testCasesFieldset) {
+        testCasesFieldset.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    const searchInput = document.getElementById('tcSearch');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            const filterText = this.value.toLowerCase().trim();
+            document.querySelectorAll('.collapsible-content.test-case-checkbox-list label').forEach(label => {
+                const tcText = label.textContent.toLowerCase();
+                if (tcText.includes(filterText)) {
+                    label.style.display = '';
+                    let current = label.closest('.collapsible-content');
+                    while(current) {
+                        if (current.id) { // Ensure it's a collapsible content
+                            const header = document.querySelector(`.collapsible-header[data-target="${current.id}"]`);
+                            if (header && header.classList.contains('collapsed')) {
+                                header.click(); // Programmatically click to expand
+                            }
+                        }
+                        if (!current.parentElement || current.parentElement.tagName === 'FIELDSET') break; // Stop at fieldset
+                        current = current.parentElement.closest('.collapsible-content');
+                    }
+                } else {
+                    label.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    const checkAllBtn = document.getElementById('checkAllVisibleBtn');
+    const uncheckAllBtn = document.getElementById('uncheckAllVisibleBtn');
+
+    if (checkAllBtn) {
+        checkAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.collapsible-content.test-case-checkbox-list label').forEach(label => {
+                if (label.style.display !== 'none') {
+                    const checkbox = label.querySelector('input[type="checkbox"]');
+                    if (checkbox) checkbox.checked = true;
+                }
+            });
+        });
+    }
+    if (uncheckAllBtn) {
+        uncheckAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.collapsible-content.test-case-checkbox-list label').forEach(label => {
+                 if (label.style.display !== 'none') {
+                    const checkbox = label.querySelector('input[type="checkbox"]');
+                    if (checkbox) checkbox.checked = false;
+                }
+            });
+        });
+    }
+
+});
+</script>
+{% endblock %}
