@@ -197,25 +197,25 @@ def cancel_ussd():
             try:
                 cancel_button = WebDriverWait(appium_driver, 3).until(EC.element_to_be_clickable((by, loc_val)))
                 cancel_button.click()
-                log_to_stdout("USSD session cancelled successfully via adaptive cancel.", flush=True)
+                log_to_stdout("USSD session cancelled successfully via adaptive cancel.")
                 cancelled = True
                 break
             except Exception:
                 continue # Try next locator
         
         if not cancelled:
-            log_to_stdout("Could not find a standard Cancel/Dismiss button for USSD.", flush=True)
+            log_to_stdout("Could not find a standard Cancel/Dismiss button for USSD.")
             # As a last resort, try pressing back key
             try:
-                log_to_stdout("Attempting to cancel USSD via KEYCODE_BACK.", flush=True)
+                log_to_stdout("Attempting to cancel USSD via KEYCODE_BACK.")
                 appium_driver.press_keycode(4) # Android Keycode for BACK
                 time.sleep(0.5)
             except Exception as e_back:
-                log_to_stdout(f"Error pressing KEYCODE_BACK during cancel_ussd: {e_back}", flush=True)
+                log_to_stdout(f"Error pressing KEYCODE_BACK during cancel_ussd: {e_back}")
 
 
     except Exception as e:
-        log_to_stdout(f"Failed to cancel USSD session during adaptive logic: {e}", flush=True)
+        log_to_stdout(f"Failed to cancel USSD session during adaptive logic: {e}")
 
 
 def main_runner():
@@ -356,7 +356,7 @@ def main_runner():
         os.makedirs(report_dir_path_for_screenshots, exist_ok=True)
 
         current_step_index = 0
-        max_adaptive_jumps_total = 5 
+        max_adaptive_jumps_total = 2
         adaptive_jump_count = 0
         hard_fail_occurred_in_loop = False 
 
@@ -402,7 +402,7 @@ def main_runner():
                                 )
                                 ussd_text = message_element.text.strip()
                     
-                                if all(word.lower() in ussd_text.lower() for word in ["welcome", "Bank", "Abyssinia"]):
+                                if all(word.lower() in ussd_text.lower() for word in ["welcome", "Login", "Exit"]):
                                     print("Expected Home USSD page matched.", flush=True)
                                     break
                                 else:
@@ -414,7 +414,7 @@ def main_runner():
                                     input_field.clear()
                                     input_field.send_keys("*")
                                     time.sleep(0.5)
-                                    if all(word.lower() in ussd_text.lower() for word in ["welcome", "Bank", "Abyssinia"]):
+                                    if all(word.lower() in ussd_text.lower() for word in ["welcome", "Login", "Exit"]):
                                         print("Expected Home USSD page matched.", flush=True)
                                         break
                                     else:                     

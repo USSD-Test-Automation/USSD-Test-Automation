@@ -5,9 +5,9 @@
 {% block content %}
 
 <div class="container mt-4">
-     {% include '_messages.html' %}
+    {% include '_messages.html' %}
     <div class="card shadow-sm border-0">
-       
+
         <div class="card-header section-header">
             <h4 class="mb-0">Generate Test Report</h4>
         </div>
@@ -163,27 +163,62 @@
         const emailInputsContainer = document.getElementById('emailInputsContainer');
         const addEmailBtn = document.getElementById('addEmailBtn');
 
+        // function updateFormVisibility() {
+        //     const selectedType = reportType.value;
+
+        //     // Hide all filters first
+        //     applicationFilter.style.display = 'none';
+        //     testCaseFilter.style.display = 'none';
+        //     batchFilter.style.display = 'none';
+
+        //     // Show relevant filters based on report type
+        //     switch (selectedType) {
+        //         case 'application':
+        //             applicationFilter.style.display = 'block';
+        //             break;
+        //         case 'test_case':
+        //             testCaseFilter.style.display = 'block';
+        //             break;
+        //         case 'batch':
+        //             batchFilter.style.display = 'block';
+        //             break;
+        //     }
+        // }
+
+
+
         function updateFormVisibility() {
             const selectedType = reportType.value;
 
-            // Hide all filters first
-            applicationFilter.style.display = 'none';
-            testCaseFilter.style.display = 'none';
-            batchFilter.style.display = 'none';
+            // Reset visibility and required attributes
+            const filters = [
+                { el: applicationFilter, input: document.getElementById('application_id') },
+                { el: testCaseFilter, input: document.getElementById('test_case_id') },
+                { el: batchFilter, input: document.getElementById('batch_id') },
+            ];
 
-            // Show relevant filters based on report type
+            filters.forEach(filter => {
+                filter.el.style.display = 'none';
+                filter.input.removeAttribute('required');
+            });
+
+            // Set visible and required based on selected type
             switch (selectedType) {
                 case 'application':
                     applicationFilter.style.display = 'block';
+                    document.getElementById('application_id').setAttribute('required', true);
                     break;
                 case 'test_case':
                     testCaseFilter.style.display = 'block';
+                    document.getElementById('test_case_id').setAttribute('required', true);
                     break;
                 case 'batch':
                     batchFilter.style.display = 'block';
+                    document.getElementById('batch_id').setAttribute('required', true);
                     break;
             }
         }
+
 
         // Update form visibility when report type changes
         reportType.addEventListener('change', updateFormVisibility);

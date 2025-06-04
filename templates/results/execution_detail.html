@@ -62,10 +62,14 @@
 
                 <dt class="col-sm-3">Parameters Used</dt>
                 <dd class="col-sm-9">
-                    {% if execution.Parameters_parsed and not execution.Parameters_is_string %}
-                    <pre>{{ execution.Parameters_parsed | tojson(indent=2) }}</pre>
+                    {% if current_user.username == execution.ExecutedByUsername %}
+                        {% if execution.Parameters_parsed and not execution.Parameters_is_string %}
+                           <pre>{{ execution.Parameters_parsed | tojson(indent=2) }}</pre>
+                        {% else %}
+                          <pre>{{ execution.Parameters or 'None' }}</pre>
+                        {% endif %}
                     {% else %}
-                    <pre>{{ execution.Parameters or 'None' }}</pre>
+                        <pre>{{ '-' }}</pre>
                     {% endif %}
                 </dd>
 

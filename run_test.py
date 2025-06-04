@@ -14,6 +14,7 @@ from flask_cors import CORS
 import mysql.connector
 import logging # For better logging
 from datetime import datetime, timedelta
+from flask import request
 # --- New Imports ---
 from flask_login import (LoginManager, login_user, logout_user,
                          login_required, current_user)
@@ -1784,8 +1785,7 @@ def send_test_report_email(recipient_emails, pdf_data, subject="Test Execution R
 @login_required
 @manager_or_admin_required
 def generate_report():
-    """Handle report generation requests."""
-
+    
     if current_user.role.lower() != 'manager':
         flash("Unauthorized access. You have been logged out.", "danger")
         logout_user()
@@ -2824,12 +2824,12 @@ def execution_detail(execution_id):
                     execution_summary['Parameters_parsed'] = params_as_dict
                     execution_summary['Parameters_is_string'] = False
                 except json.JSONDecodeError:
-                    execution_summary['Parameters_parsed'] = None # Keep original string in 'Parameters'
+                    execution_summary['Parameters_parsed'] = None 
                     execution_summary['Parameters_is_string'] = True
-            elif execution_summary: # If Parameters is not a string (already dict, list, or None)
+            elif execution_summary: 
                 execution_summary['Parameters_parsed'] = execution_summary.get('Parameters')
                 execution_summary['Parameters_is_string'] = False
-            # --- END OF PARSE PARAMETERS ---
+
 
 
             # Fetch step results
@@ -3240,6 +3240,63 @@ def check_testcase_code(code):
         if conn and conn.is_connected():
             conn.close()
 # --- HELPERS for Manager Dashboard (Your existing) ---
+
+
+@app.route('/editprofile', methods=['GET', 'POST']) 
+@login_required
+def edit_profile():
+    if current_user.role not in ['admin', 'manager', 'tester']:
+        flash("You do not have permission to view this page.", "danger")
+        logout_user()
+        return redirect(url_for('login'))
+
+    user_id = current_user.id
+    user_to_edit = User.get(user_id)
+    if not user_to_edit:
+        flash('User not found.', 'danger')
+        return redirect(url_for('dashboard'))  # Safer than list_users
+
+    form = EditUserForm(original_username=user_to_edit.username)
+
+    if form.validate_on_submit():
+        new_password = form.password.data.strip() or None
+        is_last_admin = False
+
+        if user_to_edit.role == 'admin':
+            with get_db_conn_from_models() as conn:
+                with conn.cursor(dictionary=True) as cursor:
+                    cursor.execute("SELECT COUNT(*) AS admin_count FROM users WHERE Role = 'admin' AND IsActive = TRUE")
+                    if cursor.fetchone()['admin_count'] <= 1:
+                        is_last_admin = True
+
+        if is_last_admin and form.role.data != 'admin':
+            if current_user.id == user_id:
+                flash('As the last active admin, you cannot change your own role from Admin.', 'danger')
+            else:
+                flash('Cannot change the role of the last active admin.', 'danger')
+            return render_template('edit_profile.html', title='Edit Profile', form=form, user=user_to_edit)
+
+        success, message = User.update(
+            user_id=user_id,
+            username=form.username.data,
+            role=form.role.data,
+            new_password=new_password
+        )
+
+        if success:
+            flash(f'User "{form.username.data}" updated successfully.', 'success')
+            return redirect(url_for('edit_profile'))
+        else:
+            flash(f'Error updating user: {message}', 'danger')
+
+    elif request.method == 'GET':
+        form.username.data = user_to_edit.username
+        form.role.data = user_to_edit.role
+
+    return render_template('edit_profile.html', title='Edit Profile', form=form, user=user_to_edit)
+
+
+
 def get_all_applications_for_dashboard():
     with get_db_conn_from_models() as conn:
         with conn.cursor(dictionary=True) as cursor:
